@@ -135,21 +135,10 @@ secondary: { main: '#00ff88' }  // Green accent
 background: { default: '#0a1628' } // Dark background
 ```
 
-## 🔐 Security
-
-- All commits are GPG signed for verification
-- Dependencies are regularly updated
-- GitHub Actions uses secure deployment practices
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
 ## 👤 Contact
 
 **Kosmas Temperekidis**
 - Email: kosmas.temperekidis@live.com
-- Phone: ***REMOVED***
 - Portfolio: [https://kmtempe.github.io/portfolio-react/](https://kmtempe.github.io/portfolio-react/)
 
 ---
