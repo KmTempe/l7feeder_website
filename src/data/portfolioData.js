@@ -3,7 +3,7 @@ export const portfolioData = {
   title: 'IT Applications & Technical Support',
   tagline: 'Passionate about service and technical support, with a decisive and effective approach to achieving goals. A collaborative team player with high productivity.',
   email: 'kosmas.temperekidis@live.com',
-  phone: '***REMOVED***',
+  phone: '+3069*********',
   
   about: {
     description: 'Dedicated IT professional specializing in technical support and IT applications. Experienced in troubleshooting PoS terminals, managing e-commerce platforms, and delivering exceptional customer service with a focus on effective problem-solving and team collaboration.',
