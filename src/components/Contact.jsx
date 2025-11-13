@@ -231,7 +231,7 @@ export default function Contact({ email, phone }) {
             <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'center' }}>
               <IconButton
                 component={Link}
-                href="https://github.com/KmTempe"
+                href="https://github.com/KmTempe/portfolio-react"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{
