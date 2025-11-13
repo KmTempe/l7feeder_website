@@ -125,6 +125,8 @@ portfolio-react/
 
 Edit `src/data/portfolioData.js` to update your personal information, experience, skills, and projects.
 
+**⚠️ IMPORTANT:** The personal data in `src/data/portfolioData.js` is NOT open source and must NOT be used. Replace it with your own information.
+
 ### Modify Theme
 
 Customize colors and typography in `src/theme/theme.js`:
@@ -134,6 +136,12 @@ primary: { main: '#00d9ff' }    // Cyan accent
 secondary: { main: '#00ff88' }  // Green accent
 background: { default: '#0a1628' } // Dark background
 ```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**Personal Data Notice:** While the code is open source, all personal information in `src/data/portfolioData.js` remains the exclusive property of Kosmas Temperekidis and may NOT be copied or used. You must replace this data with your own.
 
 ## 👤 Contact
 
