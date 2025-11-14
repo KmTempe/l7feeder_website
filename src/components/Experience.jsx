@@ -74,7 +74,8 @@ export default function Experience({ experience }) {
                   borderRadius: '50%',
                   background: 'rgba(0, 217, 255, 0.5)',
                   boxShadow: 'none',
-                  transition: 'all 0.6s ease-in-out',
+                  transition: 'all 0.3s ease-out',
+                  willChange: 'transform, background, box-shadow',
                 }}
               />
 

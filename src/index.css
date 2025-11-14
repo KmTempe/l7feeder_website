@@ -2,9 +2,26 @@
   box-sizing: border-box;
 }
 
+/* Performance optimizations */
+*,
+*::before,
+*::after {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 html {
   scroll-behavior: smooth;
   background-color: #0a1628;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .blob-1, .blob-2 {
+    animation: none;
+  }
 }
 
 body {
@@ -18,6 +35,8 @@ body {
   position: relative; 
   overflow-x: hidden;
   background-color: #0a1628;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @keyframes morph {
@@ -76,64 +95,64 @@ body {
 
 @keyframes float1 {
   0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
+    transform: translate(0, 0);
   }
-  20% {
-    transform: translate(25px, -30px) rotate(72deg);
+  25% {
+    transform: translate(20px, -25px);
   }
-  40% {
-    transform: translate(-30px, 20px) rotate(144deg);
+  50% {
+    transform: translate(-25px, 15px);
   }
-  60% {
-    transform: translate(35px, 25px) rotate(216deg);
-  }
-  80% {
-    transform: translate(-20px, -25px) rotate(288deg);
+  75% {
+    transform: translate(15px, 20px);
   }
 }
 
 @keyframes float2 {
   0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
+    transform: translate(0, 0);
   }
-  20% {
-    transform: translate(-35px, 25px) rotate(-72deg);
+  25% {
+    transform: translate(-25px, 20px);
   }
-  40% {
-    transform: translate(30px, -35px) rotate(-144deg);
+  50% {
+    transform: translate(20px, -25px);
   }
-  60% {
-    transform: translate(-25px, -30px) rotate(-216deg);
-  }
-  80% {
-    transform: translate(20px, 30px) rotate(-288deg);
+  75% {
+    transform: translate(-15px, -20px);
   }
 }
 
 .blob-1 {
   position: fixed;
-  top: -200px;
-  left: -200px;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.15) 50%, transparent 70%);
+  top: -150px;
+  left: -150px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 217, 255, 0.25) 0%, rgba(0, 217, 255, 0.12) 50%, transparent 70%);
   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   animation: morph 20s ease-in-out infinite, float1 35s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
-  filter: blur(10px);
+  filter: blur(40px);
+  will-change: transform, border-radius;
+  contain: layout style paint;
+  transform: translateZ(0);
 }
 
 .blob-2 {
   position: fixed;
-  bottom: -250px;
-  right: -250px;
-  width: 900px;
-  height: 900px;
-  background: radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.15) 50%, transparent 70%);
+  bottom: -200px;
+  right: -200px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.25) 0%, rgba(0, 255, 136, 0.12) 50%, transparent 70%);
   border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   animation: morph2 25s ease-in-out infinite, float2 40s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
-  filter: blur(10px);
+  filter: blur(40px);
+  will-change: transform, border-radius;
+  contain: layout style paint;
+  transform: translateZ(0);
 }

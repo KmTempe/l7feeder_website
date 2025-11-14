@@ -37,8 +37,7 @@ export default function Hero({ name, title, tagline }) {
             label="👋 Available for Opportunities"
             sx={{ 
               mb: 3,
-              background: 'rgba(0, 217, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
+              background: 'rgba(0, 217, 255, 0.15)',
               border: '1px solid rgba(0, 217, 255, 0.3)',
               color: '#00d9ff',
               fontSize: '0.9rem',
