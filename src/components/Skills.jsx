@@ -7,7 +7,6 @@ export default function Skills({ skills }) {
       id="skills"
       sx={{
         py: { xs: 8, md: 12 },
-        background: 'linear-gradient(180deg, #0a1628 0%, #0f1f35 100%)',
       }}
     >
       <Container maxWidth="md">

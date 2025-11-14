@@ -18,7 +18,7 @@ export default function Hero({ name, title, tagline }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(180deg, #0a1628 0%, #0f1f35 100%)',
+        background: 'transparent',
         position: 'relative',
         overflow: 'hidden',
       }}

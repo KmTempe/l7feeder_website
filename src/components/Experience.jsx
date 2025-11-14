@@ -7,7 +7,6 @@ export default function Experience({ experience }) {
       id="experience"
       sx={{
         py: { xs: 8, md: 12 },
-        background: '#0a1628',
       }}
     >
       <Container maxWidth="md">
@@ -51,14 +50,21 @@ export default function Experience({ experience }) {
           {experience.map((exp, index) => (
             <Box
               key={index}
+              className="experience-item"
               sx={{
                 position: 'relative',
                 mb: 5,
                 '&:last-child': { mb: 0 },
+                '&:hover .timeline-dot': {
+                  background: 'linear-gradient(135deg, #00d9ff 0%, #00ff88 100%)',
+                  boxShadow: '0 0 0 4px rgba(0, 217, 255, 0.2), 0 0 20px rgba(0, 217, 255, 0.6)',
+                  transform: 'scale(1.3)',
+                },
               }}
             >
               {/* Timeline dot */}
               <Box
+                className="timeline-dot"
                 sx={{
                   position: 'absolute',
                   left: { xs: -10, sm: -12, md: -20 },
@@ -66,8 +72,9 @@ export default function Experience({ experience }) {
                   width: { xs: 8, sm: 10 },
                   height: { xs: 8, sm: 10 },
                   borderRadius: '50%',
-                  background: index === 0 ? 'linear-gradient(135deg, #00d9ff 0%, #00ff88 100%)' : 'rgba(0, 217, 255, 0.5)',
-                  boxShadow: index === 0 ? '0 0 0 4px rgba(0, 217, 255, 0.2)' : 'none',
+                  background: 'rgba(0, 217, 255, 0.5)',
+                  boxShadow: 'none',
+                  transition: 'all 0.6s ease-in-out',
                 }}
               />
 

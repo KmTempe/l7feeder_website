@@ -4,6 +4,7 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #0a1628;
 }
 
 body {
@@ -16,52 +17,123 @@ body {
   justify-content: space-evenly;
   position: relative; 
   overflow-x: hidden;
-}
-
-body::before, 
-body::after {
-  content: "";
-  width: 80vw;
-  height: 80vw;
-  max-width: 600px;
-  max-height: 600px;
-  position: fixed;
-  background: rgba(0, 217, 255, 0.03);
-  left: -40vw;
-  top: -40vw;
-  animation: morph 15s linear infinite alternate, spin 20s linear infinite;
-  z-index: 1;
-  will-change: border-radius, transform;
-  pointer-events: none;
-  filter: blur(10px);
-}
-
-body::after {
-  width: 90vw;
-  height: 90vw;
-  max-width: 700px;
-  max-height: 700px;
-  left: auto;
-  right: -45vw;
-  top: auto;
-  bottom: 0;
-  background: rgba(0, 255, 136, 0.03);
-  animation: morph 10s linear infinite alternate, spin 26s linear infinite reverse;
-  transform-origin: 20% 20%; 
-  filter: blur(10px);
+  background-color: #0a1628;
 }
 
 @keyframes morph {
   0% {
-    border-radius: 100% 60% 60% 40% / 70% 30% 70% 30%;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  20% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  40% {
+    border-radius: 70% 30% 50% 50% / 70% 50% 60% 40%;
+  }
+  60% {
+    border-radius: 40% 70% 60% 50% / 30% 60% 70% 50%;
+  }
+  80% {
+    border-radius: 50% 40% 70% 30% / 60% 40% 50% 70%;
   }
   100% {
-    border-radius: 40% 60%;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   } 
+}
+
+@keyframes morph2 {
+  0% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+  20% {
+    border-radius: 60% 40% 50% 60% / 70% 50% 40% 60%;
+  }
+  40% {
+    border-radius: 50% 60% 30% 70% / 50% 70% 50% 30%;
+  }
+  60% {
+    border-radius: 70% 30% 60% 40% / 40% 60% 70% 50%;
+  }
+  80% {
+    border-radius: 40% 50% 70% 60% / 60% 30% 50% 70%;
+  }
+  100% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
 }
 
 @keyframes spin {
   to {
     transform: rotate(1turn); 
   } 
+}
+
+@keyframes spin2 {
+  to {
+    transform: rotate(-1turn);
+  }
+}
+
+@keyframes float1 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(25px, -30px) rotate(72deg);
+  }
+  40% {
+    transform: translate(-30px, 20px) rotate(144deg);
+  }
+  60% {
+    transform: translate(35px, 25px) rotate(216deg);
+  }
+  80% {
+    transform: translate(-20px, -25px) rotate(288deg);
+  }
+}
+
+@keyframes float2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-35px, 25px) rotate(-72deg);
+  }
+  40% {
+    transform: translate(30px, -35px) rotate(-144deg);
+  }
+  60% {
+    transform: translate(-25px, -30px) rotate(-216deg);
+  }
+  80% {
+    transform: translate(20px, 30px) rotate(-288deg);
+  }
+}
+
+.blob-1 {
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.15) 50%, transparent 70%);
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  animation: morph 20s ease-in-out infinite, float1 35s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(10px);
+}
+
+.blob-2 {
+  position: fixed;
+  bottom: -250px;
+  right: -250px;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.15) 50%, transparent 70%);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  animation: morph2 25s ease-in-out infinite, float2 40s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(10px);
 }

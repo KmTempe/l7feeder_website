@@ -7,7 +7,6 @@ export default function About({ about }) {
       id="about"
       sx={{
         py: { xs: 8, md: 12 },
-        background: 'linear-gradient(180deg, #0f1f35 0%, #0a1628 100%)',
       }}
     >
       <Container maxWidth="md">

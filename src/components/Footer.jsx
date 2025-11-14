@@ -15,7 +15,6 @@ export default function Footer() {
       sx={{
         py: 4,
         borderTop: '1px solid rgba(0, 217, 255, 0.2)',
-        background: 'linear-gradient(180deg, #0a1628 0%, #0f1f35 100%)',
       }}
     >
       <Container maxWidth="lg">

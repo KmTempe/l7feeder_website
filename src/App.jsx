@@ -13,7 +13,10 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+      {/* Morphing Background Blobs */}
+      <div className="blob-1" />
+      <div className="blob-2" />
+      <Box sx={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
         <Header name={portfolioData.name} />
         <Hero
           name={portfolioData.name}
