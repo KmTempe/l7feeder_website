@@ -16,12 +16,14 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import WorkIcon from '@mui/icons-material/Work';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import EmailIcon from '@mui/icons-material/Email';
 
 const navItems = [
+  { text: 'Home', icon: <HomeIcon />, href: '#hero' },
   { text: 'About', icon: <PersonIcon />, href: '#about' },
   { text: 'Experience', icon: <WorkIcon />, href: '#experience' },
   { text: 'Skills', icon: <ConstructionIcon />, href: '#skills' },
