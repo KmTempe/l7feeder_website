@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: `Portfolio Contact <${process.env.SMTP_USER}>`,
       to: process.env.CONTACT_RECEIVER,
-      subject: `New Contact Form Submission from ${name}`,
+      subject: `New collaboration request from ${name}`,
       replyTo: email,
       text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
       html: `
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
               <td style="color: #222; padding: 8px 0;">${message.replace(/\n/g, '<br/>')}</td>
             </tr>
           </table>
-          <div style="font-size: 0.95rem; color: #888; text-align: right;">Sent from Portfolio Contact Form</div>
+          <div style="font-size: 0.95rem; color: #888; text-align: right;">Sent from react Contact Form</div>
         </div>
       `
     });
