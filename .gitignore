@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 vite.config.js
 package-lock.json
+.env
+.vercel
+
+.vercel

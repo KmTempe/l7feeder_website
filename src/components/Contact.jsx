@@ -3,13 +3,13 @@ import {
   Box,
   Container,
   Typography,
-  // TextField,
-  // Button,
-  // Grid,
+  TextField,
+  Button,
+  Grid,
   Paper,
   Link,
-  // Snackbar,
-  // Alert,
+  Snackbar,
+  Alert,
   IconButton,
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
@@ -20,18 +20,24 @@ import DiscordIcon from './icons/DiscordIcon';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
+
+
 export default function Contact({ email, phone }) {
-  /* COMMENTED OUT FOR STATIC GITHUB PAGES DEPLOYMENT - UNCOMMENT WHEN ADDING BACKEND */
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   email: '',
-  //   message: '',
-  // });
-  // const [snackbar, setSnackbar] = useState({
-  //   open: false,
-  //   message: '',
-  //   severity: 'success',
-  // });
+  // Use dynamic base path for API requests
+  const apiUrl = import.meta.env.DEV
+    ? `${window.location.origin.replace(/:5173$/, ':3000')}/api/contact`
+    : '/api/contact';
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
   const [discordPopupOpen, setDiscordPopupOpen] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -48,65 +54,75 @@ export default function Contact({ email, phone }) {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.5 }
     }
   };
 
-  /* COMMENTED OUT FOR STATIC GITHUB PAGES DEPLOYMENT - UNCOMMENT WHEN ADDING BACKEND */
-  // const handleChange = (e) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setSnackbar({
+        open: true,
+        message: 'All fields are required.',
+        severity: 'error',
+      });
+      return;
+    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email)) {
+      setSnackbar({
+        open: true,
+        message: 'Please provide a valid email address.',
+        severity: 'error',
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setSnackbar({
+          open: true,
+          message: 'Message sent! Expect a follow-up soon.',
+          severity: 'success',
+        });
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setSnackbar({
+          open: true,
+          message: data.error || 'Unable to send the message right now. Please try later.',
+          severity: 'error',
+        });
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: 'Unable to send the message right now. Please try later.',
+        severity: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //   if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-  //     setSnackbar({
-  //       open: true,
-  //       message: 'All fields are required.',
-  //       severity: 'error',
-  //     });
-  //     return;
-  //   }
-
-  //   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!emailPattern.test(formData.email)) {
-  //     setSnackbar({
-  //       open: true,
-  //       message: 'Please provide a valid email address.',
-  //       severity: 'error',
-  //     });
-  //     return;
-  //   }
-
-  //   try {
-  //     console.log('Form submitted:', formData);
-      
-  //     setSnackbar({
-  //       open: true,
-  //       message: 'Message received! Expect a follow-up soon.',
-  //       severity: 'success',
-  //     });
-
-  //     setFormData({ name: '', email: '', message: '' });
-  //   } catch (error) {
-  //     setSnackbar({
-  //       open: true,
-  //       message: 'Unable to send the message right now. Please try later.',
-  //       severity: 'error',
-  //     });
-  //   }
-  // };
-
-  // const handleCloseSnackbar = () => {
-  //   setSnackbar({ ...snackbar, open: false });
-  // };
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   return (
     <Box
@@ -123,9 +139,9 @@ export default function Contact({ email, phone }) {
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6 }}
           />
-            <Typography
-              variant="overline"
-              sx={{
+          <Typography
+            variant="overline"
+            sx={{
               color: 'primary.main',
               fontWeight: 600,
               letterSpacing: '0.15em',
@@ -136,9 +152,9 @@ export default function Contact({ email, phone }) {
           >
             LET'S COLLABORATE
           </Typography>
-          <Typography 
-            variant="h2" 
-            gutterBottom 
+          <Typography
+            variant="h2"
+            gutterBottom
             fontWeight={700}
             sx={{
               background: 'linear-gradient(135deg, #00d9ff 0%, #00ff88 100%)',
@@ -154,72 +170,124 @@ export default function Contact({ email, phone }) {
           </Typography>
         </Box>
 
-        {/* COMMENTED OUT CONTACT FORM FOR STATIC GITHUB PAGES DEPLOYMENT - UNCOMMENT WHEN ADDING BACKEND */}
-        {/* <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} md={8} lg={6}>
-            <Paper
-              component="form"
-              onSubmit={handleSubmit}
-              elevation={0}
-              sx={{
-                p: 5,
-                backgroundColor: 'rgba(15, 31, 53, 0.4)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(0, 217, 255, 0.2)',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  borderColor: 'rgba(0, 217, 255, 0.4)',
-                },
-              }}
-            >
-              <TextField
-                fullWidth
-                label="Name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                margin="normal"
-                variant="outlined"
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                margin="normal"
-                variant="outlined"
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                label="How can I help?"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                multiline
-                rows={6}
-                margin="normal"
-                variant="outlined"
-                inputProps={{ maxLength: 1000 }}
-                sx={{ mb: 3 }}
-              />
-              <Button
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 6, px: { xs: 2, sm: 0 } }}>
+          <Paper
+            component="form"
+            onSubmit={handleSubmit}
+            elevation={0}
+            sx={{
+              p: { xs: 3, sm: 4 },
+              backgroundColor: 'rgba(15, 31, 53, 0.4)',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(0, 217, 255, 0.2)',
+              textAlign: 'center',
+              maxWidth: '500px',
+              width: '100%',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                borderColor: 'rgba(0, 217, 255, 0.4)',
+              },
+            }}
+          >
+            <Typography variant="h5" fontWeight={700} sx={{ mb: 2, color: 'primary.main', letterSpacing: '0.05em' }}>
+              Contact Form
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Box>
+                <Typography variant="body2" sx={{ mb: 0.5, fontWeight: 600, color: 'text.secondary', textAlign: 'left' }}>Name</Typography>
+                <input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  maxLength={64}
+                  placeholder="Your name"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0,217,255,0.2)',
+                    background: 'rgba(15,31,53,0.15)',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    marginBottom: '4px',
+                  }}
+                  autoComplete="name"
+                  disabled={loading}
+                />
+              </Box>
+              <Box>
+                <Typography variant="body2" sx={{ mb: 0.5, fontWeight: 600, color: 'text.secondary', textAlign: 'left' }}>Email</Typography>
+                <input
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  maxLength={128}
+                  placeholder="Your email"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0,217,255,0.2)',
+                    background: 'rgba(15,31,53,0.15)',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    marginBottom: '4px',
+                  }}
+                  autoComplete="email"
+                  disabled={loading}
+                  inputMode="email"
+                />
+
+              </Box>
+              <Box>
+                <Typography variant="body2" sx={{ mb: 0.5, fontWeight: 600, color: 'text.secondary', textAlign: 'left' }}>Message</Typography>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  maxLength={1000}
+                  placeholder="How can I help?"
+                  rows={6}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0,217,255,0.2)',
+                    background: 'rgba(15,31,53,0.15)',
+                    color: '#fff',
+                    fontSize: '1rem',
+                    resize: 'vertical',
+                  }}
+                  autoComplete="off"
+                  disabled={loading}
+                />
+              </Box>
+              <button
                 type="submit"
-                variant="contained"
-                size="large"
-                fullWidth
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #00d9ff 0%, #00ff88 100%)',
+                  color: '#0f1f35',
+                  fontWeight: 700,
+                  fontSize: '1.1rem',
+                  border: 'none',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  transition: 'background 0.3s',
+                  marginTop: '8px',
+                }}
               >
-                Send Message
-              </Button>
-            </Paper>
-          </Grid>
-        </Grid> */}
+                {loading ? 'Sending...' : 'Send Message'}
+              </button>
+            </Box>
+          </Paper>
+        </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 6, px: { xs: 2, sm: 0 } }}>
           <Paper
@@ -367,21 +435,17 @@ export default function Contact({ email, phone }) {
         </Box>
       </Container>
 
-      {/* COMMENTED OUT SNACKBAR FOR STATIC GITHUB PAGES DEPLOYMENT - UNCOMMENT WHEN ADDING BACKEND */}
-      {/* <Snackbar
-        open={snackbar.open}
-        autoHideDuration={snackbar.severity === 'error' ? 6000 : 4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-      </Snackbar> */}
+      {/* Snackbar for feedback */}
+      <Box>
+        <Paper elevation={0} sx={{ display: snackbar.open ? 'block' : 'none', position: 'fixed', left: '50%', bottom: 32, transform: 'translateX(-50%)', minWidth: 280, maxWidth: 400, zIndex: 9999, bgcolor: 'background.paper', border: '1px solid', borderColor: snackbar.severity === 'error' ? 'error.main' : 'primary.main', px: 2, py: 1.5, borderRadius: 2, boxShadow: 6 }}>
+          <Typography variant="body2" sx={{ color: snackbar.severity === 'error' ? 'error.main' : 'primary.main', fontWeight: 600 }}>
+            {snackbar.message}
+          </Typography>
+          <IconButton size="small" onClick={handleCloseSnackbar} sx={{ position: 'absolute', right: 8, top: 8, color: 'text.secondary' }}>
+            ×
+          </IconButton>
+        </Paper>
+      </Box>
     </Box>
   );
 }
