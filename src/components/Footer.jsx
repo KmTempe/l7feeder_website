@@ -4,6 +4,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import DiscordIcon from './icons/DiscordIcon';
 import { portfolioData } from '../data/portfolioData';
+import packageJson from '../../package.json';
 import { motion } from 'framer-motion';
 
 export default function Footer() {
@@ -30,7 +31,8 @@ export default function Footer() {
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'flex-start' }, gap: 1.5 }}>
             <Typography variant="body2" color="text.secondary">
-              © {currentYear} {portfolioData.name}. Engineered with precision & curiosity.
+              © {currentYear} {portfolioData.name}. Engineered with curiosity & only god knows what i have do &nbsp; 
+              <span style={{ fontSize: '0.85em', color: '#9db4cc',  }}>Version&nbsp;{packageJson.version}</span>
             </Typography>
             
           </Box>
