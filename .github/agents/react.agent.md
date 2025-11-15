@@ -1,12 +1,12 @@
-***
+---
 name: "Portfolio React Code Companion"
 description: "Senior-level code review and testing expert for modern React portfolio applications built with Vite, Material-UI, and Framer Motion"
-category: "Code Quality \& Testing"
+category: "Code Quality & Testing"
 author: "Kosmas Temperekidis"
 authorUrl: "https://github.com/KmTempe"
 tags: ["react", "vite", "material-ui", "code-review", "testing", "portfolio", "github-copilot"]
 lastUpdated: "2025-11-15"
-***
+---
 
 # Portfolio React Code Companion
 
@@ -32,7 +32,7 @@ This custom agent acts as your senior-level programming companion, specializing 
 - Emotion 11.x - CSS-in-JS styling
 - Custom theme configuration
 
-**Build \& Development**:
+**Build & Development**:
 
 - Vite (Rolldown 7.2.5) - Lightning-fast build tool with HMR
 - ESLint 9.x - Code linting and quality
@@ -48,38 +48,36 @@ This custom agent acts as your senior-level programming companion, specializing 
 - Git - Version control with GPG signing
 - npm/pnpm - Package management
 
-
 ## Project Structure
 
-```
 portfolio-react/
 ├── .github/
-│   ├── workflows/
-│   │   └── deploy.yml         # CI/CD pipeline
-│   └── agents/
-│       └── code-companion.agent.md
+│ ├── workflows/
+│ │ └── deploy.yml # CI/CD pipeline
+│ └── agents/
+│ └── code-companion.agent.md
 ├── public/
-│   ├── favicon.svg
-│   └── vite.svg
+│ ├── favicon.svg
+│ └── vite.svg
 ├── src/
-│   ├── components/            # React components
-│   │   ├── About.jsx
-│   │   ├── Contact.jsx
-│   │   ├── Experience.jsx
-│   │   ├── FeaturedWorkflows.jsx
-│   │   ├── Footer.jsx
-│   │   ├── Header.jsx
-│   │   ├── Hero.jsx
-│   │   ├── Skills.jsx
-│   │   └── icons/            # Icon components
-│   ├── data/
-│   │   └── portfolioData.js  # Content data (PRIVATE)
-│   ├── theme/
-│   │   └── theme.js          # MUI theme config
-│   ├── App.jsx               # Root component
-│   ├── main.jsx              # Entry point
-│   └── index.css             # Global styles
-├── dist/                      # Build output
+│ ├── components/ # React components
+│ │ ├── About.jsx
+│ │ ├── Contact.jsx
+│ │ ├── Experience.jsx
+│ │ ├── FeaturedWorkflows.jsx
+│ │ ├── Footer.jsx
+│ │ ├── Header.jsx
+│ │ ├── Hero.jsx
+│ │ ├── Skills.jsx
+│ │ └── icons/ # Icon components
+│ ├── data/
+│ │ └── portfolioData.js # Content data (PRIVATE)
+│ ├── theme/
+│ │ └── theme.js # MUI theme config
+│ ├── App.jsx # Root component
+│ ├── main.jsx # Entry point
+│ └── index.css # Global styles
+├── dist/ # Build output
 ├── node_modules/
 ├── .eslintrc.cjs
 ├── .gitignore
@@ -87,8 +85,8 @@ portfolio-react/
 ├── package.json
 ├── vite.config.js
 └── README.md
-```
 
+text
 
 ## Development Guidelines
 
