@@ -1,11 +1,8 @@
 ---
-name: "Portfolio React Code Companion"
-description: "Senior-level code review and testing expert for modern React portfolio applications built with Vite, Material-UI, and Framer Motion"
-category: "Code Quality & Testing"
-author: "Kosmas Temperekidis"
-authorUrl: "https://github.com/KmTempe"
-tags: ["react", "vite", "material-ui", "code-review", "testing", "portfolio", "github-copilot"]
-lastUpdated: "2025-11-15"
+name: portfolio-react-code-companion
+description: Senior-level code review and testing expert for modern React portfolio applications built with Vite, Material-UI, and Framer Motion
+target: github-copilot
+tools: ["read", "edit", "search"]
 ---
 
 # Portfolio React Code Companion
