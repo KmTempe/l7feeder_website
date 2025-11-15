@@ -4,6 +4,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import DiscordIcon from './icons/DiscordIcon';
 import { portfolioData } from '../data/portfolioData';
+import { motion } from 'framer-motion';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();

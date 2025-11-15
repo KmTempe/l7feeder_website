@@ -17,6 +17,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import DiscordIcon from './icons/DiscordIcon';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function Contact({ email, phone }) {
   /* COMMENTED OUT FOR STATIC GITHUB PAGES DEPLOYMENT - UNCOMMENT WHEN ADDING BACKEND */
@@ -31,6 +33,27 @@ export default function Contact({ email, phone }) {
   //   severity: 'success',
   // });
   const [discordPopupOpen, setDiscordPopupOpen] = useState(false);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    }
+  };
 
   /* COMMENTED OUT FOR STATIC GITHUB PAGES DEPLOYMENT - UNCOMMENT WHEN ADDING BACKEND */
   // const handleChange = (e) => {
@@ -94,10 +117,15 @@ export default function Contact({ email, phone }) {
       }}
     >
       <Container maxWidth="lg">
-        <Box sx={{ mb: 8, textAlign: 'center' }}>
-          <Typography
-            variant="overline"
-            sx={{
+        <Box ref={ref} sx={{ mb: 8, textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.6 }}
+          />
+            <Typography
+              variant="overline"
+              sx={{
               color: 'primary.main',
               fontWeight: 600,
               letterSpacing: '0.15em',
