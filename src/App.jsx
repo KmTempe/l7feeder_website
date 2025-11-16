@@ -9,6 +9,7 @@ import AnimatedBlobs from './components/AnimatedBlobs';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
 
+
 // Lazy load components that are below the fold
 const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));
@@ -41,6 +42,7 @@ function App() {
           <Footer />
         </Suspense>
         <SpeedInsights />
+        <Analytics />
       </Box>
     </ThemeProvider>
   );
