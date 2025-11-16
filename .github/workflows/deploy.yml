@@ -32,8 +32,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Bump version
-        run: npm run version:patch
 
       - name: Commit version bump
         run: |

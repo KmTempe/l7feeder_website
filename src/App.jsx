@@ -13,6 +13,7 @@ const Experience = lazy(() => import('./components/Experience'));
 const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           />
           <Footer />
         </Suspense>
+        <SpeedInsights />
       </Box>
     </ThemeProvider>
   );
