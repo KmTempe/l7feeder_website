@@ -7,6 +7,7 @@ import Home from './components/Home';
 import ScrollProgress from './components/ScrollProgress';
 import AnimatedBlobs from './components/AnimatedBlobs';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 
 
