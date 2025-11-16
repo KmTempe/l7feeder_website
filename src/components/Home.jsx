@@ -3,7 +3,7 @@ import { KeyboardArrowDown } from '@mui/icons-material';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
-export default function Hero({ name, title, tagline }) {
+export default function Home({ name, tagline }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -25,7 +25,7 @@ export default function Hero({ name, title, tagline }) {
     <Box
       ref={ref}
       component="section"
-      id="hero"
+      id="home"
       sx={{
         minHeight: '100vh',
         display: 'flex',

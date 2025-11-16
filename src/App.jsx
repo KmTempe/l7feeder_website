@@ -1,12 +1,13 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { theme } from './theme/theme';
 import { portfolioData } from './data/portfolioData';
 import Header from './components/Header';
-import Hero from './components/Hero';
+import Home from './components/Home';
 import ScrollProgress from './components/ScrollProgress';
 import AnimatedBlobs from './components/AnimatedBlobs';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+
 
 // Lazy load components that are below the fold
 const About = lazy(() => import('./components/About'));
@@ -14,6 +15,7 @@ const Experience = lazy(() => import('./components/Experience'));
 const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
+
 
 function App() {
   return (
@@ -23,7 +25,7 @@ function App() {
       <AnimatedBlobs />
       <Box sx={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
         <Header name={portfolioData.name} />
-        <Hero
+        <Home
           name={portfolioData.name}
           title={portfolioData.title}
           tagline={portfolioData.tagline}

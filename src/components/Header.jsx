@@ -24,7 +24,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const navItems = [
-  { text: 'Home', icon: <HomeIcon />, href: '#hero' },
+  { text: 'Home', icon: <HomeIcon />, href: '#home' },
   { text: 'About', icon: <PersonIcon />, href: '#about' },
   { text: 'Experience', icon: <WorkIcon />, href: '#experience' },
   { text: 'Skills', icon: <ConstructionIcon />, href: '#skills' },
