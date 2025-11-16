@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import ScrollProgress from './components/ScrollProgress';
 import AnimatedBlobs from './components/AnimatedBlobs';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy load components that are below the fold
 const About = lazy(() => import('./components/About'));
@@ -13,7 +14,6 @@ const Experience = lazy(() => import('./components/Experience'));
 const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
-import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   return (

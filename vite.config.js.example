@@ -1,19 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/portfolio-react/', // Change to your GitHub Pages repo name or '/' for custom domain
+  base: '/',
   server: {
     host: true,
-    allowedHosts: ['your-domain.com'], // Add your allowed hosts here
+    port: 3000,
+    // This handles SPA routing in local dev
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Split vendor libraries into separate chunks for better caching
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom')) {
               return 'react-vendor';
@@ -27,7 +32,6 @@ export default defineConfig({
             if (id.includes('framer-motion')) {
               return 'framer';
             }
-            // Other node_modules go to vendor
             return 'vendor';
           }
         },

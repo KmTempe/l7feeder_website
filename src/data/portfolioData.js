@@ -25,7 +25,7 @@ export const portfolioData = {
 
   experience: [
     {
-      title: 'Front Office Agent',
+      title: 'Customer and Technical Support Specialist',
       company: 'CQS S.A',
       period: 'March 2024 – Present',
       responsibilities: [
