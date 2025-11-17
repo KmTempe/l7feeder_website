@@ -65,7 +65,7 @@ function generateRobots() {
   const robots = `# Allow all search engines to crawl your site
 User-agent: *
 Allow: /
-Sitemap: https://l7feeders.dev/sitemap.xml
+Sitemap: ${DOMAIN}/sitemap.xml
 
 # Google
 User-agent: Googlebot
@@ -77,13 +77,13 @@ Allow: /
 
 # Block AI crawlers
 User-agent: CCBot
-Disallow: /
+Allow: /
 
 User-agent: anthropic-ai
 Disallow: /
 
 User-agent: OpenAI-SearchBot
-Disallow: /
+Allow: /
 
 # Point to your sitemap
 Sitemap: ${DOMAIN}/sitemap.xml
