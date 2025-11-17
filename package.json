@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "postbuild": "node scripts/generate-sitemap.cjs",
+    "postbuild": "node scripts/generate-site-files.cjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
