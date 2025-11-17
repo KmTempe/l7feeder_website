@@ -30,7 +30,7 @@ ${pages
 </urlset>
 `;
 
-  const outputPath = path.join(__dirname, '../dist/sitemap.xml');
+  const outputPath = path.join(__dirname, '../public/sitemap.xml');
   fs.writeFileSync(outputPath, sitemap);
   console.log('✓ sitemap.xml generated at', outputPath);
 }
@@ -65,7 +65,7 @@ Disallow: /
 Sitemap: ${DOMAIN}/sitemap.xml
 `;
 
-  const outputPath = path.join(__dirname, '../dist/robots.txt');
+  const outputPath = path.join(__dirname, '../public/robots.txt');
   fs.writeFileSync(outputPath, robots);
   console.log('✓ robots.txt generated at', outputPath);
 }
@@ -106,7 +106,7 @@ Disallow-User-Agents: CCBot, anthropic-ai, OpenAI-SearchBot
 Sitemap: ${DOMAIN}/sitemap.xml
 `;
 
-  const outputPath = path.join(__dirname, '../dist/llms.txt');
+  const outputPath = path.join(__dirname, '../public/llms.txt');
   fs.writeFileSync(outputPath, llms);
   console.log('✓ llms.txt generated at', outputPath);
 }
