@@ -29,3 +29,9 @@ package-lock.json
 .vercel
 bfg-1.15.0.jar
 public/
+
+# IndexNow configuration
+indexnow-key.config
+
+# IndexNow key files (optional - they should be in .github secrets instead)
+*.txt
