@@ -83,7 +83,7 @@ Site-URL: ${DOMAIN}
 Contact: ${CONTACT_EMAIL}
 
 Description:
-This is a website showcasing my experiance. The site includes project demonstrations, 
+This is a website showcasing my experience. The site includes project demonstrations, 
 and contact information for collaboration inquiries.
 
 Topics:
