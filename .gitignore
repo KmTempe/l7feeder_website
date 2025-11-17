@@ -28,3 +28,6 @@ package-lock.json
 
 .vercel
 bfg-1.15.0.jar
+/public
+public
+public\robots.txt
