@@ -4,6 +4,7 @@ const path = require('path');
 const DOMAIN = 'https://l7feeders.dev';
 const CONTACT_EMAIL = 'kosmas.Temperekidis@live.com';
 const siteName = 'Kosmas Temperekidis Portfolio';
+const lastmod = new Date().toISOString().split('T')[0];
 
 const publicDir = path.join(__dirname, '../public');
 if (!fs.existsSync(publicDir)) {
@@ -46,6 +47,7 @@ ${pages
   .map(
     (page) => `  <url>
     <loc>${DOMAIN}${page}</loc>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>`
@@ -63,6 +65,7 @@ function generateRobots() {
   const robots = `# Allow all search engines to crawl your site
 User-agent: *
 Allow: /
+Sitemap: https://l7feeders.dev/sitemap.xml
 
 # Google
 User-agent: Googlebot
