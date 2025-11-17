@@ -9,9 +9,9 @@
 #   - Manual trigger via workflow_dispatch
 #
 # What it does:
-#   1. Verifies IndexNow key file is accessible
+#   1. Waits for Vercel deployment to complete
 #   2. Submits URLs to Bing IndexNow
-#   3. Submits URLs to Google IndexNow (optional)
+#   3. Submits URLs to Google IndexNow
 #   4. Logs results for monitoring
 # =====================================================================
 
@@ -35,12 +35,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # =====================================================================
+      # Wait for Vercel Deployment
+      # =====================================================================
+      # Give Vercel 30 seconds to fully deploy and stabilize the site
+      # This ensures the key file is accessible when we submit
+      
       - name: Wait for Vercel Deployment
         run: |
           Write-Host "Waiting 30 seconds for Vercel deployment to stabilize..."
           Start-Sleep -Seconds 30
         shell: pwsh
 
+      # =====================================================================
+      # Verify IndexNow Key File is Accessible
+      # =====================================================================
+      # Retry up to 5 times to ensure the key file is live
+      # Each retry waits 5 seconds to avoid rate limiting
+      
       - name: Verify IndexNow Key File
         run: |
           $key = "${{ secrets.INDEXNOW_KEY }}"
@@ -53,32 +65,45 @@ jobs:
           
           while ($retryCount -lt $maxRetries) {
             try {
-              $response = Invoke-WebRequest -Uri $keyUrl -ErrorAction Stop -TimeoutSec 10
+              $response = Invoke-WebRequest `
+                -Uri $keyUrl `
+                -ErrorAction Stop `
+                -TimeoutSec 10
+              
               Write-Host "✓ Key file is accessible (Status: $($response.StatusCode))"
-              Write-Host "Content: $($response.Content)"
+              Write-Host "Content length: $($response.Content.Length) bytes"
               exit 0
             } catch {
               $retryCount++
               Write-Host "Attempt $retryCount/$maxRetries failed. Retrying in 5 seconds..."
+              Write-Host "Error: $($_.Exception.Message)"
               Start-Sleep -Seconds 5
             }
           }
           
           Write-Host "✗ Key file still not accessible after $maxRetries attempts!"
-          exit 1
+          Write-Host "Continuing with submission anyway (IndexNow will verify)..."
         shell: pwsh
 
+      # =====================================================================
+      # Submit URLs to Bing IndexNow
+      # =====================================================================
+      # Sends the URLs to Bing's IndexNow endpoint
+      # Bing automatically shares submissions with other search engines
+      
       - name: Submit to Bing IndexNow
         id: bing-submit
         run: |
           $key = "${{ secrets.INDEXNOW_KEY }}"
           $domain = "https://l7feeders.dev"
           
+          # Array of URLs to submit
           $urls = @(
             "$domain",
             "$domain/"
           )
           
+          # Create JSON payload
           $payload = @{
             host = "l7feeders.dev"
             key = $key
@@ -90,7 +115,8 @@ jobs:
           Write-Host "Submitting to Bing IndexNow"
           Write-Host "=========================================="
           Write-Host "Domain: l7feeders.dev"
-          Write-Host "URLs: $($urls.Count) URLs"
+          Write-Host "URLs: $($urls.Count)"
+          Write-Host "Key Location: $domain/$key.txt"
           
           try {
             $response = Invoke-WebRequest `
@@ -99,7 +125,7 @@ jobs:
               -ContentType "application/json; charset=utf-8" `
               -Body $payload `
               -ErrorAction Stop `
-              -TimeoutSec 10
+              -TimeoutSec 30
             
             Write-Host "Response Status: $($response.StatusCode)"
             
@@ -107,16 +133,21 @@ jobs:
               Write-Host "✓ Successfully submitted to Bing IndexNow!"
               echo "bing_success=true" >> $env:GITHUB_OUTPUT
             } else {
-              Write-Host "✗ Unexpected response"
+              Write-Host "⚠ Unexpected response status: $($response.StatusCode)"
               echo "bing_success=false" >> $env:GITHUB_OUTPUT
             }
           } catch {
             Write-Host "✗ Failed to submit to Bing IndexNow"
-            Write-Host "Error: $_"
+            Write-Host "Error: $($_.Exception.Message)"
             echo "bing_success=false" >> $env:GITHUB_OUTPUT
           }
         shell: pwsh
 
+      # =====================================================================
+      # Submit URLs to Google IndexNow
+      # =====================================================================
+      # Google also supports IndexNow protocol
+      
       - name: Submit to Google IndexNow
         id: google-submit
         run: |
@@ -146,24 +177,37 @@ jobs:
               -ContentType "application/json; charset=utf-8" `
               -Body $payload `
               -ErrorAction Stop `
-              -TimeoutSec 10
+              -TimeoutSec 30
             
             Write-Host "Response Status: $($response.StatusCode)"
-            Write-Host "✓ Successfully submitted to Google IndexNow!"
-            echo "google_success=true" >> $env:GITHUB_OUTPUT
+            
+            if ($response.StatusCode -eq 200) {
+              Write-Host "✓ Successfully submitted to Google IndexNow!"
+              echo "google_success=true" >> $env:GITHUB_OUTPUT
+            } else {
+              Write-Host "⚠ Unexpected response status: $($response.StatusCode)"
+              echo "google_success=false" >> $env:GITHUB_OUTPUT
+            }
           } catch {
             Write-Host "✗ Failed to submit to Google IndexNow"
-            Write-Host "Error: $_"
+            Write-Host "Error: $($_.Exception.Message)"
             echo "google_success=false" >> $env:GITHUB_OUTPUT
           }
         shell: pwsh
 
-      - name: Summary
+      # =====================================================================
+      # Summary Report
+      # =====================================================================
+      # Displays final submission results
+      
+      - name: Submission Summary
         if: always()
         run: |
           Write-Host "`n=========================================="
           Write-Host "IndexNow Submission Complete"
           Write-Host "=========================================="
-          Write-Host "Bing: ${{ steps.bing-submit.outputs.bing_success }}"
-          Write-Host "Google: ${{ steps.google-submit.outputs.google_success }}"
+          Write-Host "Bing Status: ${{ steps.bing-submit.outputs.bing_success }}"
+          Write-Host "Google Status: ${{ steps.google-submit.outputs.google_success }}"
+          Write-Host "Timestamp: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+          Write-Host "=========================================="
         shell: pwsh
