@@ -17,6 +17,6 @@ ${pages
 </urlset>
 `;
 
-const outputPath = path.join(__dirname, '../public/sitemap.xml');
+const outputPath = path.join(__dirname, '../dist/sitemap.xml');
 fs.writeFileSync(outputPath, sitemap);
 console.log('sitemap.xml generated at', outputPath);

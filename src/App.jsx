@@ -18,7 +18,6 @@ const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
 
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
