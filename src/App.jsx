@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { theme } from './theme/theme';
 import { portfolioData } from './data/portfolioData';
@@ -13,7 +13,6 @@ import SidePanel from './components/SidePanel';
 
 
 // Lazy load components that are below the fold
-const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));
 const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
@@ -21,14 +20,20 @@ const Footer = lazy(() => import('./components/Footer'));
 const Education = lazy(() => import('./components/Education'));
 
 function App() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* <ScrollProgress /> */}
+      <ScrollProgress />
       {/* <AnimatedBlobs /> */}
       <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
-        <Header name={portfolioData.name} />
-        <SidePanel name={portfolioData.name} />
+        <Header name={portfolioData.name} onDrawerToggle={handleDrawerToggle} />
+        <SidePanel name={portfolioData.name} mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
         <Box
           component="main"
           sx={{
@@ -36,17 +41,16 @@ function App() {
             minHeight: '100vh',
             position: 'relative',
             zIndex: 1,
-            ml: { md: '300px' }, // Add margin left on desktop to account for SidePanel
-            width: { md: `calc(100% - 300px)` }
+            ml: { xl: '300px' }, // Add margin left on desktop to account for SidePanel
+            width: { xl: `calc(100% - 300px)` }
           }}
         >
           <Home
             name={portfolioData.name}
             title={portfolioData.title}
-            tagline={portfolioData.tagline}
+            about={portfolioData.about}
           />
           <Suspense fallback={<Box sx={{ minHeight: '50vh' }} />}>
-            <About about={portfolioData.about} />
             <Experience experience={portfolioData.experience} />
             <Education education={portfolioData.education} />
             <Skills skills={portfolioData.skills} />

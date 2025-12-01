@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Button, Avatar, Paper } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
 import WorkIcon from '@mui/icons-material/Work';
 import SchoolIcon from '@mui/icons-material/School';
 import ConstructionIcon from '@mui/icons-material/Construction';
@@ -14,7 +13,6 @@ import { motion } from 'framer-motion';
 
 const navItems = [
     { text: 'Home', icon: <HomeIcon />, href: '#home' },
-    { text: 'About', icon: <PersonIcon />, href: '#about' },
     { text: 'Experience', icon: <WorkIcon />, href: '#experience' },
     { text: 'Education', icon: <SchoolIcon />, href: '#education' },
     { text: 'Skills', icon: <ConstructionIcon />, href: '#skills' },
@@ -26,30 +24,27 @@ const socialLinks = [
     { icon: <InstagramIcon />, href: 'https://www.instagram.com/rememberthe5thofnovember1605/', label: 'Instagram' },
 ];
 
-export default function SidePanel({ name }) {
+import { Drawer } from '@mui/material';
+
+export default function SidePanel({ name, mobileOpen, onClose }) {
     const [discordPopupOpen, setDiscordPopupOpen] = useState(false);
     const handleNavClick = (href) => {
         const element = document.querySelector(href);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (onClose) onClose();
         }
     };
 
-    return (
+    const drawerContent = (
         <Box
             sx={{
-                width: 300,
-                height: '100vh',
-                position: 'fixed',
-                left: 0,
-                top: 0,
-                display: { xs: 'none', md: 'flex' },
+                height: '100%',
+                display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                background: '#0a192f', // Theme default background
-                borderRight: '1px solid rgba(100, 255, 218, 0.1)',
+                background: '#0a192f',
                 p: 4,
-                zIndex: 1200,
             }}
         >
             <Box>
@@ -65,9 +60,37 @@ export default function SidePanel({ name }) {
                     >
                         {name}
                     </Typography>
-                    <Typography variant="body2" color="primary.main" sx={{ fontFamily: '"Fira Code", monospace' }}>
+                    <Typography variant="body2" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace', mb: 2 }}>
                         Full Stack Developer
                     </Typography>
+
+                    {/* Mobile/Tablet Profile Image */}
+                    <Box
+                        sx={{
+                            display: { xs: 'block', xl: 'none' },
+                            mb: 4,
+                            position: 'relative',
+                            width: '150px',
+                            mx: 'auto',
+                        }}
+                    >
+                        <Box
+                            component="img"
+                            src="https://github.com/KmTempe.png"
+                            alt="Profile"
+                            sx={{
+                                width: '100%',
+                                height: 'auto',
+                                borderRadius: '50%',
+                                border: '2px solid #64ffda',
+                                filter: 'grayscale(100%)',
+                                transition: 'all 0.3s ease',
+                                '&:hover': {
+                                    filter: 'none',
+                                }
+                            }}
+                        />
+                    </Box>
                 </Box>
 
                 <List sx={{ width: '100%' }}>
@@ -250,6 +273,45 @@ export default function SidePanel({ name }) {
                 >
                     Resume
                 </Button>
+            </Box>
+        </Box >
+    );
+
+    return (
+        <Box
+            component="nav"
+            sx={{ width: { xl: 300 }, flexShrink: { xl: 0 } }}
+        >
+            {/* Mobile Drawer */}
+            <Drawer
+                variant="temporary"
+                open={mobileOpen}
+                onClose={onClose}
+                ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                }}
+                sx={{
+                    display: { xs: 'block', xl: 'none' },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 300, borderRight: '1px solid rgba(100, 255, 218, 0.1)' },
+                }}
+            >
+                {drawerContent}
+            </Drawer>
+
+            {/* Desktop Permanent Drawer */}
+            <Box
+                sx={{
+                    display: { xs: 'none', xl: 'block' },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 300 },
+                    width: 300,
+                    height: '100vh',
+                    position: 'fixed',
+                    left: 0,
+                    top: 0,
+                    borderRight: '1px solid rgba(100, 255, 218, 0.1)',
+                }}
+            >
+                {drawerContent}
             </Box>
         </Box>
     );

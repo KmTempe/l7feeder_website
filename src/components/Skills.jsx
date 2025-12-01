@@ -30,11 +30,11 @@ export default function Skills({ skills }) {
       component="section"
       id="skills"
       sx={{
-        py: { xs: 8, md: 12 },
+        py: { xs: 6, md: 10 },
       }}
     >
-      <Container maxWidth="md">
-        <Box ref={ref} sx={{ mb: 6, textAlign: 'left' }}>
+      <Container maxWidth="xl">
+        <Box ref={ref} sx={{ mb: 4, textAlign: 'left' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -69,9 +69,9 @@ export default function Skills({ skills }) {
               >
                 Expertise
               </Typography>
-            </Box>
-          </motion.div>
-        </Box>
+            </Box >
+          </motion.div >
+        </Box >
 
         <motion.div
           variants={containerVariants}
@@ -113,23 +113,42 @@ export default function Skills({ skills }) {
                   >
                     {category}
                   </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+                  <Box
+                    component={motion.div}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={{
+                      visible: { transition: { staggerChildren: 0.05 } }
+                    }}
+                    sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}
+                  >
                     {items.map((skill, idx) => (
-                      <Chip
+                      <motion.div
                         key={idx}
-                        label={skill}
-                        sx={{
-                          bgcolor: 'rgba(100, 255, 218, 0.1)',
-                          color: 'primary.main',
-                          fontFamily: '"Fira Code", monospace',
-                          fontSize: '0.8rem',
-                          borderRadius: 1,
-                          height: '28px',
-                          '&:hover': {
-                            bgcolor: 'rgba(100, 255, 218, 0.2)',
-                          }
+                        variants={{
+                          hidden: { opacity: 0, scale: 0.8 },
+                          visible: { opacity: 1, scale: 1 }
                         }}
-                      />
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Chip
+                          label={skill}
+                          sx={{
+                            bgcolor: 'rgba(100, 255, 218, 0.1)',
+                            color: 'primary.main',
+                            fontFamily: '"Fira Code", monospace',
+                            fontSize: '0.8rem',
+                            borderRadius: 1,
+                            height: '28px',
+                            cursor: 'pointer',
+                            '&:hover': {
+                              bgcolor: 'rgba(100, 255, 218, 0.2)',
+                            }
+                          }}
+                        />
+                      </motion.div>
                     ))}
                   </Box>
                 </Box>
@@ -137,7 +156,7 @@ export default function Skills({ skills }) {
             ))}
           </Box>
         </motion.div>
-      </Container>
-    </Box>
+      </Container >
+    </Box >
   );
 }

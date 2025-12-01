@@ -30,11 +30,11 @@ export default function Experience({ experience }) {
       component="section"
       id="experience"
       sx={{
-        py: { xs: 8, md: 12 },
+        py: { xs: 6, md: 10 },
       }}
     >
-      <Container maxWidth="md">
-        <Box ref={ref} sx={{ mb: 6, textAlign: 'left' }}>
+      <Container maxWidth="xl">
+        <Box ref={ref} sx={{ mb: 4, textAlign: 'left' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -69,9 +69,9 @@ export default function Experience({ experience }) {
               >
                 Where I've Worked
               </Typography>
-            </Box>
-          </motion.div>
-        </Box>
+            </Box >
+          </motion.div >
+        </Box >
 
         <Box sx={{ position: 'relative', pl: { xs: 2, md: 0 } }}>
           <motion.div
@@ -83,10 +83,12 @@ export default function Experience({ experience }) {
               <motion.div
                 key={exp.title}
                 variants={itemVariants}
+                whileHover={{ y: -5 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               >
                 <Box
                   sx={{
-                    mb: 5,
+                    mb: 4,
                     display: 'grid',
                     gridTemplateColumns: { md: '1fr 3fr' },
                     gap: { xs: 1, md: 4 },
@@ -170,7 +172,7 @@ export default function Experience({ experience }) {
             ))}
           </motion.div>
         </Box>
-      </Container>
-    </Box>
+      </Container >
+    </Box >
   );
 }

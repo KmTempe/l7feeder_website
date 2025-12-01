@@ -100,12 +100,12 @@ export default function Contact({ email }) {
       component="section"
       id="contact"
       sx={{
-        py: { xs: 12, md: 20 },
+        py: { xs: 8, md: 12 },
         textAlign: 'center',
       }}
     >
-      <Container maxWidth="md">
-        <Box ref={ref} sx={{ mb: 8 }}>
+      <Container maxWidth="xl">
+        <Box ref={ref} sx={{ mb: 6 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -123,7 +123,7 @@ export default function Contact({ email }) {
             >
               05. What's Next?
             </Typography>
-          </motion.div>
+          </motion.div >
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -154,7 +154,7 @@ export default function Contact({ email }) {
                 color: 'text.secondary',
                 maxWidth: '600px',
                 mx: 'auto',
-                mb: 6,
+                mb: 4,
                 fontSize: '1.1rem',
                 lineHeight: 1.6,
               }}
@@ -275,20 +275,21 @@ export default function Contact({ email }) {
           </motion.div>
 
 
-        </Box>
-      </Container>
+        </Box >
+      </Container >
 
       {/* Snackbar for feedback */}
-      <Snackbar
+      < Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }
+        }
       >
         <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
-      </Snackbar>
-    </Box>
+      </Snackbar >
+    </Box >
   );
 }
