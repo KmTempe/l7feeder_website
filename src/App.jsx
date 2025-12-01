@@ -8,7 +8,7 @@ import ScrollProgress from './components/ScrollProgress';
 import AnimatedBlobs from './components/AnimatedBlobs';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
-
+import SidePanel from './components/SidePanel';
 
 
 // Lazy load components that are below the fold
@@ -22,27 +22,40 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ScrollProgress />
-      <AnimatedBlobs />
-      <Box sx={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
+      {/* <ScrollProgress /> */}
+      {/* <AnimatedBlobs /> */}
+      <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
         <Header name={portfolioData.name} />
-        <Home
-          name={portfolioData.name}
-          title={portfolioData.title}
-          tagline={portfolioData.tagline}
-        />
-        <Suspense fallback={<Box sx={{ minHeight: '50vh' }} />}>
-          <About about={portfolioData.about} />
-          <Experience experience={portfolioData.experience} />
-          <Skills skills={portfolioData.skills} />
-          <Contact
-            email={portfolioData.email}
-            phone={portfolioData.phone}
+        <SidePanel name={portfolioData.name} />
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            minHeight: '100vh',
+            position: 'relative',
+            zIndex: 1,
+            ml: { md: '300px' }, // Add margin left on desktop to account for SidePanel
+            width: { md: `calc(100% - 300px)` }
+          }}
+        >
+          <Home
+            name={portfolioData.name}
+            title={portfolioData.title}
+            tagline={portfolioData.tagline}
           />
-          <Footer />
-        </Suspense>
-        <SpeedInsights />
-        <Analytics />
+          <Suspense fallback={<Box sx={{ minHeight: '50vh' }} />}>
+            <About about={portfolioData.about} />
+            <Experience experience={portfolioData.experience} />
+            <Skills skills={portfolioData.skills} />
+            <Contact
+              email={portfolioData.email}
+              phone={portfolioData.phone}
+            />
+            <Footer />
+          </Suspense>
+          <SpeedInsights />
+          <Analytics />
+        </Box>
       </Box>
     </ThemeProvider>
   );

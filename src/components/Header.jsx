@@ -53,7 +53,7 @@ export default function Header({ name }) {
 
   const handleNavClick = (href) => {
     setMobileOpen(false);
-    
+
     setTimeout(() => {
       const element = document.querySelector(href);
       if (element) {
@@ -63,9 +63,9 @@ export default function Header({ name }) {
   };
 
   const drawer = (
-    <Box 
-      sx={{ 
-        width: 320, 
+    <Box
+      sx={{
+        width: 320,
         height: '100%',
         background: 'linear-gradient(180deg, rgba(10, 22, 40, 0.98) 0%, rgba(15, 30, 50, 0.98) 100%)',
         backdropFilter: 'blur(20px)',
@@ -87,12 +87,12 @@ export default function Header({ name }) {
           pointerEvents: 'none',
         }}
       />
-      
+
       <Box sx={{ position: 'relative', zIndex: 1, p: 3 }}>
         {/* Header */}
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
           mb: 4,
           pb: 3,
@@ -110,8 +110,8 @@ export default function Header({ name }) {
           >
             Navigation
           </Typography>
-          <IconButton 
-            onClick={handleDrawerToggle} 
+          <IconButton
+            onClick={handleDrawerToggle}
             aria-label="close navigation"
             component={motion.button}
             whileHover={{ rotate: 90, scale: 1.1 }}
@@ -130,9 +130,9 @@ export default function Header({ name }) {
         {/* Navigation List */}
         <List sx={{ p: 0 }}>
           {navItems.map((item, index) => (
-            <ListItem 
-              key={item.text} 
-              disablePadding 
+            <ListItem
+              key={item.text}
+              disablePadding
               sx={{ mb: 1.5 }}
               component={motion.div}
               initial={{ opacity: 0, x: 50 }}
@@ -169,9 +169,9 @@ export default function Header({ name }) {
                   },
                 }}
               >
-                <ListItemIcon 
+                <ListItemIcon
                   className="nav-icon"
-                  sx={{ 
+                  sx={{
                     color: 'primary.main',
                     minWidth: 40,
                     transition: 'all 0.3s ease',
@@ -179,11 +179,11 @@ export default function Header({ name }) {
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText 
+                <ListItemText
                   className="nav-text"
                   primary={item.text}
-                  primaryTypographyProps={{ 
-                    fontWeight: 600, 
+                  primaryTypographyProps={{
+                    fontWeight: 600,
                     color: 'text.primary',
                     fontSize: '1.05rem',
                     transition: 'all 0.3s ease',
@@ -220,13 +220,14 @@ export default function Header({ name }) {
 
   return (
     <>
-      <AppBar 
-        position="fixed" 
+      <AppBar
+        position="fixed"
         elevation={0}
-        sx={{ 
+        sx={{
           background: 'rgba(10, 22, 40, 0.95)',
           backdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(0, 217, 255, 0.1)',
+          display: { md: 'none' }
         }}
       >
         <Toolbar>

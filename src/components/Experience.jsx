@@ -17,11 +17,11 @@ export default function Experience({ experience }) {
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, x: -30 },
-    visible: { 
-      opacity: 1, 
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
       x: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { duration: 0.5 }
     }
   };
 
@@ -36,54 +36,44 @@ export default function Experience({ experience }) {
       <Container maxWidth="md">
         <Box ref={ref} sx={{ mb: 6, textAlign: 'left' }}>
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
           >
-            <Typography
-              variant="overline"
-              sx={{
-                color: 'text.secondary',
-                fontWeight: 600,
-                letterSpacing: '0.15em',
-                fontSize: '0.75rem',
-              }}
-            >
-              JOURNEY
-            </Typography>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Typography 
-              variant="h3" 
-              sx={{
-                mt: 1,
-                fontWeight: 700,
-                color: 'secondary.main',
-              }}
-            >
-              Career & Education
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  color: 'text.primary',
+                  display: 'flex',
+                  alignItems: 'center',
+                  '&::before': {
+                    content: '"02."',
+                    color: 'primary.main',
+                    fontFamily: '"Fira Code", monospace',
+                    fontSize: '1.5rem',
+                    mr: 2,
+                    fontWeight: 400,
+                  },
+                  '&::after': {
+                    content: '""',
+                    display: 'block',
+                    width: '300px',
+                    height: '1px',
+                    bgcolor: 'rgba(136, 146, 176, 0.2)',
+                    ml: 3,
+                    display: { xs: 'none', sm: 'block' },
+                  },
+                }}
+              >
+                Where I've Worked
+              </Typography>
+            </Box>
           </motion.div>
         </Box>
 
-        <Box sx={{ position: 'relative', pl: { xs: 2.5, sm: 3, md: 5 } }}>
-          {/* Vertical line */}
-          <Box
-            sx={{
-              position: 'absolute',
-              left: { xs: 4, sm: 5, md: 13 },
-              top: 8,
-              bottom: 0,
-              width: 2,
-              background: 'linear-gradient(180deg, rgba(0, 217, 255, 0.4) 0%, rgba(0, 217, 255, 0.05) 100%)',
-            }}
-          />
-
+        <Box sx={{ position: 'relative', pl: { xs: 2, md: 0 } }}>
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -95,90 +85,53 @@ export default function Experience({ experience }) {
                 variants={itemVariants}
               >
                 <Box
-                  className="experience-item"
-                  component={motion.div}
-                  whileHover={{ x: 10 }}
-                  transition={{ duration: 0.3 }}
                   sx={{
-                    position: 'relative',
                     mb: 5,
+                    display: 'grid',
+                    gridTemplateColumns: { md: '1fr 3fr' },
+                    gap: { xs: 1, md: 4 },
                     '&:last-child': { mb: 0 },
-                    '&:hover .timeline-dot': {
-                      background: 'linear-gradient(135deg, #00d9ff 0%, #00ff88 100%)',
-                      boxShadow: '0 0 0 4px rgba(0, 217, 255, 0.2), 0 0 20px rgba(0, 217, 255, 0.6)',
-                      transform: 'scale(1.3)',
-                    },
                   }}
                 >
-                  {/* Timeline dot */}
-                  <Box
-                    className="timeline-dot"
-                    component={motion.div}
-                    initial={{ scale: 0 }}
-                    animate={isInView ? { scale: 1 } : { scale: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.2 + 0.4 }}
+                  <Typography
+                    variant="body2"
                     sx={{
-                      position: 'absolute',
-                      left: { xs: -10, sm: -12, md: -20 },
-                      top: 4,
-                      width: { xs: 8, sm: 10 },
-                      height: { xs: 8, sm: 10 },
-                      borderRadius: '50%',
-                      background: 'rgba(0, 217, 255, 0.5)',
-                      boxShadow: 'none',
-                      transition: 'all 0.3s ease-out',
-                      willChange: 'transform, background, box-shadow',
+                      color: 'text.secondary',
+                      fontFamily: '"Fira Code", monospace',
+                      fontSize: '0.85rem',
+                      pt: 0.5,
                     }}
-                  />
+                  >
+                    {exp.period}
+                  </Typography>
 
-                  <Box sx={{ pl: { xs: 1.5, sm: 2, md: 3 } }}>
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
-                        color: 'text.secondary',
-                        fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                        display: 'block',
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        color: 'text.primary',
+                        fontSize: '1.25rem',
                         mb: 0.5,
                       }}
                     >
-                      {exp.period}
+                      {exp.title} <Box component="span" sx={{ color: 'primary.main' }}>@ {exp.company || exp.institution}</Box>
                     </Typography>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        fontWeight: 700,
-                        color: 'secondary.main',
-                        mb: 0.25,
-                        fontSize: { xs: '1rem', sm: '1.25rem' },
-                      }}
-                    >
-                      {exp.title}
-                    </Typography>
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        color: 'text.secondary',
-                        fontSize: { xs: '0.85rem', sm: '0.9rem' },
-                        mb: exp.responsibilities ? 1.5 : 0,
-                      }}
-                    >
-                      {exp.company || exp.institution}
-                    </Typography>
+
                     {exp.responsibilities && (
-                      <Box component="ul" sx={{ m: 0, pl: 2, listStyle: 'none' }}>
+                      <Box component="ul" sx={{ m: 0, pl: 0, listStyle: 'none', mt: 2 }}>
                         {exp.responsibilities.map((resp, idx) => (
-                          <Typography
+                          <Box
                             key={idx}
                             component="li"
-                            variant="body2"
                             sx={{
                               color: 'text.secondary',
-                              fontSize: '0.85rem',
-                              mb: 0.5,
+                              fontSize: '1rem',
+                              mb: 1.5,
                               position: 'relative',
-                              pl: 2,
+                              pl: '20px',
                               '&::before': {
-                                content: '"•"',
+                                content: '"▹"',
                                 position: 'absolute',
                                 left: 0,
                                 color: 'primary.main',
@@ -186,7 +139,7 @@ export default function Experience({ experience }) {
                             }}
                           >
                             {resp}
-                          </Typography>
+                          </Box>
                         ))}
                       </Box>
                     )}
@@ -195,9 +148,8 @@ export default function Experience({ experience }) {
                         variant="body2"
                         sx={{
                           color: 'text.secondary',
-                          fontSize: '0.85rem',
-                          mt: 1,
-                          fontStyle: 'italic',
+                          fontSize: '1rem',
+                          mt: 2,
                         }}
                       >
                         {exp.description}

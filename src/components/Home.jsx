@@ -11,8 +11,7 @@ export default function Home({ name, tagline }) {
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   const handleScroll = (href) => {
     const element = document.querySelector(href);
@@ -30,140 +29,111 @@ export default function Home({ name, tagline }) {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         background: 'transparent',
         position: 'relative',
         overflow: 'hidden',
+        pt: { xs: 10, md: 0 },
       }}
     >
-      <Container maxWidth="md">
-        <motion.div
-          style={{ opacity, scale, y }}
-        >
-          <Box
-            sx={{
-              textAlign: 'center',
-              py: 3,
-              position: 'relative',
-              zIndex: 1,
-              mt: { xs: -8, md: -12 },
-            }}
-          >
+      <Container maxWidth="lg">
+        <motion.div style={{ opacity, y }}>
+          <Box sx={{ maxWidth: '800px' }}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <Chip
-                label="👋 Available for Opportunities"
-                sx={{ 
-                  mb: 3,
-                  background: 'rgba(0, 217, 255, 0.15)',
-                  border: '1px solid rgba(0, 217, 255, 0.3)',
-                  color: '#00d9ff',
-                  fontSize: '0.9rem',
-                  padding: '0.5rem',
-                }}
-              />
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <Typography 
-                variant="h1" 
-                gutterBottom
-                sx={{
-                  fontSize: { xs: '2.5rem', md: '3.5rem' },
-                  fontWeight: 700,
-                  mb: 3,
-                  background: 'linear-gradient(135deg, #00d9ff 0%, #00ff88 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                {name}
-              </Typography>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
               <Typography
-                variant="h5"
-                color="text.secondary"
-                sx={{ 
-                  mb: 5,
-                  maxWidth: '700px',
-                  mx: 'auto',
-                  fontWeight: 400,
-                  lineHeight: 1.6,
+                variant="body1"
+                sx={{
+                  color: 'primary.main',
+                  fontFamily: '"Fira Code", monospace',
+                  mb: 2,
+                  fontWeight: 500,
+                }}
+              >
+                Hi, my name is
+              </Typography>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Typography
+                variant="h1"
+                sx={{
+                  color: 'text.primary',
+                  mb: 1,
+                }}
+              >
+                {name}.
+              </Typography>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <Typography
+                variant="h2"
+                sx={{
+                  color: 'text.secondary',
+                  mb: 4,
+                }}
+              >
+                I build things for the web.
+              </Typography>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'text.secondary',
+                  mb: 6,
+                  maxWidth: '540px',
+                  fontSize: '1.1rem',
                 }}
               >
                 {tagline}
               </Typography>
             </motion.div>
-            
+
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
             >
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={() => handleScroll('#experience')}
-                >
-                  Explore My Work
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="large"
-                  onClick={() => handleScroll('#contact')}
-                >
-                  Let's Connect
-                </Button>
-              </Box>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => handleScroll('#experience')}
+                sx={{
+                  color: 'primary.main',
+                  borderColor: 'primary.main',
+                  padding: '1.25rem 1.75rem',
+                  fontSize: '0.9rem',
+                  fontFamily: '"Fira Code", monospace',
+                  '&:hover': {
+                    backgroundColor: 'rgba(100, 255, 218, 0.1)',
+                    borderColor: 'primary.main',
+                  },
+                }}
+              >
+                Check out my work!
+              </Button>
             </motion.div>
           </Box>
         </motion.div>
       </Container>
-      
-      {/* Scroll indicator */}
-      <Box
-        onClick={() => handleScroll('#about')}
-        sx={{
-          position: 'absolute',
-          bottom: { xs: 40, md: 60 },
-          left: '50%',
-          transform: 'translateX(-50%)',
-          cursor: 'pointer',
-          animation: 'bounce 2s infinite',
-          transition: 'opacity 0.3s ease',
-          '&:hover': {
-            opacity: 1,
-          },
-          '@keyframes bounce': {
-            '0%, 20%, 50%, 80%, 100%': {
-              transform: 'translateX(-50%) translateY(0)',
-            },
-            '40%': {
-              transform: 'translateX(-50%) translateY(-10px)',
-            },
-            '60%': {
-              transform: 'translateX(-50%) translateY(-5px)',
-            },
-          },
-        }}
-      >
-        <KeyboardArrowDown sx={{ fontSize: 40, color: '#00d9ff', opacity: 0.6 }} />
-      </Box>
     </Box>
   );
 }
