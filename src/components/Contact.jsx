@@ -3,24 +3,13 @@ import {
   Box,
   Container,
   Typography,
-  TextField,
-  Button,
-  Grid,
   Paper,
-  Link,
+  Button,
   Snackbar,
   Alert,
-  IconButton,
 } from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
-// import PhoneIcon from '@mui/icons-material/Phone';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import DiscordIcon from './icons/DiscordIcon';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-
-
 
 export default function Contact({ email }) {
   // Use dynamic base path for API requests
@@ -39,7 +28,6 @@ export default function Contact({ email }) {
     message: '',
     severity: 'success',
   });
-  const [discordPopupOpen, setDiscordPopupOpen] = useState(false);
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -133,7 +121,7 @@ export default function Contact({ email }) {
                 display: 'block',
               }}
             >
-              04. What's Next?
+              05. What's Next?
             </Typography>
           </motion.div>
 
@@ -286,159 +274,7 @@ export default function Contact({ email }) {
             </Paper>
           </motion.div>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8, px: { xs: 2, sm: 0 } }}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 3, sm: 4 },
-                backgroundColor: 'rgba(17, 34, 64, 0.5)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(100, 255, 218, 0.1)',
-                textAlign: 'center',
-                maxWidth: '500px',
-                width: '100%',
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: { xs: 1, sm: 2 }, mb: 3, flexWrap: 'wrap' }}>
-                <EmailIcon sx={{ color: 'primary.main', fontSize: { xs: 24, sm: 28 } }} />
-                <Link
-                  href={`mailto:${email}`}
-                  sx={{
-                    color: 'text.primary',
-                    textDecoration: 'none',
-                    fontWeight: 500,
-                    fontSize: { xs: '0.9rem', sm: '1rem' },
-                    fontFamily: '"Fira Code", monospace',
-                    transition: 'color 0.3s ease',
-                    wordBreak: 'break-all',
-                    '&:hover': { color: 'primary.main' },
-                  }}
-                >
-                  {email}
-                </Link>
-              </Box>
 
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontFamily: '"Fira Code", monospace', fontSize: '0.85rem' }}>
-                Connect with me
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-                <IconButton
-                  component={Link}
-                  href="https://github.com/KmTempe/portfolio-react"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    color: 'text.secondary',
-                    border: '1px solid rgba(100, 255, 218, 0.1)',
-                    '&:hover': {
-                      color: 'primary.main',
-                      borderColor: 'primary.main',
-                      bgcolor: 'rgba(100, 255, 218, 0.1)',
-                      transform: 'translateY(-3px)',
-                    },
-                    transition: 'all 0.25s cubic-bezier(0.645,0.045,0.355,1)',
-                  }}
-                >
-                  <GitHubIcon />
-                </IconButton>
-                <IconButton
-                  component={Link}
-                  href="https://www.instagram.com/rememberthe5thofnovember1605/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    color: 'text.secondary',
-                    border: '1px solid rgba(100, 255, 218, 0.1)',
-                    '&:hover': {
-                      color: 'primary.main',
-                      borderColor: 'primary.main',
-                      bgcolor: 'rgba(100, 255, 218, 0.1)',
-                      transform: 'translateY(-3px)',
-                    },
-                    transition: 'all 0.25s cubic-bezier(0.645,0.045,0.355,1)',
-                  }}
-                >
-                  <InstagramIcon />
-                </IconButton>
-                <Box sx={{ position: 'relative' }}>
-                  <IconButton
-                    onClick={() => setDiscordPopupOpen(!discordPopupOpen)}
-                    sx={{
-                      color: 'text.secondary',
-                      border: '1px solid rgba(100, 255, 218, 0.1)',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        color: 'primary.main',
-                        borderColor: 'primary.main',
-                        bgcolor: 'rgba(100, 255, 218, 0.1)',
-                        transform: 'translateY(-3px)',
-                      },
-                      transition: 'all 0.25s cubic-bezier(0.645,0.045,0.355,1)',
-                    }}
-                  >
-                    <DiscordIcon />
-                  </IconButton>
-                  {discordPopupOpen && (
-                    <Paper
-                      elevation={8}
-                      sx={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        mt: 1,
-                        px: 2,
-                        py: 1.5,
-                        bgcolor: '#112240',
-                        border: '1px solid rgba(100, 255, 218, 0.3)',
-                        borderRadius: 1,
-                        whiteSpace: 'nowrap',
-                        animation: 'popupSlide 0.3s ease-out',
-                        '@keyframes popupSlide': {
-                          '0%': {
-                            opacity: 0,
-                            transform: 'translateX(-50%) translateY(-10px)',
-                          },
-                          '100%': {
-                            opacity: 1,
-                            transform: 'translateX(-50%) translateY(0)',
-                          },
-                        },
-                        '&::before': {
-                          content: '""',
-                          position: 'absolute',
-                          top: -6,
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          width: 0,
-                          height: 0,
-                          borderLeft: '6px solid transparent',
-                          borderRight: '6px solid transparent',
-                          borderBottom: '6px solid rgba(100, 255, 218, 0.3)',
-                        },
-                      }}
-                    >
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 500,
-                          color: 'primary.main',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 1,
-                          fontFamily: '"Fira Code", monospace',
-                          fontSize: '0.8rem',
-                        }}
-                      >
-                        <DiscordIcon sx={{ fontSize: 16 }} />
-                        vannesss
-                      </Typography>
-                    </Paper>
-                  )}
-                </Box>
-              </Box>
-            </Paper>
-          </Box>
         </Box>
       </Container>
 

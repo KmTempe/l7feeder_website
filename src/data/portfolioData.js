@@ -3,27 +3,25 @@ export const portfolioData = {
   title: 'IT Applications & Technical Support',
   tagline: 'Passionate about service and technical support, with a decisive and effective approach to achieving goals. A collaborative team player with high productivity.',
   email: 'kosmas.temperekidis@live.com',
-  phone: '+3069*********',
-  
+
   about: {
-    description: 'Dedicated IT professional specializing in technical support and IT applications. Experienced in troubleshooting PoS terminals, managing e-commerce platforms, and delivering exceptional customer service with a focus on effective problem-solving and team collaboration.',
-    cards: [
-      {
-        title: 'Mission',
-        description: 'Deliver reliable technical support and innovative solutions that enhance customer satisfaction and operational efficiency.'
-      },
-      {
-        title: 'Approach',
-        description: 'Combine hands-on technical expertise with strong communication skills to solve complex problems and support business goals.'
-      },
-      {
-        title: 'Focus Areas',
-        description: 'Technical support, IT applications, e-commerce management, and customer service excellence.'
-      }
+    description: [
+      'Dedicated IT professional specializing in technical support and IT applications. Experienced in troubleshooting PoS terminals, managing e-commerce platforms, and delivering exceptional customer service with a focus on effective problem-solving and team collaboration.',
+      'My journey in IT has been driven by a passion for solving complex problems and delivering efficient solutions. I enjoy working on both the front-end and back-end, ensuring a seamless user experience.'
     ]
   },
 
   experience: [
+    // {
+    //   title: 'Dummy Job Title',
+    //   company: 'Test Company Inc.',
+    //   period: 'Future – Forever',
+    //   responsibilities: [
+    //     'Testing dynamic rendering of the experience section',
+    //     'Ensuring the UI scales correctly with new data',
+    //     'Verifying component reusability'
+    //   ]
+    // },
     {
       title: 'Customer and Technical Support Specialist',
       company: 'CQS S.A',
@@ -72,8 +70,8 @@ export const portfolioData = {
   ],
 
   skills: {
-    'Frameworks': ['PHP', 'JavaScript', 'Python', 'Next.js','Vite', 'React', 'Flask'],
-    'Tools & Platforms': ['Git', 'Docker', 'Docker Compose','MongoDB'],
+    'Frameworks': ['PHP', 'JavaScript', 'Python', 'Next.js', 'Vite', 'React', 'Flask'],
+    'Tools & Platforms': ['Git', 'Docker', 'Docker Compose', 'MongoDB'],
     'Creative & Productivity': ['Adobe Photoshop', 'Adobe Lightroom', 'DaVinci Resolve'],
     'Professional': ['Technical Support', 'Customer Service', 'E-commerce Management', 'Problem Solving', 'Team Collaboration']
   }

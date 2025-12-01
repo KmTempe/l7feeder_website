@@ -6,17 +6,7 @@ export default function About({ about }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  // Extract skills for the list (using Frameworks as primary skills)
-  const skills = [
-    'JavaScript (ES6+)',
-    'React',
-    'Next.js',
-    'Node.js',
-    'Python',
-    'SQL',
-    'Git',
-    'Docker'
-  ];
+
 
   return (
     <Box
@@ -71,54 +61,16 @@ export default function About({ about }) {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Typography
-                variant="body1"
-                color="text.secondary"
-                sx={{ mb: 2 }}
-              >
-                {about.description}
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                My journey in IT has been driven by a passion for solving complex problems and delivering efficient solutions. I enjoy working on both the front-end and back-end, ensuring a seamless user experience.
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                Here are a few technologies I've been working with recently:
-              </Typography>
-
-              <Box
-                component="ul"
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(2, minmax(140px, 200px))',
-                  gap: '0 10px',
-                  padding: 0,
-                  margin: 0,
-                  listStyle: 'none',
-                }}
-              >
-                {skills.map((skill) => (
-                  <Box
-                    component="li"
-                    key={skill}
-                    sx={{
-                      position: 'relative',
-                      pl: '20px',
-                      mb: '10px',
-                      fontFamily: '"Fira Code", monospace',
-                      fontSize: '0.85rem',
-                      color: 'text.secondary',
-                      '&::before': {
-                        content: '"▹"',
-                        position: 'absolute',
-                        left: 0,
-                        color: 'primary.main',
-                      }
-                    }}
-                  >
-                    {skill}
-                  </Box>
-                ))}
-              </Box>
+              {about.description.map((paragraph, index) => (
+                <Typography
+                  key={index}
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ mb: 2 }}
+                >
+                  {paragraph}
+                </Typography>
+              ))}
             </motion.div>
 
             <motion.div

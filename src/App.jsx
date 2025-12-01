@@ -8,6 +8,7 @@ import ScrollProgress from './components/ScrollProgress';
 import AnimatedBlobs from './components/AnimatedBlobs';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
+
 import SidePanel from './components/SidePanel';
 
 
@@ -17,6 +18,7 @@ const Experience = lazy(() => import('./components/Experience'));
 const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
+const Education = lazy(() => import('./components/Education'));
 
 function App() {
   return (
@@ -46,10 +48,10 @@ function App() {
           <Suspense fallback={<Box sx={{ minHeight: '50vh' }} />}>
             <About about={portfolioData.about} />
             <Experience experience={portfolioData.experience} />
+            <Education education={portfolioData.education} />
             <Skills skills={portfolioData.skills} />
             <Contact
               email={portfolioData.email}
-              phone={portfolioData.phone}
             />
             <Footer />
           </Suspense>

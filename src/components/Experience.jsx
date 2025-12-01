@@ -81,7 +81,7 @@ export default function Experience({ experience }) {
           >
             {experience.map((exp, index) => (
               <motion.div
-                key={index}
+                key={exp.title}
                 variants={itemVariants}
               >
                 <Box
@@ -130,11 +130,20 @@ export default function Experience({ experience }) {
                               mb: 1.5,
                               position: 'relative',
                               pl: '20px',
+                              transition: 'all 0.2s ease',
                               '&::before': {
                                 content: '"▹"',
                                 position: 'absolute',
                                 left: 0,
                                 color: 'primary.main',
+                                transition: 'all 0.2s ease',
+                              },
+                              '&:hover': {
+                                color: 'text.primary',
+                              },
+                              '&:hover::before': {
+                                textShadow: '0 0 10px rgba(100, 255, 218, 0.8), 0 0 20px rgba(100, 255, 218, 0.4)',
+                                transform: 'scale(1.2)',
                               },
                             }}
                           >
