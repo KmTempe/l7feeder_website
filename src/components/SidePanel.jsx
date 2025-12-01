@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import ResumeDocument from './ResumeDocument';
 import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Button, Avatar, Paper } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
@@ -260,19 +262,26 @@ export default function SidePanel({ name, mobileOpen, onClose }) {
                     </Box>
                 </Box>
 
-                <Button
-                    variant="outlined"
-                    fullWidth
-                    startIcon={<DownloadIcon />}
-                    href="/cv.pdf"
-                    target="_blank"
-                    sx={{
-                        py: 1.5,
-                        fontFamily: '"Fira Code", monospace',
-                    }}
+                <PDFDownloadLink
+                    document={<ResumeDocument />}
+                    fileName="Kosmas_Temperekidis_Resume.pdf"
+                    style={{ textDecoration: 'none', width: '100%' }}
                 >
-                    Resume
-                </Button>
+                    {({ loading }) => (
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            startIcon={<DownloadIcon />}
+                            disabled={loading}
+                            sx={{
+                                py: 1.5,
+                                fontFamily: '"Fira Code", monospace',
+                            }}
+                        >
+                            {loading ? 'Loading...' : 'Resume'}
+                        </Button>
+                    )}
+                </PDFDownloadLink>
             </Box>
         </Box >
     );
