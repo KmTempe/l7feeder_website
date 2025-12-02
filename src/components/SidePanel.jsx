@@ -303,7 +303,13 @@ export default function SidePanel({ name, mobileOpen, onClose }) {
                 }}
                 sx={{
                     display: { xs: 'block', xl: 'none' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 300, borderRight: '1px solid rgba(100, 255, 218, 0.1)' },
+                    '& .MuiDrawer-paper': {
+                        boxSizing: 'border-box',
+                        width: 300,
+                        borderRight: '1px solid rgba(100, 255, 218, 0.1)',
+                        background: '#0a192f',
+                        backgroundImage: 'none'
+                    },
                 }}
             >
                 {drawerContent}
