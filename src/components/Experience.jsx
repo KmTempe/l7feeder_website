@@ -33,7 +33,7 @@ export default function Experience({ experience }) {
         py: { xs: 6, md: 10 },
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Box ref={ref} sx={{ mb: 4, textAlign: 'left' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

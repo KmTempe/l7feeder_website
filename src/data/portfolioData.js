@@ -71,7 +71,7 @@ export const portfolioData = {
 
   skills: {
     'Frameworks': ['PHP', 'JavaScript', 'Python', 'Next.js', 'Vite', 'React', 'Flask'],
-    'Tools & Platforms': ['Git', 'Docker', 'Docker Compose', 'MongoDB'],
+    'Tools & Platforms': ['Git', 'Docker', 'Docker Compose', 'MongoDB', 'PostgreSQL'],
     'Creative & Productivity': ['Adobe Photoshop', 'Adobe Lightroom', 'DaVinci Resolve'],
     'Professional': ['Technical Support', 'Customer Service', 'E-commerce Management', 'Problem Solving', 'Team Collaboration']
   }

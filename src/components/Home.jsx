@@ -35,9 +35,9 @@ export default function Home({ name, about }) {
         pt: { xs: 10, xl: 0 },
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <motion.div style={{ opacity, y }}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xl: '1.2fr 0.8fr' }, gap: { xs: 4, xl: 6 }, alignItems: 'center' }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { lg: '1.2fr 0.8fr' }, gap: { xs: 4, lg: 6 }, alignItems: 'center' }}>
             <Box>
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
@@ -63,7 +63,7 @@ export default function Home({ name, about }) {
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <Typography
-                  variant="h1"
+                  variant="h2"
                   sx={{
                     color: 'text.primary',
                     mb: 1,
@@ -79,13 +79,13 @@ export default function Home({ name, about }) {
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <Typography
-                  variant="h2"
+                  variant="h4"
                   sx={{
                     color: 'text.secondary',
                     mb: 4,
                   }}
                 >
-                  I build things for the web.
+                  I build things. Only God knows if they work.
                 </Typography>
               </motion.div>
 

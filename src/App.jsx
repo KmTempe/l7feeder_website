@@ -42,7 +42,8 @@ function App() {
             position: 'relative',
             zIndex: 1,
             ml: { xl: '300px' }, // Add margin left on desktop to account for SidePanel
-            width: { xl: `calc(100% - 300px)` }
+            width: { xl: `calc(100% - 300px)` },
+            pr: { xl: '300px' } // Add padding right to balance the SidePanel and center content in viewport
           }}
         >
           <Home

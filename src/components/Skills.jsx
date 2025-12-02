@@ -33,7 +33,7 @@ export default function Skills({ skills }) {
         py: { xs: 6, md: 10 },
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Box ref={ref} sx={{ mb: 4, textAlign: 'left' }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -135,6 +135,9 @@ export default function Skills({ skills }) {
                       >
                         <Chip
                           label={skill}
+                          onClick={category === 'Tools & Platforms' && skill === 'Git'
+                            ? () => window.open('https://github.com/KmTempe/portfolio-react', '_blank')
+                            : undefined}
                           sx={{
                             bgcolor: 'rgba(100, 255, 218, 0.1)',
                             color: 'primary.main',
@@ -142,7 +145,7 @@ export default function Skills({ skills }) {
                             fontSize: '0.8rem',
                             borderRadius: 1,
                             height: '28px',
-                            cursor: 'pointer',
+                            cursor: 'default',
                             '&:hover': {
                               bgcolor: 'rgba(100, 255, 218, 0.2)',
                             }

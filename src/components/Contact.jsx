@@ -104,7 +104,7 @@ export default function Contact({ email }) {
         textAlign: 'center',
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Box ref={ref} sx={{ mb: 6 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
