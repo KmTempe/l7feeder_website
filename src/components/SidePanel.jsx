@@ -96,7 +96,7 @@ export default function SidePanel({ name, mobileOpen, onClose }) {
                 </Box>
 
                 <List sx={{ width: '100%' }}>
-                    {navItems.map((item, index) => (
+                    {navItems.map((item) => (
                         <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
                             <ListItemButton
                                 onClick={() => handleNavClick(item.href)}

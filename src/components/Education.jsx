@@ -58,7 +58,6 @@ export default function Education({ education }) {
                                     },
                                     '&::after': {
                                         content: '""',
-                                        display: 'block',
                                         width: '300px',
                                         height: '1px',
                                         bgcolor: 'rgba(136, 146, 176, 0.2)',

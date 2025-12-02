@@ -58,7 +58,6 @@ export default function Experience({ experience }) {
                   },
                   '&::after': {
                     content: '""',
-                    display: 'block',
                     width: '300px',
                     height: '1px',
                     bgcolor: 'rgba(136, 146, 176, 0.2)',
@@ -67,7 +66,7 @@ export default function Experience({ experience }) {
                   },
                 }}
               >
-                Where I've Worked
+                Where I&apos;ve Worked
               </Typography>
             </Box >
           </motion.div >
@@ -79,7 +78,7 @@ export default function Experience({ experience }) {
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
           >
-            {experience.map((exp, index) => (
+            {experience.map((exp) => (
               <motion.div
                 key={exp.title}
                 variants={itemVariants}

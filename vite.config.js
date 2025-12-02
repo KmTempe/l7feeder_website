@@ -1,8 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import viteCompression from 'vite-plugin-compression'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    viteCompression(),
+    visualizer({
+      filename: './dist/stats.html',
+      open: false,
+    }),
+  ],
   base: '/',
   server: {
     host: true,
@@ -31,11 +40,14 @@ export default defineConfig({
             if (id.includes('framer-motion')) {
               return 'framer';
             }
+            if (id.includes('@react-pdf/renderer')) {
+              return 'react-pdf';
+            }
             return 'vendor';
           }
         },
       },
     },
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 1000,
   },
 })

@@ -58,7 +58,6 @@ export default function Skills({ skills }) {
                   },
                   '&::after': {
                     content: '""',
-                    display: 'block',
                     width: '300px',
                     height: '1px',
                     bgcolor: 'rgba(136, 146, 176, 0.2)',
@@ -79,7 +78,7 @@ export default function Skills({ skills }) {
           animate={isInView ? "visible" : "hidden"}
         >
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
-            {Object.entries(skills).map(([category, items], index) => (
+            {Object.entries(skills).map(([category, items]) => (
               <motion.div key={category} variants={itemVariants}>
                 <Box
                   sx={{

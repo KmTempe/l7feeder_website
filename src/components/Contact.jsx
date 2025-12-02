@@ -11,7 +11,7 @@ import {
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export default function Contact({ email }) {
+export default function Contact() {
   // Use dynamic base path for API requests
   const apiUrl = import.meta.env.DEV
     ? `${window.location.origin.replace(/:5173$/, ':3000')}/api/contact`
@@ -80,7 +80,7 @@ export default function Contact({ email }) {
           severity: 'error',
         });
       }
-    } catch (error) {
+    } catch {
       setSnackbar({
         open: true,
         message: 'Unable to send the message right now. Please try later.',
@@ -121,7 +121,7 @@ export default function Contact({ email }) {
                 display: 'block',
               }}
             >
-              05. What's Next?
+              05. What&apos;s Next?
             </Typography>
           </motion.div >
 
@@ -159,7 +159,7 @@ export default function Contact({ email }) {
                 lineHeight: 1.6,
               }}
             >
-              I'm currently looking for new opportunities, and my inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+              I&apos;m currently looking for new opportunities, and my inbox is always open. Whether you have a question or just want to say hi, I&apos;ll try my best to get back to you!
             </Typography>
           </motion.div>
 

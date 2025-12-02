@@ -1,15 +1,9 @@
-import { useState } from 'react';
-import { Box, Container, Typography, Link, IconButton, Paper } from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import DiscordIcon from './icons/DiscordIcon';
+import { Box, Container, Typography, Link } from '@mui/material';
 import { portfolioData } from '../data/portfolioData';
 import packageJson from '../../package.json';
-import { motion } from 'framer-motion';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const [discordPopupOpen, setDiscordPopupOpen] = useState(false);
 
   return (
     <Box
@@ -31,10 +25,10 @@ export default function Footer() {
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'flex-start' }, gap: 1.5 }}>
             <Typography variant="body2" color="text.secondary">
-              © {currentYear} {portfolioData.name}. Engineered with curiosity & only god knows what i have do &nbsp; 
-              <span style={{ fontSize: '0.85em', color: '#9db4cc',  }}>Version&nbsp;{packageJson.version}</span>
+              © {currentYear} {portfolioData.name}. Engineered with curiosity & only god knows what i have do &nbsp;
+              <span style={{ fontSize: '0.85em', color: '#9db4cc', }}>Version&nbsp;{packageJson.version}</span>
             </Typography>
-            
+
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'center', sm: 'right' } }}>
             Built with{' '}
@@ -42,8 +36,8 @@ export default function Footer() {
               href="https://react.dev"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ 
-                color: 'primary.main', 
+              sx={{
+                color: 'primary.main',
                 textDecoration: 'none',
                 '&:hover': { color: 'secondary.main' },
               }}
@@ -55,8 +49,8 @@ export default function Footer() {
               href="https://vitejs.dev"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ 
-                color: 'primary.main', 
+              sx={{
+                color: 'primary.main',
                 textDecoration: 'none',
                 '&:hover': { color: 'secondary.main' },
               }}
@@ -68,8 +62,8 @@ export default function Footer() {
               href="https://mui.com"
               target="_blank"
               rel="noopener noreferrer"
-              sx={{ 
-                color: 'primary.main', 
+              sx={{
+                color: 'primary.main',
                 textDecoration: 'none',
                 '&:hover': { color: 'secondary.main' },
               }}
