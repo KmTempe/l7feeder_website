@@ -134,9 +134,13 @@ export default function Skills({ skills }) {
                       >
                         <Chip
                           label={skill}
-                          onClick={category === 'Tools & Platforms' && skill === 'Git'
-                            ? () => window.open('https://github.com/KmTempe/portfolio-react', '_blank')
-                            : undefined}
+                          onClick={
+                            (category === 'Tools & Platforms' && skill === 'Git')
+                              ? () => window.open('https://github.com/KmTempe/portfolio-react', '_blank')
+                              : (category === 'Frameworks' && skill === 'Next.js')
+                                ? () => window.open('https://binlookup.l7feeders.dev/', '_blank')
+                                : undefined
+                          }
                           sx={{
                             bgcolor: 'rgba(100, 255, 218, 0.1)',
                             color: 'primary.main',
@@ -157,7 +161,7 @@ export default function Skills({ skills }) {
               </motion.div>
             ))}
           </Box>
-        </motion.div>
+        </motion.div >
       </Container >
     </Box >
   );
