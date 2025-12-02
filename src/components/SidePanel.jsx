@@ -12,6 +12,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import DownloadIcon from '@mui/icons-material/Download';
 import DiscordIcon from './icons/DiscordIcon';
 import { motion } from 'framer-motion';
+import { portfolioData } from '../data/portfolioData';
 
 const navItems = [
     { text: 'Home', icon: <HomeIcon />, href: '#home' },
@@ -63,7 +64,7 @@ export default function SidePanel({ name, mobileOpen, onClose }) {
                         {name}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace', mb: 2 }}>
-                        Full Stack Developer
+                        {portfolioData.title}
                     </Typography>
 
                     {/* Mobile/Tablet Profile Image */}
