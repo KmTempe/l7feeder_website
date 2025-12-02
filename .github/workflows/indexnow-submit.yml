@@ -51,54 +51,11 @@ jobs:
         shell: pwsh
 
       # =====================================================================
-      # Verify IndexNow Key File (Optional - for logging)
+      # Verify IndexNow Key File (Skipped due to Vercel Firewall)
       # =====================================================================
-      # Attempts to verify key file is accessible
-      # Continues even if verification fails (Bing will verify)
-      
-      - name: Verify IndexNow Key File
-        run: |
-          $key = "${{ secrets.INDEXNOW_KEY }}"
-          $keyUrl = "https://l7feeders.dev/$key.txt"
-          $maxRetries = 3
-          $retryCount = 0
-          
-          # Browser-like headers to bypass rate limiting
-          $headers = @{
-            "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            "Accept" = "text/plain"
-          }
-          
-          Write-Host "Checking if key file is accessible..."
-          Write-Host "URL: $keyUrl"
-          
-          while ($retryCount -lt $maxRetries) {
-            try {
-              $response = Invoke-WebRequest `
-                -Uri $keyUrl `
-                -Headers $headers `
-                -ErrorAction Stop `
-                -TimeoutSec 10 `
-                -MaximumRetryCount 0
-              
-              Write-Host "✓ Key file is accessible (Status: $($response.StatusCode))"
-              exit 0
-            } catch {
-              $retryCount++
-              $waitTime = $retryCount * 5
-              Write-Host "Attempt $retryCount/$maxRetries failed. Error: $($_.Exception.Message)"
-              if ($_.Exception.Response) {
-                Write-Host "Status Code: $($_.Exception.Response.StatusCode)"
-                Write-Host "Status Description: $($_.Exception.Response.StatusDescription)"
-              }
-              Write-Host "Waiting ${waitTime}s..."
-              Start-Sleep -Seconds $waitTime
-            }
-          }
-          
-          Write-Host "⚠ Key file verification skipped, continuing with submission..."
-          Write-Host "  (Bing will verify ownership when processing)"
-        shell: pwsh
+      # The verification step is skipped because Vercel's Bot Protection
+      # blocks the GitHub Actions runner (429 Too Many Requests).
+      # Bing will verify the key file independently during processing.
 
       # =====================================================================
       # Submit URLs to Bing IndexNow
