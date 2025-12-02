@@ -31,8 +31,8 @@ jobs:
           Write-Host "Generated: public/$fileName"
         shell: pwsh
 
-      - name: Build
-        run: npm run build
+      - name: check
+        run: npm run check
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest

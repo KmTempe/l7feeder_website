@@ -166,6 +166,7 @@ export default function SidePanel({ name, mobileOpen, onClose }) {
                             <IconButton
                                 key={link.label}
                                 href={link.href}
+                                aria-label={link.label}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 sx={{
