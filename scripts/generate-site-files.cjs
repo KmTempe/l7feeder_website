@@ -44,15 +44,15 @@ function generateSitemap() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages
-  .map(
-    (page) => `  <url>
+      .map(
+        (page) => `  <url>
     <loc>${DOMAIN}${page}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>`
-  )
-  .join('\n')}
+      )
+      .join('\n')}
 </urlset>
 `;
 
@@ -135,7 +135,7 @@ Sitemap: ${DOMAIN}/sitemap.xml
 
 function main() {
   console.log('🔧 Generating site files...\n');
-  
+
   try {
     generateSitemap();
     generateRobots();

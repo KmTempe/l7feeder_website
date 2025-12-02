@@ -86,7 +86,12 @@ jobs:
             } catch {
               $retryCount++
               $waitTime = $retryCount * 5
-              Write-Host "Attempt $retryCount/$maxRetries failed. Waiting ${waitTime}s..."
+              Write-Host "Attempt $retryCount/$maxRetries failed. Error: $($_.Exception.Message)"
+              if ($_.Exception.Response) {
+                Write-Host "Status Code: $($_.Exception.Response.StatusCode)"
+                Write-Host "Status Description: $($_.Exception.Response.StatusDescription)"
+              }
+              Write-Host "Waiting ${waitTime}s..."
               Start-Sleep -Seconds $waitTime
             }
           }
