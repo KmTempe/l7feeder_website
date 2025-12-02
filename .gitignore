@@ -35,3 +35,6 @@ indexnow-key.config
 
 # IndexNow key files (optional - they should be in .github secrets instead)
 *.txt
+
+# Agent configuration
+.agent/
