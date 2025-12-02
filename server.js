@@ -1,0 +1,35 @@
+// THIS SERVER IS FOR LOCAL DEVELOPMENT ONLY.
+// IT IS NOT USED IN PRODUCTION (VERCEL).
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import contactHandler from './api/contact.js';
+
+dotenv.config({ path: '.env.local' });
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Use CORS middleware (optional, but good for local dev if ports differ)
+// Note: api/contact.js also sets CORS headers, so we might not strictly need this if calling from same origin or if handler handles it.
+// But since Vite proxies, it looks like same origin to the browser.
+app.use(cors());
+
+// Route for contact API
+app.all('/api/contact', async (req, res) => {
+    try {
+        await contactHandler(req, res);
+    } catch (error) {
+        console.error('API Error:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Local API server running at http://localhost:${PORT}`);
+});
