@@ -49,7 +49,7 @@ export default function Skills({ skills }) {
                   display: 'flex',
                   alignItems: 'center',
                   '&::before': {
-                    content: '"04."',
+                    content: '"05."',
                     color: 'primary.main',
                     fontFamily: '"Fira Code", monospace',
                     fontSize: '1.5rem',

@@ -49,7 +49,7 @@ export default function Education({ education }) {
                                     display: 'flex',
                                     alignItems: 'center',
                                     '&::before': {
-                                        content: '"03."',
+                                        content: '"04."',
                                         color: 'primary.main',
                                         fontFamily: '"Fira Code", monospace',
                                         fontSize: '1.5rem',

@@ -14,6 +14,7 @@ import SidePanel from './components/SidePanel';
 
 // Lazy load components that are below the fold
 const Experience = lazy(() => import('./components/Experience'));
+const Projects = lazy(() => import('./components/Projects'));
 const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
@@ -53,6 +54,7 @@ function App() {
           />
           <Suspense fallback={<Box sx={{ minHeight: '50vh' }} />}>
             <Experience experience={portfolioData.experience} />
+            <Projects projects={portfolioData.projects} />
             <Education education={portfolioData.education} />
             <Skills skills={portfolioData.skills} />
             <Contact

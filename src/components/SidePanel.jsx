@@ -9,6 +9,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import EmailIcon from '@mui/icons-material/Email';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import CodeIcon from '@mui/icons-material/Code';
 import DownloadIcon from '@mui/icons-material/Download';
 import DiscordIcon from './icons/DiscordIcon';
 import { motion } from 'framer-motion';
@@ -17,6 +18,7 @@ import { portfolioData } from '../data/portfolioData';
 const navItems = [
     { text: 'Home', icon: <HomeIcon />, href: '#home' },
     { text: 'Experience', icon: <WorkIcon />, href: '#experience' },
+    { text: 'Projects', icon: <CodeIcon />, href: '#projects' },
     { text: 'Education', icon: <SchoolIcon />, href: '#education' },
     { text: 'Skills', icon: <ConstructionIcon />, href: '#skills' },
     { text: 'Contact', icon: <EmailIcon />, href: '#contact' },

@@ -74,5 +74,18 @@ export const portfolioData = {
     'Tools & Platforms': ['Git', 'Docker', 'Docker Compose', 'MongoDB', 'PostgreSQL'],
     'Creative & Productivity': ['Adobe Photoshop', 'Adobe Lightroom', 'DaVinci Resolve'],
     'Professional': ['Technical Support', 'Customer Service', 'E-commerce Management', 'Problem Solving', 'Team Collaboration']
-  }
+  },
+
+  projects: [
+    {
+      title: 'Bin Lookup',
+      description: 'A tool to check the issuer bank of a given card BIN (Bank Identification Number).',
+      link: 'https://binlookup.l7feeders.dev/'
+    },
+    {
+      title: 'Google Certified Device Checker',
+      description: 'Search if a given device is certified from Google using the public available list from Google Play Help.',
+      link: 'https://device-checker.l7feeders.dev/'
+    }
+  ]
 };
