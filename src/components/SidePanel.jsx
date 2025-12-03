@@ -282,7 +282,7 @@ export default function SidePanel({ name, mobileOpen, onClose }) {
                                 fontFamily: '"Fira Code", monospace',
                             }}
                         >
-                            {loading ? 'Loading...' : 'Résume'}
+                            {loading ? 'Loading...' : 'Résumé'}
                         </Button>
                     )}
                 </PDFDownloadLink>
