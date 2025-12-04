@@ -40,13 +40,10 @@ export default defineConfig({
             if (id.includes('@mui/material') || id.includes('@emotion')) {
               return 'mui-core';
             }
-            if (id.includes('react-dom')) {
-              return 'react-dom';
-            }
             if (id.includes('@vercel')) {
               return 'vercel';
             }
-            if (id.includes('react')) {
+            if (id.includes('react') || id.includes('react-dom')) {
               return 'react-vendor';
             }
             return 'vendor';
