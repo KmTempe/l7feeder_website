@@ -28,9 +28,7 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('@react-pdf')) {
-              return 'react-pdf';
-            }
+
             if (id.includes('framer-motion')) {
               return 'framer';
             }
