@@ -34,11 +34,8 @@ export default defineConfig({
             if (id.includes('framer-motion')) {
               return 'framer';
             }
-            if (id.includes('@mui/icons-material')) {
-              return 'mui-icons';
-            }
-            if (id.includes('@mui/material') || id.includes('@emotion')) {
-              return 'mui-core';
+            if (id.includes('@mui') || id.includes('@emotion')) {
+              return 'mui-vendor';
             }
             if (id.includes('@vercel')) {
               return 'vercel';
