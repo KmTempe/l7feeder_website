@@ -28,20 +28,26 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor';
-            }
-            if (id.includes('@mui/material') || id.includes('@emotion')) {
-              return 'mui-core';
-            }
-            if (id.includes('@mui/icons-material')) {
-              return 'mui-icons';
+            if (id.includes('@react-pdf')) {
+              return 'react-pdf';
             }
             if (id.includes('framer-motion')) {
               return 'framer';
             }
-            if (id.includes('@react-pdf/renderer')) {
-              return 'react-pdf';
+            if (id.includes('@mui/icons-material')) {
+              return 'mui-icons';
+            }
+            if (id.includes('@mui/material') || id.includes('@emotion')) {
+              return 'mui-core';
+            }
+            if (id.includes('react-dom')) {
+              return 'react-dom';
+            }
+            if (id.includes('@vercel')) {
+              return 'vercel';
+            }
+            if (id.includes('react')) {
+              return 'react-vendor';
             }
             return 'vendor';
           }
