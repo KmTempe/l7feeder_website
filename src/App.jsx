@@ -5,9 +5,9 @@ import { portfolioData } from './data/portfolioData';
 import Header from './components/Header';
 import Home from './components/Home';
 import ScrollProgress from './components/ScrollProgress';
-import AnimatedBlobs from './components/AnimatedBlobs';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
+import Snowfall from 'react-snowfall'
 
 import SidePanel from './components/SidePanel';
 
@@ -29,6 +29,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Snowfall />
       <CssBaseline />
       <ScrollProgress />
       {/* <AnimatedBlobs /> */}
