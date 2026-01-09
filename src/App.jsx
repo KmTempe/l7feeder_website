@@ -34,7 +34,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {!prefersReducedMotion && (
+      {/* {!prefersReducedMotion && (
         <Snowfall
           snowflakeCount={snowflakeCount}
           speed={isMobile ? [0.6, 1.4] : [0.8, 2.0]}
@@ -50,7 +50,7 @@ function App() {
             zIndex: 0,
           }}
         />
-      )}
+      )} */}
       <CssBaseline />
       <ScrollProgress />
       {/* <AnimatedBlobs /> */}
