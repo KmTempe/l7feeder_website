@@ -1,5 +1,6 @@
 import { useState, lazy, Suspense } from 'react';
-import { ThemeProvider, CssBaseline, Box, useMediaQuery } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box } from '@mui/material';
+//import useMediaQuery from '@mui/material/useMediaQuery';
 import { theme } from './theme/theme';
 import { portfolioData } from './data/portfolioData';
 import Header from './components/Header';
