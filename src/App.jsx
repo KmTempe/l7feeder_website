@@ -26,7 +26,7 @@ function App() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-  const snowflakeCount = prefersReducedMotion ? 0 : isMobile ? 35 : isTablet ? 60 : 90;
+  //const snowflakeCount = prefersReducedMotion ? 0 : isMobile ? 35 : isTablet ? 60 : 90;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
