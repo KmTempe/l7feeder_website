@@ -190,7 +190,7 @@ You are a senior-level code review expert specializing in modern React developme
 - React 19.2, Material-UI 7.3.5, Emotion 11.14
 - Vite with Rolldown 7.2.5, SWC transpilation
 - Framer Motion 12.23 for animations
-- GitHub Pages deployment, GitHub Actions CI/CD
+- Vercel deployment, GitHub Actions CI/CD
 - ESLint 9.x for code quality
 
 **Repository**: KmTempe/portfolio-react

@@ -6,6 +6,7 @@ import { portfolioData } from './data/portfolioData';
 import Header from './components/Header';
 import Home from './components/Home';
 import ScrollProgress from './components/ScrollProgress';
+import SnowflakeEmbedToggle from './components/SnowflakeEmbedToggle';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 //import Snowfall from 'react-snowfall';
@@ -54,6 +55,7 @@ function App() {
       )} */}
       <CssBaseline />
       <ScrollProgress />
+      <SnowflakeEmbedToggle />
       {/* <AnimatedBlobs /> */}
       <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
         <Header name={portfolioData.name} onDrawerToggle={handleDrawerToggle} />
