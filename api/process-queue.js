@@ -6,8 +6,8 @@ const LIBREDESK_API_SECRET = process.env.LIBREDESK_API_SECRET;
 const LIBREDESK_INBOX_ID = process.env.LIBREDESK_INBOX_ID;
 const LIBREDESK_AGENT_ID = process.env.LIBREDESK_AGENT_ID;
 const LIBREDESK_TEAM_ID = process.env.LIBREDESK_TEAM_ID;
-const LIBREDESK_PRIORITY = process.env.LIBREDESK_PRIORITY || 'low';
-const LIBREDESK_TAG = process.env.LIBREDESK_TAG || 'l7f';
+const LIBREDESK_PRIORITY = process.env.LIBREDESK_PRIORITY;
+const LIBREDESK_TAGS = process.env.LIBREDESK_TAGS;
 
 // Build Basic Auth header (base64 encoded api_key:api_secret)
 function getAuthHeader() {
@@ -62,8 +62,8 @@ async function createConversation(subject, message, email, name) {
       initiator: 'contact',
       agent_id: LIBREDESK_AGENT_ID ? parseInt(LIBREDESK_AGENT_ID, 10) : null,
       team_id: LIBREDESK_TEAM_ID ? parseInt(LIBREDESK_TEAM_ID, 10) : null,
-      priority: LIBREDESK_PRIORITY,
-      tags: [LIBREDESK_TAG],
+      priority: LIBREDESK_PRIORITY || undefined,
+      tags: LIBREDESK_TAGS ? LIBREDESK_TAGS.split(',').map(t => t.trim()) : undefined,
     }),
   });
   

@@ -42,3 +42,4 @@ data/contact-queue.json
 # Agent configuration
 .agent/
 .env*.local
+

@@ -8,8 +8,8 @@ function getConfig() {
     LIBREDESK_INBOX_ID: process.env.LIBREDESK_INBOX_ID,
     LIBREDESK_AGENT_ID: process.env.LIBREDESK_AGENT_ID,
     LIBREDESK_TEAM_ID: process.env.LIBREDESK_TEAM_ID,
-    LIBREDESK_PRIORITY: process.env.LIBREDESK_PRIORITY || 'Low',
-    LIBREDESK_TAGS: process.env.LIBREDESK_TAGS || 'l7f',
+    LIBREDESK_PRIORITY: process.env.LIBREDESK_PRIORITY,
+    LIBREDESK_TAGS: process.env.LIBREDESK_TAGS,
   };
 }
 

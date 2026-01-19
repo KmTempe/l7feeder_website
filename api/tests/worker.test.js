@@ -6,10 +6,10 @@ const mockEnv = {
   LIBREDESK_API_KEY: 'test-api-key',
   LIBREDESK_API_SECRET: 'test-api-secret',
   LIBREDESK_INBOX_ID: '1',
-  LIBREDESK_AGENT_ID: '40',
+  LIBREDESK_AGENT_ID: '1',
   LIBREDESK_TEAM_ID: '1',
-  LIBREDESK_PRIORITY: 'Low',
-  LIBREDESK_TAGS: 'l7f,contact-form',
+  LIBREDESK_PRIORITY: 'Medium',
+  LIBREDESK_TAGS: 'tag-a,tag-b',
 };
 
 // Worker module functions (we'll test the logic separately)
@@ -109,24 +109,24 @@ describe('Queue Worker Logic', () => {
 
   describe('Tag Parsing', () => {
     it('should split comma-separated tags', () => {
-      const tagsConfig = 'l7f,contact-form,website';
+      const tagsConfig = 'tag-a,tag-b,tag-c';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
       
-      expect(tagNames).toEqual(['l7f', 'contact-form', 'website']);
+      expect(tagNames).toEqual(['tag-a', 'tag-b', 'tag-c']);
     });
 
     it('should handle single tag', () => {
-      const tagsConfig = 'l7f';
+      const tagsConfig = 'tag-a';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
       
-      expect(tagNames).toEqual(['l7f']);
+      expect(tagNames).toEqual(['tag-a']);
     });
 
     it('should trim whitespace from tags', () => {
-      const tagsConfig = ' l7f , contact-form , website ';
+      const tagsConfig = ' tag-a , tag-b , tag-c ';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
       
-      expect(tagNames).toEqual(['l7f', 'contact-form', 'website']);
+      expect(tagNames).toEqual(['tag-a', 'tag-b', 'tag-c']);
     });
 
     it('should handle empty string', () => {
@@ -258,10 +258,10 @@ describe('Queue Worker Logic', () => {
 
   describe('Priority Payload', () => {
     it('should build correct priority payload', () => {
-      const priority = 'Low';
+      const priority = 'Medium';
       const payload = { priority };
       
-      expect(payload).toEqual({ priority: 'Low' });
+      expect(payload).toEqual({ priority: 'Medium' });
     });
 
     it('should accept valid priority values', () => {
@@ -276,11 +276,11 @@ describe('Queue Worker Logic', () => {
 
   describe('Tags Payload', () => {
     it('should build correct tags payload', () => {
-      const tagsConfig = 'l7f,contact-form';
+      const tagsConfig = 'tag-a,tag-b';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
       const payload = { tags: tagNames };
       
-      expect(payload).toEqual({ tags: ['l7f', 'contact-form'] });
+      expect(payload).toEqual({ tags: ['tag-a', 'tag-b'] });
     });
   });
 });

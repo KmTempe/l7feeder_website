@@ -100,11 +100,30 @@ async function processItem(item, config) {
 }
 
 export default async function handler(req, res) {
-  // Verify cron secret (security)
+  // Verify request is from Vercel Cron or has valid secret
   const authHeader = req.headers.authorization;
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const userAgent = req.headers['user-agent'] || '';
+  
+  // Debug logging
+  console.log('=== Auth Debug ===');
+  console.log('User-Agent:', JSON.stringify(userAgent));
+  console.log('All headers:', JSON.stringify(req.headers));
+  
+  const isVercelCron = userAgent.includes('vercel-cron');
+  
+  // Allow if: 1) Vercel cron user-agent, or 2) valid Bearer token
+  const hasValidSecret = process.env.CRON_SECRET && 
+                         authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  
+  console.log('isVercelCron:', isVercelCron);
+  console.log('hasValidSecret:', hasValidSecret);
+  
+  if (!isVercelCron && !hasValidSecret) {
+    console.error('Unauthorized: not vercel-cron and no valid secret');
     return res.status(401).json({ error: 'Unauthorized' });
   }
+  
+  console.log(`Cron triggered by: ${isVercelCron ? 'Vercel Cron' : 'API with secret'}`);
 
   console.log('=== Cron: Process Contact Queue ===');
   console.log(`Time: ${new Date().toISOString()}`);
