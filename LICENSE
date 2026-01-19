@@ -1,6 +1,10 @@
-MIT License
+MIT License (Code Only) + Personal Data Protection
 
-Copyright (c) 2025 Kosmas Temperekidis
+Copyright (c) 2025-2026 Kosmas Temperekidis
+
+=============================================================================
+PART 1: CODE LICENSE (MIT)
+=============================================================================
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +24,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
----
+=============================================================================
+PART 2: PERSONAL DATA RESTRICTION (All Rights Reserved)
+=============================================================================
 
-IMPORTANT NOTICE: Personal Data Restriction
+The following content is NOT covered by the MIT License above and is the 
+exclusive intellectual property of Kosmas Temperekidis. All rights reserved.
 
-While this code is open source under the MIT License, the personal information
-contained in src/data/portfolioData.js, including but not limited to:
+PROTECTED CONTENT includes but is not limited to:
 - Personal name, contact information, and biographical details
-- Work experience and employment history
-- Educational background
-- Personal projects and achievements
+- Work experience, employment history, and job descriptions
+- Educational background and certifications
+- Personal projects, achievements, and portfolio items
+- Profile images, logos, and personal branding
+- Any content in: src/data/portfolioData.js
 
-is NOT covered by this license and remains the exclusive property of 
-Kosmas Temperekidis. You may NOT use, copy, or redistribute this personal 
-data. When using this code, you MUST replace all personal information with 
-your own data.
+RESTRICTIONS:
+1. You may NOT use, copy, publish, or redistribute the protected personal data
+2. You may NOT impersonate or misrepresent yourself as Kosmas Temperekidis
+3. You may NOT use the personal data for any commercial or non-commercial purpose
+
+PERMITTED USE:
+- You MAY use this repository as a template for your own portfolio
+- You MUST replace ALL personal data with your own information before deployment
+- You MUST remove or replace all protected content listed above
+
+ENFORCEMENT:
+Violation of Part 2 may result in DMCA takedown requests and legal action.
+
+=============================================================================
+HOW TO USE THIS TEMPLATE
+=============================================================================
+
+1. Fork or clone this repository
+2. Delete or replace ALL content in src/data/portfolioData.js with your own data
+3. Replace any images, logos, or personal branding
+4. Deploy your own version with your own information
+
+By using this repository, you agree to these terms.
