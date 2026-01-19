@@ -38,3 +38,4 @@ indexnow-key.config
 
 # Agent configuration
 .agent/
+.env*.local

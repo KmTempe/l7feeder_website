@@ -1,14 +1,15 @@
-import nodemailer from 'nodemailer';
+import { enqueue, isKVConfigured } from './lib/kv-queue.js';
+import { sendToLibreDesk } from './lib/libredesk.js';
 
 export default async function handler(req, res) {
-    // CORS support for local dev
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    if (req.method === 'OPTIONS') {
-      res.status(200).end();
-      return;
-    }
+  // CORS support for local dev
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -22,48 +23,29 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid email address.' });
   }
 
-  // Setup SMTP transport using env variables
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT, 10),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
+  // Check if KV is configured
+  const kvAvailable = await isKVConfigured();
 
+  if (kvAvailable) {
+    // Add to queue for LibreDesk API (processed by cron job)
+    try {
+      const queueId = await enqueue({ name, email, message });
+      console.log(`Contact queued for LibreDesk: ${queueId}`);
+      return res.status(200).json({ success: true, queued: queueId });
+    } catch (err) {
+      console.error('Queue error:', err);
+      // Fall through to direct send
+    }
+  }
+
+  // No KV or queue failed - send directly to LibreDesk
   try {
-    await transporter.sendMail({
-      from: `Portfolio Contact <${process.env.SMTP_USER}>`,
-      to: process.env.CONTACT_RECEIVER,
-      subject: `New collaboration request from ${name}`,
-      replyTo: email,
-      text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
-      html: `
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; padding: 32px; border-radius: 12px; max-width: 480px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.07);">
-          <h2 style="color: #0f0f0fff; margin-bottom: 16px; font-size: 1.5rem; font-weight: 700;">New Contact Form Submission</h2>
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
-            <tr>
-              <td style="font-weight: 600; color: #0f1f35; padding: 8px 0; width: 90px;">Name:</td>
-              <td style="color: #222; padding: 8px 0;">${name}</td>
-            </tr>
-            <tr>
-              <td style="font-weight: 600; color: #0f1f35; padding: 8px 0;">Email:</td>
-              <td style="color: #222; padding: 8px 0;"><a href="mailto:${email}" style="color: #0f0f0fff; text-decoration: none;">${email}</a></td>
-            </tr>
-            <tr>
-              <td style="font-weight: 600; color: #0f1f35; padding: 8px 0; vertical-align: top;">Message:</td>
-              <td style="color: #222; padding: 8px 0;">${message.replace(/\n/g, '<br/>')}</td>
-            </tr>
-          </table>
-          <div style="font-size: 0.95rem; color: #888; text-align: right;">Sent from react Contact Form</div>
-        </div>
-      `
-    });
-    return res.status(200).json({ success: true });
+    console.log('KV not available, sending directly to LibreDesk');
+    await sendToLibreDesk(name, email, message);
+    console.log('Contact sent directly to LibreDesk');
+    return res.status(200).json({ success: true, direct: true });
   } catch (err) {
-    console.error('Email send error:', err);
+    console.error('LibreDesk error:', err);
     return res.status(500).json({ error: 'Failed to send message. Please try again later.' });
   }
 }

@@ -4,6 +4,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import contactHandler from './api/contact.js';
+import processQueueHandler from './api/process-queue.js';
 
 dotenv.config({ path: '.env.local' });
 
@@ -24,6 +25,18 @@ app.all('/api/contact', async (req, res) => {
         await contactHandler(req, res);
     } catch (error) {
         console.error('API Error:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+});
+
+// Route for processing queue (can be called by cron or manually)
+app.all('/api/process-queue', async (req, res) => {
+    try {
+        await processQueueHandler(req, res);
+    } catch (error) {
+        console.error('Queue API Error:', error);
         if (!res.headersSent) {
             res.status(500).json({ error: 'Internal Server Error' });
         }
