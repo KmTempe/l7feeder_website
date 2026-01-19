@@ -36,6 +36,9 @@ indexnow-key.config
 # IndexNow key files (optional - they should be in .github secrets instead)
 *.txt
 
+# Queue data (may contain contact info)
+data/contact-queue.json
+
 # Agent configuration
 .agent/
 .env*.local
