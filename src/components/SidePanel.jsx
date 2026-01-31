@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ResumeDocument from './ResumeDocument';
 import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Button, Avatar, Paper } from '@mui/material';
@@ -13,16 +13,9 @@ import CodeIcon from '@mui/icons-material/Code';
 import DownloadIcon from '@mui/icons-material/Download';
 import DiscordIcon from './icons/DiscordIcon';
 import { motion } from 'framer-motion';
-import { portfolioData } from '../data/portfolioData';
 
-const navItems = [
-    { text: 'Home', icon: <HomeIcon />, href: '#home' },
-    { text: 'Experience', icon: <WorkIcon />, href: '#experience' },
-    { text: 'Projects', icon: <CodeIcon />, href: '#projects' },
-    { text: 'Education', icon: <SchoolIcon />, href: '#education' },
-    { text: 'Skills', icon: <ConstructionIcon />, href: '#skills' },
-    { text: 'Contact', icon: <EmailIcon />, href: '#contact' },
-];
+
+
 
 const socialLinks = [
     { icon: <GitHubIcon />, href: 'https://github.com/KmTempe', label: 'GitHub' },
@@ -31,8 +24,34 @@ const socialLinks = [
 
 import { Drawer } from '@mui/material';
 
-export default function SidePanel({ name, mobileOpen, onClose }) {
+export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) {
     const [discordPopupOpen, setDiscordPopupOpen] = useState(false);
+
+    const navItems = useMemo(() => {
+        const items = [
+            { text: 'Home', icon: <HomeIcon />, href: '#home' }
+        ];
+
+        if (portfolioData?.experience?.length > 0) {
+            items.push({ text: 'Experience', icon: <WorkIcon />, href: '#experience' });
+        }
+
+        if (portfolioData?.projects?.length > 0) {
+            items.push({ text: 'Projects', icon: <CodeIcon />, href: '#projects' });
+        }
+
+        if (portfolioData?.education?.length > 0) {
+            items.push({ text: 'Education', icon: <SchoolIcon />, href: '#education' });
+        }
+
+        if (portfolioData?.skills && Object.keys(portfolioData?.skills).length > 0) {
+            items.push({ text: 'Skills', icon: <ConstructionIcon />, href: '#skills' });
+        }
+
+        items.push({ text: 'Contact', icon: <EmailIcon />, href: '#contact' });
+
+        return items;
+    }, [portfolioData]);
     const handleNavClick = (href) => {
         const element = document.querySelector(href);
         if (element) {

@@ -4,6 +4,8 @@ import { useRef } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 export default function Projects({ projects }) {
+    if (!projects || projects.length === 0) return null;
+
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 

@@ -59,7 +59,7 @@ function App() {
       {/* <AnimatedBlobs /> */}
       <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
         <Header name={portfolioData.name} onDrawerToggle={handleDrawerToggle} />
-        <SidePanel name={portfolioData.name} mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
+        <SidePanel name={portfolioData.name} portfolioData={portfolioData} mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
         <Box
           component="main"
           sx={{
@@ -78,10 +78,10 @@ function App() {
             about={portfolioData.about}
           />
           <Suspense fallback={<Box sx={{ minHeight: '50vh' }} />}>
-            <Experience experience={portfolioData.experience} />
-            <Projects projects={portfolioData.projects} />
-            <Education education={portfolioData.education} />
-            <Skills skills={portfolioData.skills} />
+            {portfolioData.experience && <Experience experience={portfolioData.experience} />}
+            {portfolioData.projects && <Projects projects={portfolioData.projects} />}
+            {portfolioData.education && <Education education={portfolioData.education} />}
+            {portfolioData.skills && <Skills skills={portfolioData.skills} />}
             <Contact
               email={portfolioData.email}
             />
