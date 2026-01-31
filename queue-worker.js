@@ -1,4 +1,4 @@
-import { getPendingItems, markProcessing, markFailed, dequeue, getQueue } from './api/lib/queue.js';
+import { getPendingItems, markProcessing, markFailed, dequeue, getQueue } from './api/lib/kv-queue.js';
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -25,13 +25,13 @@ async function isLibredeskAvailable() {
   if (!LIBREDESK_API_URL || !LIBREDESK_API_KEY || !LIBREDESK_API_SECRET) {
     return false;
   }
-  
+
   try {
     // Extract base URL (remove /api/v1 suffix)
     const baseUrl = LIBREDESK_API_URL.replace(/\/api\/v1\/?$/, '');
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000); // 3 sec timeout
-    
+
     const res = await fetch(`${baseUrl}/health`, {
       method: 'GET',
       headers: {
@@ -71,16 +71,16 @@ async function createConversation(name, email, message) {
       team_id: LIBREDESK_TEAM_ID ? parseInt(LIBREDESK_TEAM_ID, 10) : null,
     }),
   });
-  
+
   if (!res.ok) {
     const errText = await res.text();
     throw new Error(`Failed to create conversation: ${res.status} - ${errText}`);
   }
-  
+
   const result = await res.json();
   const conversationId = result.data?.uuid || result.data?.id;
   console.log('Created conversation:', conversationId, 'Full response:', JSON.stringify(result.data));
-  
+
   // Step 2: Update priority via separate endpoint
   if (conversationId && LIBREDESK_PRIORITY) {
     const priorityRes = await fetch(`${LIBREDESK_API_URL}/conversations/${conversationId}/priority`, {
@@ -91,7 +91,7 @@ async function createConversation(name, email, message) {
       },
       body: JSON.stringify({ priority: LIBREDESK_PRIORITY }),
     });
-    
+
     if (!priorityRes.ok) {
       const errBody = await priorityRes.text();
       console.warn(`Warning: Could not update priority: ${priorityRes.status} - ${errBody}`);
@@ -99,7 +99,7 @@ async function createConversation(name, email, message) {
       console.log('Priority set successfully');
     }
   }
-  
+
   // Step 3: Update tags via separate endpoint
   if (conversationId && LIBREDESK_TAGS) {
     const tagNames = LIBREDESK_TAGS.split(',').map(t => t.trim());
@@ -111,7 +111,7 @@ async function createConversation(name, email, message) {
       },
       body: JSON.stringify({ tags: tagNames }),
     });
-    
+
     if (!tagsRes.ok) {
       const errBody = await tagsRes.text();
       console.warn(`Warning: Could not update tags: ${tagsRes.status} - ${errBody}`);
@@ -119,23 +119,23 @@ async function createConversation(name, email, message) {
       console.log('Tags set successfully');
     }
   }
-  
+
   return result;
 }
 
 // Process single item
 async function processItem(item) {
   console.log(`Processing: ${item.id} (attempt ${item.attempts + 1})`);
-  markProcessing(item.id);
-  
+  await markProcessing(item.id);
+
   try {
     await createConversation(item.name, item.email, item.message);
-    dequeue(item.id);
+    await dequeue(item.id);
     console.log(`✓ Success: ${item.id}`);
     return true;
   } catch (err) {
     console.error(`✗ Failed: ${item.id} - ${err.message}`);
-    markFailed(item.id, err.message);
+    await markFailed(item.id, err.message);
     return false;
   }
 }
@@ -145,20 +145,20 @@ async function runWorker() {
   console.log('\n=== Queue Worker Started ===');
   console.log(`LibreDesk URL: ${LIBREDESK_API_URL || 'NOT SET'}`);
   console.log(`Inbox ID: ${LIBREDESK_INBOX_ID || 'NOT SET'}`);
-  
+
   const POLL_INTERVAL = 30000; // 30 seconds
-  
+
   while (true) {
     try {
-      const queue = getQueue();
+      const queue = await getQueue();
       console.log(`\n[${new Date().toISOString()}] Queue size: ${queue.length}`);
-      
+
       if (queue.length === 0) {
         console.log('Queue empty, waiting...');
         await sleep(POLL_INTERVAL);
         continue;
       }
-      
+
       // Check LibreDesk availability
       const available = await isLibredeskAvailable();
       if (!available) {
@@ -166,27 +166,27 @@ async function runWorker() {
         await sleep(POLL_INTERVAL);
         continue;
       }
-      
+
       console.log('LibreDesk available, processing queue...');
-      
+
       // Get pending items
-      const pending = getPendingItems(5);
+      const pending = await getPendingItems(5);
       if (pending.length === 0) {
         console.log('No items ready for processing (backoff)');
         await sleep(POLL_INTERVAL);
         continue;
       }
-      
+
       // Process each item
       for (const item of pending) {
         await processItem(item);
         await sleep(1000); // Small delay between items
       }
-      
+
     } catch (err) {
       console.error('Worker error:', err);
     }
-    
+
     await sleep(POLL_INTERVAL);
   }
 }

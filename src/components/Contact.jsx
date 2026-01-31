@@ -12,10 +12,8 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 export default function Contact() {
-  // Use dynamic base path for API requests
-  const apiUrl = import.meta.env.DEV
-    ? `${window.location.origin.replace(/:5173$/, ':3000')}/api/contact`
-    : '/api/contact';
+  // Use proxy for local dev (configured in vite.config.js)
+  const apiUrl = '/api/contact';
 
   const [formData, setFormData] = useState({
     name: '',

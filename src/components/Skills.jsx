@@ -3,10 +3,10 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 export default function Skills({ skills }) {
-  if (!skills || Object.keys(skills).length === 0) return null;
-
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  if (!skills || Object.keys(skills).length === 0) return null;
 
   const containerVariants = {
     hidden: { opacity: 0 },

@@ -44,7 +44,14 @@ describe('SidePanel Component', () => {
     });
 
     it('renders navigation items', () => {
-        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={() => { }} />);
+        const mockData = {
+            title: 'Test Title',
+            experience: [{}],
+            education: [{}],
+            skills: { test: 'test' },
+            projects: [{}]
+        };
+        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={() => { }} portfolioData={mockData} />);
 
         expect(screen.getAllByText('Home')[0]).toBeInTheDocument();
         expect(screen.getAllByText('Experience')[0]).toBeInTheDocument();
@@ -54,7 +61,8 @@ describe('SidePanel Component', () => {
     });
 
     it('renders social links', () => {
-        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={() => { }} />);
+        const mockData = { title: 'Test Title' };
+        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={() => { }} portfolioData={mockData} />);
 
         const githubLinks = screen.queryAllByRole('link', { name: /GitHub/i });
         expect(githubLinks.length).toBeGreaterThan(0);
@@ -67,7 +75,14 @@ describe('SidePanel Component', () => {
 
     it('navigates to section on click', () => {
         const onCloseMock = vi.fn();
-        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={onCloseMock} />);
+        const mockData = {
+            title: 'Test Title',
+            experience: [{}],
+            education: [{}],
+            skills: { test: 'test' },
+            projects: [{}]
+        };
+        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={onCloseMock} portfolioData={mockData} />);
 
         // Mock document.querySelector to return an element
         const mockElement = document.createElement('div');
