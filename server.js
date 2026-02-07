@@ -4,6 +4,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import contactHandler from './api/contact.js';
+import sendOtpHandler from './api/send-otp.js';
+import verifyOtpHandler from './api/verify-otp.js';
 import processQueueHandler from './api/process-queue.js';
 
 dotenv.config({ path: '.env.local' });
@@ -19,12 +21,35 @@ app.use(express.json());
 // But since Vite proxies, it looks like same origin to the browser.
 app.use(cors());
 
-// Route for contact API
+// Route for contact API (kept for backwards compatibility)
 app.all('/api/contact', async (req, res) => {
     try {
         await contactHandler(req, res);
     } catch (error) {
         console.error('API Error:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+});
+
+// 2FA contact form routes
+app.all('/api/send-otp', async (req, res) => {
+    try {
+        await sendOtpHandler(req, res);
+    } catch (error) {
+        console.error('Send OTP Error:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+});
+
+app.all('/api/verify-otp', async (req, res) => {
+    try {
+        await verifyOtpHandler(req, res);
+    } catch (error) {
+        console.error('Verify OTP Error:', error);
         if (!res.headersSent) {
             res.status(500).json({ error: 'Internal Server Error' });
         }

@@ -1,3 +1,9 @@
 # Local development server
 server.js
 .env.local
+
+# Test files - not needed in deployment
+api/tests/
+
+# Local-only files
+queue-worker.js
