@@ -37,4 +37,4 @@ This code is open source under the MIT License.
 ## Contact
 
 **Kosmas Temperekidis**
-- Email: kosmas.temperekidis@live.com
+- Email: support@l7feeders.dev

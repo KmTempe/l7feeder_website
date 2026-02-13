@@ -165,7 +165,7 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                         <EmailIcon sx={{ color: 'primary.main', fontSize: 20 }} />
                         <Typography
                             component="a"
-                            href="mailto:kosmas.temperekidis@live.com"
+                            href="mailto:support@l7feeders.dev"
                             sx={{
                                 color: 'text.secondary',
                                 textDecoration: 'none',
@@ -175,7 +175,7 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                                 '&:hover': { color: 'primary.main' },
                             }}
                         >
-                            kosmas.temperekidis@live.com
+                            support@l7feeders.dev
                         </Typography>
                     </Box>
 

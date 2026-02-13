@@ -2,7 +2,7 @@ export const portfolioData = {
   name: 'Kosmas Temperekidis',
   title: 'IT Applications & Technical Support',
   tagline: 'Passionate about service and technical support, with a decisive and effective approach to achieving goals. A collaborative team player with high productivity.',
-  email: 'kosmas.temperekidis@live.com',
+  email: 'support@l7feeders.dev',
 
   about: {
     description: [

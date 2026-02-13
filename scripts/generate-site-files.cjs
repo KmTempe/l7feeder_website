@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const DOMAIN = 'https://l7feeders.dev';
-const CONTACT_EMAIL = 'kosmas.Temperekidis@live.com';
+const CONTACT_EMAIL = 'support@l7feeders.dev';
 const siteName = 'Kosmas Temperekidis Portfolio';
 const lastmod = new Date().toISOString().split('T')[0];
 
