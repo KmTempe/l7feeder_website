@@ -86,6 +86,11 @@ export const portfolioData = {
       title: 'Google Certified Device Checker',
       description: 'Search if a given device is certified from Google using the public available list from Google Play Help.',
       link: 'https://device-checker.l7feeders.dev/'
-    }
+    },
+    {
+      title: 'CV Maker',
+      description: 'A simple tool for auto generating CVs from json files.',
+      link: 'https://cvmaker.l7feeders.dev/'
+    },
   ]
 };
