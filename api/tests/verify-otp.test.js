@@ -55,7 +55,10 @@ describe('Verify OTP API Handler', () => {
       const req = createMockReq('POST', { email: 'test@test.com', otp: '1234567' });
       const res = createMockRes();
       await handler(req, res);
-      expect(res.headers['Access-Control-Allow-Origin']).toBe('http://localhost:3005');
+      const expectedOrigin = process.env.VERCEL === '1'
+        ? 'https://l7feeders.dev'
+        : 'http://localhost:3005';
+      expect(res.headers['Access-Control-Allow-Origin']).toBe(expectedOrigin);
     });
 
     it('should handle OPTIONS preflight', async () => {

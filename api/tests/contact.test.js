@@ -63,7 +63,10 @@ describe('Contact API Handler', () => {
 
       await handler(req, res);
 
-      expect(res.headers['Access-Control-Allow-Origin']).toBe('http://localhost:3005');
+      const expectedOrigin = process.env.VERCEL === '1'
+        ? 'https://l7feeders.dev'
+        : 'http://localhost:3005';
+      expect(res.headers['Access-Control-Allow-Origin']).toBe(expectedOrigin);
       expect(res.headers['Access-Control-Allow-Methods']).toBe('POST, OPTIONS');
       expect(res.headers['Access-Control-Allow-Headers']).toBe('Content-Type');
     });
