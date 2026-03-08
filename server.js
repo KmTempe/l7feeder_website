@@ -7,14 +7,15 @@ import contactHandler from './api/contact.js';
 import sendOtpHandler from './api/send-otp.js';
 import verifyOtpHandler from './api/verify-otp.js';
 import processQueueHandler from './api/process-queue.js';
+import cronProcessQueueHandler from './api/cron/process-queue.js';
 
 dotenv.config({ path: '.env.local' });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+// Middleware to parse JSON bodies (limit to 16kb to prevent abuse)
+app.use(express.json({ limit: '16kb' }));
 
 // Use CORS middleware (optional, but good for local dev if ports differ)
 // Note: api/contact.js also sets CORS headers, so we might not strictly need this if calling from same origin or if handler handles it.
@@ -62,6 +63,18 @@ app.all('/api/process-queue', async (req, res) => {
         await processQueueHandler(req, res);
     } catch (error) {
         console.error('Queue API Error:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+});
+
+// Cron route for processing queue via LibreDesk (mirrors Vercel cron)
+app.all('/api/cron/process-queue', async (req, res) => {
+    try {
+        await cronProcessQueueHandler(req, res);
+    } catch (error) {
+        console.error('Cron Queue Error:', error);
         if (!res.headersSent) {
             res.status(500).json({ error: 'Internal Server Error' });
         }

@@ -1,4 +1,5 @@
 import { getPendingItems, markProcessing, markFailed, dequeue } from './lib/queue.js';
+import { escapeHtml } from './lib/sanitize.js';
 
 const LIBREDESK_API_URL = process.env.LIBREDESK_API_URL; // e.g., https://your-libredesk.com/api/v1
 const LIBREDESK_API_KEY = process.env.LIBREDESK_API_KEY;
@@ -22,7 +23,7 @@ async function isLibredeskAvailable() {
     console.log('LibreDesk not configured');
     return false;
   }
-  
+
   try {
     // Extract base URL (remove /api/v1 suffix)
     const baseUrl = LIBREDESK_API_URL.replace(/\/api\/v1\/?$/, '');
@@ -55,7 +56,7 @@ async function createConversation(subject, message, email, name) {
     body: JSON.stringify({
       inbox_id: parseInt(LIBREDESK_INBOX_ID, 10),
       subject: subject,
-      content: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><hr/><p>${message.replace(/\n/g, '<br/>')}</p>`,
+      content: `<p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><hr/><p>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>`,
       contact_email: email,
       first_name: firstName,
       last_name: lastName,
@@ -66,12 +67,12 @@ async function createConversation(subject, message, email, name) {
       tags: LIBREDESK_TAGS ? LIBREDESK_TAGS.split(',').map(t => t.trim()) : undefined,
     }),
   });
-  
+
   if (!res.ok) {
     const errorText = await res.text();
     throw new Error(`Failed to create conversation: ${res.status} - ${errorText}`);
   }
-  
+
   return await res.json();
 }
 
@@ -79,7 +80,7 @@ async function createConversation(subject, message, email, name) {
 async function processQueueItem(item) {
   console.log(`Processing queue item: ${item.id}`);
   markProcessing(item.id);
-  
+
   try {
     // Create conversation (LibreDesk auto-creates contact from contact_email)
     await createConversation(
@@ -88,12 +89,12 @@ async function processQueueItem(item) {
       item.email,
       item.name
     );
-    
+
     // Success! Remove from queue
     dequeue(item.id);
     console.log(`Successfully processed and removed: ${item.id}`);
     return { success: true, id: item.id };
-    
+
   } catch (err) {
     console.error(`Failed to process ${item.id}:`, err.message);
     markFailed(item.id, err.message);
@@ -107,39 +108,39 @@ export default async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  
-  // Optional: protect this endpoint with a secret
+
+  // Require valid queue secret for authentication
   const authHeader = req.headers['x-queue-secret'];
-  if (process.env.QUEUE_SECRET && authHeader !== process.env.QUEUE_SECRET) {
+  if (!process.env.QUEUE_SECRET || authHeader !== process.env.QUEUE_SECRET) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
+
   // Check if LibreDesk is available
   const available = await isLibredeskAvailable();
   if (!available) {
-    return res.status(503).json({ 
+    return res.status(503).json({
       message: 'LibreDesk not available, items remain in queue',
       processed: 0,
     });
   }
-  
+
   // Get pending items
   const pendingItems = getPendingItems(5); // Process 5 at a time
-  
+
   if (pendingItems.length === 0) {
     return res.status(200).json({ message: 'Queue empty', processed: 0 });
   }
-  
+
   // Process items
   const results = [];
   for (const item of pendingItems) {
     const result = await processQueueItem(item);
     results.push(result);
   }
-  
+
   const successful = results.filter(r => r.success).length;
   const failed = results.filter(r => !r.success).length;
-  
+
   return res.status(200).json({
     message: `Processed ${results.length} items`,
     successful,

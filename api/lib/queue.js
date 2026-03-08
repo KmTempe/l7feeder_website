@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,7 +38,7 @@ export function saveQueue(queue) {
 export function enqueue(item) {
   const queue = getQueue();
   const queueItem = {
-    id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `${Date.now()}-${crypto.randomBytes(6).toString('hex')}`,
     ...item,
     createdAt: new Date().toISOString(),
     attempts: 0,
@@ -70,19 +71,19 @@ export function updateQueueItem(id, updates) {
 export function getPendingItems(maxItems = 10) {
   const queue = getQueue();
   const now = Date.now();
-  
+
   return queue
     .filter(item => {
       if (item.status === 'processing') return false;
       if (item.attempts >= 10) return false; // Max 10 retries
-      
+
       // Exponential backoff: wait 2^attempts * 30 seconds
       if (item.lastAttempt) {
         const backoffMs = Math.pow(2, item.attempts) * 30000;
         const nextAttempt = new Date(item.lastAttempt).getTime() + backoffMs;
         if (now < nextAttempt) return false;
       }
-      
+
       return true;
     })
     .slice(0, maxItems);

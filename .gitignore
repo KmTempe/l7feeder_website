@@ -46,3 +46,5 @@ data/contact-queue.json
 
 new_feature
 new_feature
+/.agents/workflows
+/security-analisis.md

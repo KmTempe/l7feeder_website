@@ -7,7 +7,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
-  { ignores: ['dist/**', 'api/**', 'node_modules/**'] },
+  { ignores: ['dist/**', 'node_modules/**'] },
   {
     files: ['src/**/*.{js,jsx}'],
     plugins: {
@@ -37,6 +37,21 @@ export default defineConfig([
         'warn',
         { allowConstantExport: true },
       ],
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+  {
+    files: ['api/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },

@@ -52,7 +52,7 @@ describe('Send OTP API Handler', () => {
       const req = createMockReq('POST', { name: 'Test', email: 'test@test.com', message: 'Hi' });
       const res = createMockRes();
       await handler(req, res);
-      expect(res.headers['Access-Control-Allow-Origin']).toBe('*');
+      expect(res.headers['Access-Control-Allow-Origin']).toBe('http://localhost:3005');
     });
 
     it('should handle OPTIONS preflight', async () => {

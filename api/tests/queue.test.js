@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -67,18 +67,18 @@ function createTestQueue() {
   function getPendingItems(maxItems = 10) {
     const queue = getQueue();
     const now = Date.now();
-    
+
     return queue
       .filter(item => {
         if (item.status === 'processing') return false;
         if (item.attempts >= 10) return false;
-        
+
         if (item.lastAttempt) {
           const backoffMs = Math.pow(2, item.attempts) * 30000;
           const nextAttempt = new Date(item.lastAttempt).getTime() + backoffMs;
           if (now < nextAttempt) return false;
         }
-        
+
         return true;
       })
       .slice(0, maxItems);
@@ -143,10 +143,10 @@ describe('Queue System', () => {
     it('should add an item to the queue and return an id', () => {
       const item = { name: 'John Doe', email: 'john@example.com', message: 'Hello' };
       const id = enqueue(item);
-      
+
       expect(id).toBeDefined();
       expect(typeof id).toBe('string');
-      
+
       const queue = getQueue();
       expect(queue).toHaveLength(1);
       expect(queue[0].name).toBe('John Doe');
@@ -157,7 +157,7 @@ describe('Queue System', () => {
     it('should set default values on enqueued item', () => {
       const item = { name: 'Jane Doe', email: 'jane@example.com', message: 'Test' };
       enqueue(item);
-      
+
       const queue = getQueue();
       expect(queue[0].status).toBe('pending');
       expect(queue[0].attempts).toBe(0);
@@ -169,7 +169,7 @@ describe('Queue System', () => {
       enqueue({ name: 'User 1', email: 'user1@test.com', message: 'Msg 1' });
       enqueue({ name: 'User 2', email: 'user2@test.com', message: 'Msg 2' });
       enqueue({ name: 'User 3', email: 'user3@test.com', message: 'Msg 3' });
-      
+
       const queue = getQueue();
       expect(queue).toHaveLength(3);
     });
@@ -177,7 +177,7 @@ describe('Queue System', () => {
     it('should generate unique IDs for each item', () => {
       const id1 = enqueue({ name: 'A', email: 'a@test.com', message: '1' });
       const id2 = enqueue({ name: 'B', email: 'b@test.com', message: '2' });
-      
+
       expect(id1).not.toBe(id2);
     });
   });
@@ -185,12 +185,12 @@ describe('Queue System', () => {
   describe('dequeue', () => {
     it('should remove an item from the queue by id', () => {
       const id = enqueue({ name: 'Test', email: 'test@test.com', message: 'Hi' });
-      
+
       let queue = getQueue();
       expect(queue).toHaveLength(1);
-      
+
       dequeue(id);
-      
+
       queue = getQueue();
       expect(queue).toHaveLength(0);
     });
@@ -199,9 +199,9 @@ describe('Queue System', () => {
       const id1 = enqueue({ name: 'Keep 1', email: 'k1@test.com', message: '1' });
       const id2 = enqueue({ name: 'Remove', email: 'rm@test.com', message: '2' });
       const id3 = enqueue({ name: 'Keep 2', email: 'k2@test.com', message: '3' });
-      
+
       dequeue(id2);
-      
+
       const queue = getQueue();
       expect(queue).toHaveLength(2);
       expect(queue.find(i => i.id === id1)).toBeDefined();
@@ -211,10 +211,10 @@ describe('Queue System', () => {
 
     it('should handle dequeue of non-existent id gracefully', () => {
       enqueue({ name: 'Test', email: 'test@test.com', message: 'Hi' });
-      
+
       // Should not throw
       dequeue('non-existent-id');
-      
+
       const queue = getQueue();
       expect(queue).toHaveLength(1);
     });
@@ -223,9 +223,9 @@ describe('Queue System', () => {
   describe('updateQueueItem', () => {
     it('should update item properties', () => {
       const id = enqueue({ name: 'Original', email: 'orig@test.com', message: 'Hi' });
-      
+
       updateQueueItem(id, { status: 'processing', attempts: 1 });
-      
+
       const queue = getQueue();
       expect(queue[0].status).toBe('processing');
       expect(queue[0].attempts).toBe(1);
@@ -235,9 +235,9 @@ describe('Queue System', () => {
     it('should not affect other items', () => {
       const id1 = enqueue({ name: 'Item 1', email: 'i1@test.com', message: '1' });
       const id2 = enqueue({ name: 'Item 2', email: 'i2@test.com', message: '2' });
-      
+
       updateQueueItem(id1, { status: 'processing' });
-      
+
       const queue = getQueue();
       expect(queue.find(i => i.id === id1).status).toBe('processing');
       expect(queue.find(i => i.id === id2).status).toBe('pending');
@@ -247,9 +247,9 @@ describe('Queue System', () => {
   describe('markProcessing', () => {
     it('should set item status to processing', () => {
       const id = enqueue({ name: 'Test', email: 'test@test.com', message: 'Hi' });
-      
+
       markProcessing(id);
-      
+
       const queue = getQueue();
       expect(queue[0].status).toBe('processing');
     });
@@ -259,9 +259,9 @@ describe('Queue System', () => {
     it('should increment attempts and set status back to pending', () => {
       const id = enqueue({ name: 'Test', email: 'test@test.com', message: 'Hi' });
       markProcessing(id);
-      
+
       markFailed(id, 'Connection timeout');
-      
+
       const queue = getQueue();
       expect(queue[0].status).toBe('pending');
       expect(queue[0].attempts).toBe(1);
@@ -271,11 +271,11 @@ describe('Queue System', () => {
 
     it('should accumulate attempts on multiple failures', () => {
       const id = enqueue({ name: 'Test', email: 'test@test.com', message: 'Hi' });
-      
+
       markFailed(id, 'Error 1');
       markFailed(id, 'Error 2');
       markFailed(id, 'Error 3');
-      
+
       const queue = getQueue();
       expect(queue[0].attempts).toBe(3);
       expect(queue[0].lastError).toBe('Error 3');
@@ -286,7 +286,7 @@ describe('Queue System', () => {
     it('should return pending items', () => {
       enqueue({ name: 'User 1', email: 'u1@test.com', message: '1' });
       enqueue({ name: 'User 2', email: 'u2@test.com', message: '2' });
-      
+
       const pending = getPendingItems();
       expect(pending).toHaveLength(2);
     });
@@ -294,9 +294,9 @@ describe('Queue System', () => {
     it('should exclude processing items', () => {
       const id1 = enqueue({ name: 'Pending', email: 'p@test.com', message: '1' });
       const id2 = enqueue({ name: 'Processing', email: 'pr@test.com', message: '2' });
-      
+
       markProcessing(id2);
-      
+
       const pending = getPendingItems();
       expect(pending).toHaveLength(1);
       expect(pending[0].id).toBe(id1);
@@ -304,17 +304,17 @@ describe('Queue System', () => {
 
     it('should exclude items that exceeded max retries (10)', () => {
       const id = enqueue({ name: 'Test', email: 'test@test.com', message: 'Hi' });
-      
+
       // Simulate 10 failures
       for (let i = 0; i < 10; i++) {
         markFailed(id, `Error ${i + 1}`);
       }
-      
+
       // Manually update to bypass backoff for this test
       const queue = getQueue();
       queue[0].lastAttempt = new Date(Date.now() - 999999999).toISOString();
       saveQueue(queue);
-      
+
       const pending = getPendingItems();
       expect(pending).toHaveLength(0);
     });
@@ -323,26 +323,26 @@ describe('Queue System', () => {
       for (let i = 0; i < 20; i++) {
         enqueue({ name: `User ${i}`, email: `u${i}@test.com`, message: `Msg ${i}` });
       }
-      
+
       const pending = getPendingItems(5);
       expect(pending).toHaveLength(5);
     });
 
     it('should apply exponential backoff', () => {
       const id = enqueue({ name: 'Test', email: 'test@test.com', message: 'Hi' });
-      
+
       // Mark as just failed (should be in backoff)
       markFailed(id, 'Error');
-      
+
       // Item should be in backoff (2^1 * 30s = 60s)
       let pending = getPendingItems();
       expect(pending).toHaveLength(0);
-      
+
       // Manually set lastAttempt to past backoff period
       const queue = getQueue();
       queue[0].lastAttempt = new Date(Date.now() - 120000).toISOString(); // 2 minutes ago
       saveQueue(queue);
-      
+
       pending = getPendingItems();
       expect(pending).toHaveLength(1);
     });
@@ -357,7 +357,7 @@ describe('Queue System', () => {
     it('should return all items in queue', () => {
       enqueue({ name: 'A', email: 'a@test.com', message: '1' });
       enqueue({ name: 'B', email: 'b@test.com', message: '2' });
-      
+
       const queue = getQueue();
       expect(queue).toHaveLength(2);
     });
@@ -368,9 +368,9 @@ describe('Queue System', () => {
       const testQueue = [
         { id: 'test-1', name: 'Test', email: 'test@test.com', message: 'Hi' },
       ];
-      
+
       saveQueue(testQueue);
-      
+
       const loaded = getQueue();
       expect(loaded).toHaveLength(1);
       expect(loaded[0].id).toBe('test-1');
