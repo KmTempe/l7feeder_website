@@ -56,5 +56,19 @@
     "vite": "^7.3.1",
     "vite-plugin-compression": "^0.5.1",
     "vitest": "^4.0.18"
+  },
+  "overrides": {
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "^10.0.3"
+    },
+    "eslint-plugin-react": {
+      "eslint": "^10.0.3"
+    },
+    "eslint-plugin-react-hooks": {
+      "eslint": "^10.0.3"
+    },
+    "eslint-plugin-react-refresh": {
+      "eslint": "^10.0.3"
+    }
   }
 }
