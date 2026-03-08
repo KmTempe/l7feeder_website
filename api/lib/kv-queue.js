@@ -2,6 +2,7 @@
 // For local development, uses DEV_REDIS_URL (localhost)
 
 import { createClient } from 'redis';
+import crypto from 'crypto';
 
 const isVercel = process.env.VERCEL === '1';
 
@@ -25,7 +26,7 @@ let redisClient = null;
 
 async function getRedis() {
   if (redisClient && redisClient.isOpen) return redisClient;
-  
+
   const redisUrl = getRedisUrl();
   if (redisUrl) {
     try {
@@ -47,7 +48,7 @@ const QUEUE_KEY = 'contact-queue';
 // Get all items from queue
 export async function getQueue() {
   const redis = await getRedis();
-  
+
   if (redis) {
     try {
       const data = await redis.get(QUEUE_KEY);
@@ -57,7 +58,7 @@ export async function getQueue() {
       return [];
     }
   }
-  
+
   // Fallback to file queue for local dev
   const { getQueue: fileGetQueue } = await import('./queue.js');
   return fileGetQueue();
@@ -66,7 +67,7 @@ export async function getQueue() {
 // Save queue
 export async function saveQueue(queue) {
   const redis = await getRedis();
-  
+
   if (redis) {
     try {
       await redis.set(QUEUE_KEY, JSON.stringify(queue));
@@ -76,7 +77,7 @@ export async function saveQueue(queue) {
       return false;
     }
   }
-  
+
   // Fallback to file queue for local dev
   const { saveQueue: fileSaveQueue } = await import('./queue.js');
   return fileSaveQueue(queue);
@@ -86,7 +87,7 @@ export async function saveQueue(queue) {
 export async function enqueue(item) {
   const queue = await getQueue();
   const queueItem = {
-    id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `${Date.now()}-${crypto.randomBytes(6).toString('hex')}`,
     ...item,
     createdAt: new Date().toISOString(),
     attempts: 0,
@@ -118,8 +119,7 @@ export async function updateQueueItem(id, updates) {
 // Get pending items ready for processing
 export async function getPendingItems(maxItems = 50) {
   const queue = await getQueue();
-  const now = Date.now();
-  
+
   return queue
     .filter(item => {
       if (item.status === 'processing') return false;

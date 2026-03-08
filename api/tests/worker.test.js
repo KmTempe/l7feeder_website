@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 // Mock environment variables
-const mockEnv = {
+const _mockEnv = {
   LIBREDESK_API_URL: 'https://test.libredesk.com/api/v1',
   LIBREDESK_API_KEY: 'test-api-key',
   LIBREDESK_API_SECRET: 'test-api-secret',
@@ -21,7 +21,7 @@ describe('Queue Worker Logic', () => {
       const credentials = `${apiKey}:${apiSecret}`;
       const encoded = Buffer.from(credentials).toString('base64');
       const authHeader = `Basic ${encoded}`;
-      
+
       expect(authHeader).toBe(`Basic ${Buffer.from('test-api-key:test-api-secret').toString('base64')}`);
     });
 
@@ -30,7 +30,7 @@ describe('Queue Worker Logic', () => {
       const apiSecret = 'secret&with%special@chars';
       const credentials = `${apiKey}:${apiSecret}`;
       const encoded = Buffer.from(credentials).toString('base64');
-      
+
       // Should be able to decode back
       const decoded = Buffer.from(encoded, 'base64').toString('utf-8');
       expect(decoded).toBe(credentials);
@@ -43,7 +43,7 @@ describe('Queue Worker Logic', () => {
       const nameParts = name.trim().split(' ');
       const firstName = nameParts[0] || name;
       const lastName = nameParts.slice(1).join(' ') || '';
-      
+
       expect(firstName).toBe('John');
       expect(lastName).toBe('');
     });
@@ -53,7 +53,7 @@ describe('Queue Worker Logic', () => {
       const nameParts = name.trim().split(' ');
       const firstName = nameParts[0] || name;
       const lastName = nameParts.slice(1).join(' ') || '';
-      
+
       expect(firstName).toBe('John');
       expect(lastName).toBe('Doe');
     });
@@ -63,7 +63,7 @@ describe('Queue Worker Logic', () => {
       const nameParts = name.trim().split(' ');
       const firstName = nameParts[0] || name;
       const lastName = nameParts.slice(1).join(' ') || '';
-      
+
       expect(firstName).toBe('John');
       expect(lastName).toBe('van der Berg');
     });
@@ -73,7 +73,7 @@ describe('Queue Worker Logic', () => {
       const nameParts = name.trim().split(' ').filter(p => p);
       const firstName = nameParts[0] || name.trim();
       const lastName = nameParts.slice(1).join(' ') || '';
-      
+
       expect(firstName).toBe('John');
       expect(lastName).toBe('Doe');
     });
@@ -83,14 +83,14 @@ describe('Queue Worker Logic', () => {
     it('should replace newlines with <br/> tags', () => {
       const message = 'Line 1\nLine 2\nLine 3';
       const formatted = message.replace(/\n/g, '<br/>');
-      
+
       expect(formatted).toBe('Line 1<br/>Line 2<br/>Line 3');
     });
 
     it('should handle CRLF newlines', () => {
       const message = 'Line 1\r\nLine 2';
       const formatted = message.replace(/\r?\n/g, '<br/>');
-      
+
       expect(formatted).toBe('Line 1<br/>Line 2');
     });
 
@@ -98,9 +98,9 @@ describe('Queue Worker Logic', () => {
       const name = 'John Doe';
       const email = 'john@example.com';
       const message = 'Hello\nWorld';
-      
+
       const content = `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><hr/><p>${message.replace(/\n/g, '<br/>')}</p>`;
-      
+
       expect(content).toContain('<strong>Name:</strong> John Doe');
       expect(content).toContain('<strong>Email:</strong> john@example.com');
       expect(content).toContain('Hello<br/>World');
@@ -111,28 +111,28 @@ describe('Queue Worker Logic', () => {
     it('should split comma-separated tags', () => {
       const tagsConfig = 'tag-a,tag-b,tag-c';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
-      
+
       expect(tagNames).toEqual(['tag-a', 'tag-b', 'tag-c']);
     });
 
     it('should handle single tag', () => {
       const tagsConfig = 'tag-a';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
-      
+
       expect(tagNames).toEqual(['tag-a']);
     });
 
     it('should trim whitespace from tags', () => {
       const tagsConfig = ' tag-a , tag-b , tag-c ';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
-      
+
       expect(tagNames).toEqual(['tag-a', 'tag-b', 'tag-c']);
     });
 
     it('should handle empty string', () => {
       const tagsConfig = '';
       const tagNames = tagsConfig ? tagsConfig.split(',').map(t => t.trim()) : [];
-      
+
       expect(tagNames).toEqual([]);
     });
   });
@@ -141,28 +141,28 @@ describe('Queue Worker Logic', () => {
     it('should calculate correct backoff for attempt 0', () => {
       const attempts = 0;
       const backoffMs = Math.pow(2, attempts) * 30000;
-      
+
       expect(backoffMs).toBe(30000); // 30 seconds
     });
 
     it('should calculate correct backoff for attempt 1', () => {
       const attempts = 1;
       const backoffMs = Math.pow(2, attempts) * 30000;
-      
+
       expect(backoffMs).toBe(60000); // 1 minute
     });
 
     it('should calculate correct backoff for attempt 5', () => {
       const attempts = 5;
       const backoffMs = Math.pow(2, attempts) * 30000;
-      
+
       expect(backoffMs).toBe(960000); // 16 minutes
     });
 
     it('should calculate correct backoff for attempt 9 (last retry)', () => {
       const attempts = 9;
       const backoffMs = Math.pow(2, attempts) * 30000;
-      
+
       expect(backoffMs).toBe(15360000); // ~4.27 hours
     });
 
@@ -170,12 +170,12 @@ describe('Queue Worker Logic', () => {
       const now = Date.now();
       const attempts = 2;
       const backoffMs = Math.pow(2, attempts) * 30000; // 2 minutes
-      
+
       // Item failed 1 minute ago - should NOT be ready
       const recentLastAttempt = new Date(now - 60000).toISOString();
       const nextAttemptRecent = new Date(recentLastAttempt).getTime() + backoffMs;
       expect(now < nextAttemptRecent).toBe(true);
-      
+
       // Item failed 3 minutes ago - should be ready
       const oldLastAttempt = new Date(now - 180000).toISOString();
       const nextAttemptOld = new Date(oldLastAttempt).getTime() + backoffMs;
@@ -187,14 +187,14 @@ describe('Queue Worker Logic', () => {
     it('should extract base URL from API URL with trailing slash', () => {
       const apiUrl = 'https://support.example.com/api/v1/';
       const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
-      
+
       expect(baseUrl).toBe('https://support.example.com');
     });
 
     it('should extract base URL from API URL without trailing slash', () => {
       const apiUrl = 'https://support.example.com/api/v1';
       const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
-      
+
       expect(baseUrl).toBe('https://support.example.com');
     });
 
@@ -202,7 +202,7 @@ describe('Queue Worker Logic', () => {
       const apiUrl = 'https://support.example.com/api/v1';
       const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, '');
       const healthUrl = `${baseUrl}/health`;
-      
+
       expect(healthUrl).toBe('https://support.example.com/health');
     });
   });
@@ -215,11 +215,11 @@ describe('Queue Worker Logic', () => {
       const inboxId = '1';
       const agentId = '40';
       const teamId = '1';
-      
+
       const nameParts = name.trim().split(' ');
       const firstName = nameParts[0] || name;
       const lastName = nameParts.slice(1).join(' ') || '';
-      
+
       const payload = {
         inbox_id: parseInt(inboxId, 10),
         subject: `[Contact Form] New message from ${name}`,
@@ -231,7 +231,7 @@ describe('Queue Worker Logic', () => {
         agent_id: agentId ? parseInt(agentId, 10) : null,
         team_id: teamId ? parseInt(teamId, 10) : null,
       };
-      
+
       expect(payload.inbox_id).toBe(1);
       expect(payload.agent_id).toBe(40);
       expect(payload.team_id).toBe(1);
@@ -245,12 +245,12 @@ describe('Queue Worker Logic', () => {
     it('should handle null agent and team IDs', () => {
       const agentId = null;
       const teamId = '';
-      
+
       const payload = {
         agent_id: agentId ? parseInt(agentId, 10) : null,
         team_id: teamId ? parseInt(teamId, 10) : null,
       };
-      
+
       expect(payload.agent_id).toBeNull();
       expect(payload.team_id).toBeNull();
     });
@@ -260,13 +260,13 @@ describe('Queue Worker Logic', () => {
     it('should build correct priority payload', () => {
       const priority = 'Medium';
       const payload = { priority };
-      
+
       expect(payload).toEqual({ priority: 'Medium' });
     });
 
     it('should accept valid priority values', () => {
       const validPriorities = ['Low', 'Medium', 'High'];
-      
+
       for (const priority of validPriorities) {
         const payload = { priority };
         expect(payload.priority).toBe(priority);
@@ -279,7 +279,7 @@ describe('Queue Worker Logic', () => {
       const tagsConfig = 'tag-a,tag-b';
       const tagNames = tagsConfig.split(',').map(t => t.trim());
       const payload = { tags: tagNames };
-      
+
       expect(payload).toEqual({ tags: ['tag-a', 'tag-b'] });
     });
   });
@@ -295,7 +295,7 @@ describe('Worker Integration Scenarios', () => {
       // 4. Update priority via PUT /conversations/{uuid}/priority
       // 5. Update tags via POST /conversations/{uuid}/tags
       // 6. dequeue(id) removes item from queue
-      
+
       const flow = [
         'getPendingItems',
         'markProcessing',
@@ -304,7 +304,7 @@ describe('Worker Integration Scenarios', () => {
         'POST /conversations/{uuid}/tags',
         'dequeue',
       ];
-      
+
       expect(flow).toHaveLength(6);
     });
   });
@@ -317,7 +317,7 @@ describe('Worker Integration Scenarios', () => {
       // 3. createConversation() throws error
       // 4. markFailed(id, error) increments attempts and sets backoff
       // 5. Item becomes available again after backoff period
-      
+
       const flow = [
         'getPendingItems',
         'markProcessing',
@@ -326,7 +326,7 @@ describe('Worker Integration Scenarios', () => {
         'Wait for backoff',
         'Retry from step 1',
       ];
-      
+
       expect(flow).toHaveLength(6);
     });
   });
@@ -339,14 +339,14 @@ describe('Worker Integration Scenarios', () => {
       // 3. Worker waits POLL_INTERVAL
       // 4. Retry from step 1
       // Items stay in queue until LibreDesk is available
-      
+
       const flow = [
         'getQueue',
         'isLibredeskAvailable (fails)',
         'Wait POLL_INTERVAL',
         'Retry',
       ];
-      
+
       expect(flow).toHaveLength(4);
     });
   });

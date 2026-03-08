@@ -55,7 +55,7 @@ describe('Verify OTP API Handler', () => {
       const req = createMockReq('POST', { email: 'test@test.com', otp: '1234567' });
       const res = createMockRes();
       await handler(req, res);
-      expect(res.headers['Access-Control-Allow-Origin']).toBe('*');
+      expect(res.headers['Access-Control-Allow-Origin']).toBe('http://localhost:3005');
     });
 
     it('should handle OPTIONS preflight', async () => {

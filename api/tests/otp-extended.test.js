@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { generateOtp, storeOtp, verifyOtp, storeFormData, getFormData, checkResendCooldown } from '../lib/otp.js';
 
 // Extended tests for the OTP library using in-memory fallback (no Redis).

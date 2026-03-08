@@ -5,8 +5,11 @@
 import { generateOtp, storeOtp, storeFormData, checkResendCooldown, sendOtpEmail } from './lib/otp.js';
 
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS — restrict to production domain or local dev
+  const allowedOrigin = process.env.VERCEL === '1'
+    ? 'https://l7feeders.dev'
+    : 'http://localhost:3005';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -24,8 +27,11 @@ export default async function handler(req, res) {
   if (!name.trim() || !email.trim() || !message.trim()) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
+  if (name.length > 100 || email.length > 254 || message.length > 5000) {
+    return res.status(400).json({ error: 'Field exceeds maximum length.' });
+  }
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+  const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (!emailPattern.test(email)) {
     return res.status(400).json({ error: 'Invalid email address.' });
   }
@@ -46,6 +52,7 @@ export default async function handler(req, res) {
 
   // ── Generate & store OTP, store form data ───────────────────────────────
   const otp = generateOtp();
+  //console.log(`Generated OTP: ${otp}`); local debug i guess its fine to leave it commented
 
   try {
     await storeOtp(email, otp);

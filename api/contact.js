@@ -2,8 +2,11 @@ import { enqueue, isKVConfigured } from './lib/kv-queue.js';
 import { sendToLibreDesk } from './lib/libredesk.js';
 
 export default async function handler(req, res) {
-  // CORS support for local dev
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // CORS support — restrict to production domain or local dev
+  const allowedOrigin = process.env.VERCEL === '1'
+    ? 'https://l7feeders.dev'
+    : 'http://localhost:3005';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') {
@@ -18,7 +21,10 @@ export default async function handler(req, res) {
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (name.length > 100 || email.length > 254 || message.length > 5000) {
+    return res.status(400).json({ error: 'Field exceeds maximum length.' });
+  }
+  const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (!emailPattern.test(email)) {
     return res.status(400).json({ error: 'Invalid email address.' });
   }

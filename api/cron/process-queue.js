@@ -2,6 +2,7 @@
 // Runs at 00:00 and 12:00 UTC daily
 
 import { getPendingItems, markProcessing, markFailed, dequeue, getQueue } from '../lib/kv-queue.js';
+import { escapeHtml } from '../lib/sanitize.js';
 
 function getConfig() {
   return {
@@ -37,7 +38,7 @@ async function createConversation(name, email, message, config) {
     body: JSON.stringify({
       inbox_id: parseInt(config.LIBREDESK_INBOX_ID, 10),
       subject: `[Contact Form] New message from ${name}`,
-      content: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><hr/><p>${message.replace(/\n/g, '<br/>')}</p>`,
+      content: `<p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><hr/><p>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>`,
       contact_email: email,
       first_name: firstName,
       last_name: lastName,
@@ -100,30 +101,13 @@ async function processItem(item, config) {
 }
 
 export default async function handler(req, res) {
-  // Verify request is from Vercel Cron or has valid secret
+  // Verify request has valid CRON_SECRET Bearer token
+  // Vercel Cron automatically sends Authorization: Bearer <CRON_SECRET>
   const authHeader = req.headers.authorization;
-  const userAgent = req.headers['user-agent'] || '';
-  
-  // Debug logging
-  console.log('=== Auth Debug ===');
-  console.log('User-Agent:', JSON.stringify(userAgent));
-  console.log('All headers:', JSON.stringify(req.headers));
-  
-  const isVercelCron = userAgent.includes('vercel-cron');
-  
-  // Allow if: 1) Vercel cron user-agent, or 2) valid Bearer token
-  const hasValidSecret = process.env.CRON_SECRET && 
-                         authHeader === `Bearer ${process.env.CRON_SECRET}`;
-  
-  console.log('isVercelCron:', isVercelCron);
-  console.log('hasValidSecret:', hasValidSecret);
-  
-  if (!isVercelCron && !hasValidSecret) {
-    console.error('Unauthorized: not vercel-cron and no valid secret');
+
+  if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  
-  console.log(`Cron triggered by: ${isVercelCron ? 'Vercel Cron' : 'API with secret'}`);
 
   console.log('=== Cron: Process Contact Queue ===');
   console.log(`Time: ${new Date().toISOString()}`);

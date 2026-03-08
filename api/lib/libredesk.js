@@ -1,5 +1,7 @@
 // LibreDesk API helper for direct message sending
 
+import { escapeHtml } from './sanitize.js';
+
 function getConfig() {
   return {
     LIBREDESK_API_URL: process.env.LIBREDESK_API_URL,
@@ -40,7 +42,7 @@ export async function sendToLibreDesk(name, email, message) {
     body: JSON.stringify({
       inbox_id: parseInt(config.LIBREDESK_INBOX_ID, 10),
       subject: `[Contact Form] New message from ${name}`,
-      content: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><hr/><p>${message.replace(/\n/g, '<br/>')}</p>`,
+      content: `<p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><hr/><p>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>`,
       contact_email: email,
       first_name: firstName,
       last_name: lastName,

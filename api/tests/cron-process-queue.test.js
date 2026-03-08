@@ -41,7 +41,7 @@ function createMockRes() {
 
 describe('Cron Process Queue Handler', () => {
   const CRON_SECRET = 'test-cron-secret';
-  
+
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.CRON_SECRET = CRON_SECRET;
@@ -53,7 +53,7 @@ describe('Cron Process Queue Handler', () => {
     process.env.LIBREDESK_TEAM_ID = '1';
     process.env.LIBREDESK_PRIORITY = 'Low';
     process.env.LIBREDESK_TAGS = 'l7f';
-    
+
     getQueue.mockResolvedValue([]);
     getPendingItems.mockResolvedValue([]);
     markProcessing.mockResolvedValue();
@@ -62,12 +62,23 @@ describe('Cron Process Queue Handler', () => {
   });
 
   describe('Authentication', () => {
-    it('should reject requests without auth header', async () => {
+    it('should reject requests without valid auth', async () => {
       const req = createMockReq();
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
+      expect(res.statusCode).toBe(401);
+      expect(res.body.error).toBe('Unauthorized');
+    });
+
+    it('should reject when CRON_SECRET is not set', async () => {
+      delete process.env.CRON_SECRET;
+      const req = createMockReq(`Bearer some-secret`);
+      const res = createMockRes();
+
+      await handler(req, res);
+
       expect(res.statusCode).toBe(401);
       expect(res.body.error).toBe('Unauthorized');
     });
@@ -75,9 +86,9 @@ describe('Cron Process Queue Handler', () => {
     it('should reject requests with invalid auth header', async () => {
       const req = createMockReq('Bearer wrong-secret');
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
       expect(res.statusCode).toBe(401);
       expect(res.body.error).toBe('Unauthorized');
     });
@@ -85,9 +96,9 @@ describe('Cron Process Queue Handler', () => {
     it('should accept requests with valid cron secret', async () => {
       const req = createMockReq(`Bearer ${CRON_SECRET}`);
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
       expect(res.statusCode).toBe(200);
     });
   });
@@ -95,12 +106,12 @@ describe('Cron Process Queue Handler', () => {
   describe('Empty Queue', () => {
     it('should return success when queue is empty', async () => {
       getQueue.mockResolvedValue([]);
-      
+
       const req = createMockReq(`Bearer ${CRON_SECRET}`);
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
       expect(res.statusCode).toBe(200);
       expect(res.body.message).toBe('Queue empty');
       expect(res.body.processed).toBe(0);
@@ -116,10 +127,10 @@ describe('Cron Process Queue Handler', () => {
         message: 'Hello',
         attempts: 0,
       };
-      
+
       getQueue.mockResolvedValue([mockItem]);
       getPendingItems.mockResolvedValue([mockItem]);
-      
+
       // Mock successful API responses
       global.fetch
         .mockResolvedValueOnce({
@@ -128,12 +139,12 @@ describe('Cron Process Queue Handler', () => {
         })
         .mockResolvedValueOnce({ ok: true }) // priority
         .mockResolvedValueOnce({ ok: true }); // tags
-      
+
       const req = createMockReq(`Bearer ${CRON_SECRET}`);
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
       expect(res.statusCode).toBe(200);
       expect(res.body.successful).toBe(1);
       expect(res.body.failed).toBe(0);
@@ -148,22 +159,22 @@ describe('Cron Process Queue Handler', () => {
         message: 'Hi',
         attempts: 0,
       };
-      
+
       getQueue.mockResolvedValue([mockItem]);
       getPendingItems.mockResolvedValue([mockItem]);
-      
+
       // Mock failed API response
       global.fetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
         text: async () => 'Internal Server Error',
       });
-      
+
       const req = createMockReq(`Bearer ${CRON_SECRET}`);
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
       expect(res.statusCode).toBe(200);
       expect(res.body.successful).toBe(0);
       expect(res.body.failed).toBe(1);
@@ -177,21 +188,21 @@ describe('Cron Process Queue Handler', () => {
         { id: '2', name: 'User 2', email: 'u2@test.com', message: 'Msg 2', attempts: 0 },
         { id: '3', name: 'User 3', email: 'u3@test.com', message: 'Msg 3', attempts: 0 },
       ];
-      
+
       getQueue.mockResolvedValue(mockItems);
       getPendingItems.mockResolvedValue(mockItems);
-      
+
       // Mock all successful
       global.fetch.mockResolvedValue({
         ok: true,
         json: async () => ({ data: { uuid: 'conv-uuid' } }),
       });
-      
+
       const req = createMockReq(`Bearer ${CRON_SECRET}`);
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
       expect(res.statusCode).toBe(200);
       expect(res.body.processed).toBe(3);
       expect(res.body.successful).toBe(3);
@@ -202,12 +213,12 @@ describe('Cron Process Queue Handler', () => {
   describe('Configuration Validation', () => {
     it('should return error if LibreDesk not configured', async () => {
       delete process.env.LIBREDESK_API_URL;
-      
+
       const req = createMockReq(`Bearer ${CRON_SECRET}`);
       const res = createMockRes();
-      
+
       await handler(req, res);
-      
+
       expect(res.statusCode).toBe(500);
       expect(res.body.error).toBe('LibreDesk not configured');
     });
