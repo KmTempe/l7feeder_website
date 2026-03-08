@@ -42,10 +42,11 @@ function Write-Status($msg, $color = "DarkGray") {
 }
 
 function Write-Success($msg) { Write-Status $msg "Green" }
-function Write-Warn($msg)    { Write-Status $msg "Yellow" }
-function Write-Err($msg)     { Write-Status $msg "Red" }
+function Write-Warn($msg) { Write-Status $msg "Yellow" }
+function Write-Err($msg) { Write-Status $msg "Red" }
 
-function Pause-Menu {
+function Wait-Menu {
+
     Write-Host ""
     Write-Host "  Press any key to continue..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
@@ -160,7 +161,8 @@ function Invoke-CronProcessQueue {
         $status = $_.Exception.Response.StatusCode.value__
         if ($status -eq 401) {
             Write-Err "401 Unauthorized — check CRON_SECRET"
-        } else {
+        }
+        else {
             Write-Err "Request failed: $_"
             Write-Warn "Is the dev server running? (option 2)"
         }
