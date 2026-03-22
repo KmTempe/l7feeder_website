@@ -108,7 +108,7 @@ const ResumeDocument = () => (
 
             {/* About */}
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Professional Summary</Text>
+                <Text style={styles.sectionTitle}>About Me</Text>
                 {portfolioData.about.description.map((desc, index) => (
                     <Text key={index} style={{ marginBottom: 5 }}>
                         {desc}

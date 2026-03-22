@@ -92,5 +92,10 @@ export const portfolioData = {
       description: 'A simple tool for auto generating CVs from json files.',
       link: 'https://cvmaker.l7feeders.dev/'
     },
+    {
+      title: 'LibreDesk SMS Proxy',
+      description: 'Middleware that bridges LibreDesk events with the SMSGate Android app.It automates customer SMS notifications for ticket resolutions and status updates',
+      link: 'https://github.com/KmTempe/libredesk-sms-proxy'
+    }
   ]
 };
