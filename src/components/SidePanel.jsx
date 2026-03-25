@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { BlobProvider } from '@react-pdf/renderer';
 import ResumeDocument from './ResumeDocument';
 import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Button, Avatar, Paper } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
@@ -285,13 +285,13 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                     </Box>
                 </Box>
 
-                <PDFDownloadLink
-                    document={<ResumeDocument />}
-                    fileName="Kosmas_Temperekidis_Resume.pdf"
-                    style={{ textDecoration: 'none', width: '100%' }}
-                >
-                    {({ loading }) => (
+                <BlobProvider document={<ResumeDocument />}>
+                    {({ url, loading }) => (
                         <Button
+                            component="a"
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             variant="outlined"
                             fullWidth
                             startIcon={<DownloadIcon />}
@@ -304,7 +304,7 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                             {loading ? 'Loading...' : 'Résumé'}
                         </Button>
                     )}
-                </PDFDownloadLink>
+                </BlobProvider>
             </Box>
         </Box >
     );

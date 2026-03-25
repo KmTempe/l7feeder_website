@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 });
 
 const ResumeDocument = () => (
-    <Document>
+    <Document title="Kosmas Temperekidis resume" author={portfolioData.name}>
         <Page size="A4" style={styles.page}>
             {/* Header */}
             <View style={styles.header}>

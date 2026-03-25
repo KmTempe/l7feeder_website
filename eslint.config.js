@@ -7,7 +7,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
-  { ignores: ['dist/**', 'node_modules/**'] },
+  { ignores: ['dist/**', 'node_modules/**', "coverage/**"] },
   {
     files: ['src/**/*.{js,jsx}'],
     plugins: {
