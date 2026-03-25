@@ -23,9 +23,9 @@ vi.mock('@vercel/speed-insights/react', () => ({
     SpeedInsights: () => null,
 }));
 
-// Mock PDFDownloadLink (used in SidePanel)
+// Mock React PDF Renderer components (used in SidePanel)
 vi.mock('@react-pdf/renderer', () => ({
-    PDFDownloadLink: ({ children }) => <div>{children({ loading: false })}</div>,
+    BlobProvider: ({ children }) => <div>{children({ loading: false, url: 'blob:mock-url' })}</div>,
     Document: () => <div>Document</div>,
     Page: () => <div>Page</div>,
     Text: () => <div>Text</div>,

@@ -11,9 +11,9 @@ vi.mock('framer-motion', () => ({
     },
 }));
 
-// Mock PDFDownloadLink
+// Mock React PDF Renderer components
 vi.mock('@react-pdf/renderer', () => ({
-    PDFDownloadLink: ({ children }) => <div>{children({ loading: false })}</div>,
+    BlobProvider: ({ children }) => <div>{children({ loading: false, url: 'blob:mock-url' })}</div>,
     Document: () => <div>Document</div>,
     Page: () => <div>Page</div>,
     Text: () => <div>Text</div>,
