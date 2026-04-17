@@ -28,7 +28,7 @@ export const portfolioData = {
       period: 'March 2024 – Present',
       responsibilities: [
         'Technical support for PoS terminals (Cardlink-Worldline)',
-        'Technical support for accounting software (Worldline All in One)',
+        'Technical support for ERP software (Worldline All in One)',
         'Front Office and Back Office operations'
       ]
     },
