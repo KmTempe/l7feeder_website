@@ -1,6 +1,6 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-//import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { theme } from './theme/theme';
 import { portfolioData } from './data/portfolioData';
 import Header from './components/Header';
@@ -9,7 +9,7 @@ import ScrollProgress from './components/ScrollProgress';
 import SnowflakeEmbedToggle from './components/SnowflakeEmbedToggle';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
-//import Snowfall from 'react-snowfall';
+import Snowfall from 'react-snowfall';
 
 import SidePanel from './components/SidePanel';
 
@@ -22,13 +22,37 @@ const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
 const Education = lazy(() => import('./components/Education'));
 
+const ENABLE_SNOWFALL = false; // Toggle snowfall effect on/off
+const LIBREDESK_BASE_URL = import.meta.env.VITE_LIBREDESK_BASE_URL;
+
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  // const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  // const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-  //const snowflakeCount = prefersReducedMotion ? 0 : isMobile ? 35 : isTablet ? 60 : 90;
+  // Load LibreDesk live chat widget with inbox ID from env
+  useEffect(() => {
+    const inboxId = import.meta.env.VITE_LIBREDESK_INBOX_ID;
+    if (!inboxId) return;
+
+    window.LibredeskSettings = {
+      baseURL: LIBREDESK_BASE_URL,
+      inboxID: inboxId,
+    };
+
+    const script = document.createElement('script');
+    script.src = `${LIBREDESK_BASE_URL}/widget.js`;
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+      delete window.LibredeskSettings;
+    };
+  }, []);
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
+  const snowflakeCount = prefersReducedMotion ? 0 : isMobile ? 35 : isTablet ? 60 : 90;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -36,7 +60,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* {!prefersReducedMotion && (
+      {ENABLE_SNOWFALL && !prefersReducedMotion && (
         <Snowfall
           snowflakeCount={snowflakeCount}
           speed={isMobile ? [0.6, 1.4] : [0.8, 2.0]}
@@ -52,7 +76,7 @@ function App() {
             zIndex: 0,
           }}
         />
-      )} */}
+      )}
       <CssBaseline />
       <ScrollProgress />
       <SnowflakeEmbedToggle />
