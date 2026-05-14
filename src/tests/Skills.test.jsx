@@ -9,6 +9,7 @@ vi.mock('framer-motion', () => ({
         // eslint-disable-next-line no-unused-vars
         div: ({ children, whileHover, whileTap, whileInView, initial, animate, exit, transition, variants, viewport, ...props }) => <div {...props}>{children}</div>,
     },
+    AnimatePresence: ({ children }) => <>{children}</>,
     useInView: () => true,
 }));
 

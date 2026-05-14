@@ -155,12 +155,18 @@ const ResumeDocument = () => (
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Skills</Text>
                 <View style={styles.skillsContainer}>
-                    {Object.entries(portfolioData.skills).map(([category, skills]) => (
-                        <View key={category} style={{ width: '50%', marginBottom: 10 }}>
-                            <Text style={styles.skillCategory}>{category}</Text>
-                            <Text style={styles.skillList}>{skills.join(', ')}</Text>
-                        </View>
-                    ))}
+                    {Object.entries(portfolioData.skills).map(([category, skills]) => {
+                        const filtered = skills.filter(
+                            (s) => s !== 'Working in High Stress Environments'
+                        );
+                        if (filtered.length === 0) return null;
+                        return (
+                            <View key={category} style={{ width: '50%', marginBottom: 10 }}>
+                                <Text style={styles.skillCategory}>{category}</Text>
+                                <Text style={styles.skillList}>{filtered.join(', ')}</Text>
+                            </View>
+                        );
+                    })}
                 </View>
             </View>
         </Page>
