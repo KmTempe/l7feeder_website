@@ -28,6 +28,8 @@ const inputStyle = {
 const OTP_DURATION = 5 * 60; // 5 minutes in seconds
 
 export default function Contact() {
+  const isContactFormEnabled = false; // Toggle to hide contact form
+
   const sendOtpUrl = '/api/send-otp';
   const verifyOtpUrl = '/api/verify-otp';
 
@@ -289,8 +291,36 @@ export default function Contact() {
               }}
             >
               <AnimatePresence mode="wait">
+                {!isContactFormEnabled && (
+                  <motion.div
+                    key="disabled-message"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <Box sx={{ textAlign: 'center', py: 4 }}>
+                      <Typography variant="body1" sx={{ color: 'text.secondary', fontFamily: '"Fira Code", monospace' }}>
+                        contact form is hidden due to technical reasons
+                      </Typography>
+                      <Typography
+                        component="a"
+                        href="mailto:support@l7feeders.dev"
+                        sx={{
+                          color: 'text.secondary',
+                          textDecoration: 'none',
+                          fontFamily: '"Fira Code", monospace',
+                          fontSize: '0.8rem',
+                        }}
+                      >contact me directly at <Box component="span" sx={{
+                        transition: 'color 0.3s ease',
+                        '&:hover': { color: 'primary.main' }
+                      }}>👉support@l7feeders.dev</Box></Typography>
+                    </Box>
+                  </motion.div>
+                )}
+
                 {/* ═══════════════════ STEP 1: CONTACT FORM ═══════════════════ */}
-                {step === 'form' && (
+                {isContactFormEnabled && step === 'form' && (
                   <motion.form
                     key="form-step"
                     initial={{ opacity: 0, x: -20 }}
@@ -358,7 +388,7 @@ export default function Contact() {
                 )}
 
                 {/* ═══════════════════ STEP 2: OTP VERIFICATION ═══════════════════ */}
-                {step === 'otp' && (
+                {isContactFormEnabled && step === 'otp' && (
                   <motion.form
                     key="otp-step"
                     initial={{ opacity: 0, x: 20 }}
@@ -484,7 +514,7 @@ export default function Contact() {
                 )}
 
                 {/* ═══════════════════ STEP 3: SUCCESS ═══════════════════ */}
-                {step === 'done' && (
+                {isContactFormEnabled && step === 'done' && (
                   <motion.div
                     key="done-step"
                     initial={{ opacity: 0, scale: 0.95 }}
