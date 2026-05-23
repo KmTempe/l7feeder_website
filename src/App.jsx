@@ -23,7 +23,7 @@ const Footer = lazy(() => import('./components/Footer'));
 const Education = lazy(() => import('./components/Education'));
 
 const ENABLE_SNOWFALL = false; // Toggle snowfall effect on/off
-const LIBREDESK_BASE_URL = import.meta.env.VITE_LIBREDESK_BASE_URL;
+const LIBREDESK_BASE_URL = import.meta.env.VITE_LIBREDESK_BASE_URL || 'https://support.ausrine.giize.com';
 
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
