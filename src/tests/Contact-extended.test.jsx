@@ -33,7 +33,7 @@ async function fillAndSubmitForm() {
   fireEvent.click(screen.getByRole('button', { name: /Send Message/i }));
 }
 
-const isContactFormTestEnabled = false;
+const isContactFormTestEnabled = true;
 
 describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA Tests', () => {
   beforeEach(() => {

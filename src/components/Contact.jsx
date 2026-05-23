@@ -28,7 +28,7 @@ const inputStyle = {
 const OTP_DURATION = 5 * 60; // 5 minutes in seconds
 
 export default function Contact() {
-  const isContactFormEnabled = false; // Toggle to hide contact form
+  const isContactFormEnabled = true; // Toggle to hide contact form
 
   const sendOtpUrl = '/api/send-otp';
   const verifyOtpUrl = '/api/verify-otp';

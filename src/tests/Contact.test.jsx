@@ -25,7 +25,7 @@ const renderWithTheme = (component) => {
     );
 };
 
-const isContactFormTestEnabled = false;
+const isContactFormTestEnabled = true;
 
 describe.skipIf(!isContactFormTestEnabled)('Contact Component', () => {
     beforeEach(() => {
