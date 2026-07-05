@@ -29,6 +29,7 @@ package-lock.json
 .vercel
 bfg-1.15.0.jar
 public/
+internal_assets/
 
 # IndexNow configuration
 indexnow-key.config

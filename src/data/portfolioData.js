@@ -1,3 +1,6 @@
+const homelabStackDiagramUrl = import.meta.env.VITE_HOMELAB_STACK_DIAGRAM_URL
+  || 'https://78dcc92loiyfdt17.public.blob.vercel-storage.com/docker-compose-diagram-as1AHJu3AIgz0HLWQIRQ1MQqgMDz58.svg';
+
 export const portfolioData = {
   name: 'Kosmas Temperekidis',
   title: 'IT Applications & Technical Support',
@@ -71,7 +74,7 @@ export const portfolioData = {
 
   skills: {
     'Frameworks': ['PHP', 'JavaScript', 'Python', 'Next.js', 'Vite', 'React', 'Flask'],
-    'Tools & Platforms': ['Git', 'Docker', 'Docker Compose', 'MongoDB', 'PostgreSQL'],
+    'Tools & Platforms': ['Git', 'Docker', 'Docker Compose', 'MongoDB', 'PostgreSQL', 'Redis', 'Nginx Proxy Manager', 'Uptime Kuma', 'Vercel Blob'],
     'Creative & Productivity': ['Adobe Photoshop', 'Adobe Lightroom', 'DaVinci Resolve'],
     'Professional': ['Technical Support', 'Customer Service', 'E-commerce Management', 'Problem Solving', 'Team Collaboration', 'Working in High Stress Environments']
   },
@@ -96,6 +99,38 @@ export const portfolioData = {
       title: 'LibreDesk SMS Proxy',
       description: 'Middleware that bridges LibreDesk events with the SMSGate Android app.It automates customer SMS notifications for ticket resolutions and status updates',
       link: 'https://github.com/KmTempe/libredesk-sms-proxy'
+    },
+    {
+      title: 'Self-Hosted Media Platform & Homelab',
+      description: 'Built and operate a self-hosted homelab centered on Jellyfin, with separate service stacks for media streaming, support, private cloud, photo management, monitoring, search, and invite-based onboarding.',
+      link: 'https://github.com/jellyfin/jellyfin',
+      featured: true,
+      image: {
+        src: homelabStackDiagramUrl,
+        alt: 'Homelab Docker Compose architecture diagram',
+        caption: 'Stack diagram served from Vercel Blob storage'
+      },
+      highlights: [
+        'Operate Jellyfin with the official server and web UI components, currently managing 3.6 TB of media.',
+        'Tested real-world capacity for 10-12 simultaneous transcoding users and about 20 direct-play users on a 1 Gbps connection.',
+        'Run database and cache-backed apps including LibreDesk, Nextcloud, Immich, and Meilisearch-backed search.',
+        'Use Nginx Proxy Manager as the public routing layer with SSL termination and protective rules for selected services.',
+        'Automate invite onboarding with Wizarr and support mailbox workflows, leaving final approval under admin control.',
+        'Monitor service health with Uptime Kuma so users can check platform status live.'
+      ],
+      technologies: [
+        'Jellyfin',
+        'Docker Compose',
+        'Nginx Proxy Manager',
+        'PostgreSQL',
+        'Redis',
+        'Valkey',
+        'Meilisearch',
+        'Wizarr',
+        'Uptime Kuma',
+        'Vercel Blob'
+      ],
+      roadmap: 'Next steps include centralizing users with LDAP and adding SSO through Google or Authelia.'
     }
   ]
 };

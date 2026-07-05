@@ -62,4 +62,37 @@ describe('Projects Component', () => {
         // We can check for the project titles to count
         expect(screen.getAllByText(/Project \d/)).toHaveLength(2);
     });
+
+    it('renders featured project details and diagram link', () => {
+        renderWithTheme(
+            <Projects
+                projects={[
+                    {
+                        title: 'Self-Hosted Media Platform & Homelab',
+                        description: 'Built and operate a self-hosted homelab centered on Jellyfin.',
+                        image: {
+                            src: 'https://blob.example.com/docker-compose-diagram.svg',
+                            alt: 'Homelab Docker Compose architecture diagram',
+                            caption: 'Stack diagram served from Vercel Blob storage'
+                        },
+                        highlights: ['Operate Jellyfin with 3.6 TB of media.'],
+                        technologies: ['Jellyfin', 'Docker Compose'],
+                        roadmap: 'Next steps include LDAP and SSO.'
+                    }
+                ]}
+            />
+        );
+
+        expect(screen.getByAltText('Homelab Docker Compose architecture diagram')).toHaveAttribute(
+            'src',
+            'https://blob.example.com/docker-compose-diagram.svg'
+        );
+        expect(screen.getByText('Operate Jellyfin with 3.6 TB of media.')).toBeInTheDocument();
+        expect(screen.getByText('Jellyfin')).toBeInTheDocument();
+        expect(screen.getByText(/Next steps include LDAP and SSO./i)).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /open self-hosted media platform & homelab stack diagram/i })).toHaveAttribute(
+            'href',
+            'https://blob.example.com/docker-compose-diagram.svg'
+        );
+    });
 });
