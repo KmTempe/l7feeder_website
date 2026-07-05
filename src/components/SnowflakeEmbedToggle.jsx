@@ -13,7 +13,21 @@ import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
-function SnowflakeScaledEmbed({ open, preload, isMobile }) {
+const defaultConfig = {
+  enabled: true,
+  preload: true,
+  title: 'Snowflake',
+  iframeTitle: 'Snowflake (Tor Project)',
+  widgetUrl: 'https://snowflake.torproject.org/embed.html',
+  siteUrl: 'https://snowflake.torproject.org/',
+  openLabel: 'Open Snowflake widget',
+  closeLabel: 'Close Snowflake widget',
+  tooltip: 'Anti-censorship: open Snowflake widget',
+  websiteLabel: 'Open Snowflake website',
+  description: 'Keep this tab open to help others bypass censorship.',
+};
+
+function SnowflakeScaledEmbed({ open, preload, isMobile, iframeTitle, widgetUrl }) {
   const containerRef = useRef(null);
 
   const baseSize = useMemo(
@@ -65,8 +79,8 @@ function SnowflakeScaledEmbed({ open, preload, isMobile }) {
         }}
       >
         <iframe
-          title="Snowflake (Tor Project)"
-          src="https://snowflake.torproject.org/embed.html"
+          title={iframeTitle}
+          src={widgetUrl}
           width={baseSize.width}
           height={baseSize.height}
           frameBorder="0"
@@ -80,11 +94,14 @@ function SnowflakeScaledEmbed({ open, preload, isMobile }) {
   );
 }
 
-export default function SnowflakeEmbedToggle({ preload = true }) {
+export default function SnowflakeEmbedToggle({ config = {}, preload }) {
+  const snowflakeConfig = { ...defaultConfig, ...config };
+  const shouldPreload = preload ?? snowflakeConfig.preload;
   const [open, setOpen] = useState(false);
-  const [hasOpened, setHasOpened] = useState(preload);
+  const [hasOpened, setHasOpened] = useState(shouldPreload);
   const isMobile = useMediaQuery('(max-width: 600px)');
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const shouldRenderPanel = hasOpened || shouldPreload;
 
   useEffect(() => {
     if (!open) return;
@@ -96,6 +113,8 @@ export default function SnowflakeEmbedToggle({ preload = true }) {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [open]);
+
+  if (!snowflakeConfig.enabled) return null;
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
@@ -109,13 +128,13 @@ export default function SnowflakeEmbedToggle({ preload = true }) {
         })}
       >
         <Tooltip
-          title={open ? 'Hide Snowflake widget' : 'Anti-censorship: open Snowflake widget'}
+          title={open ? snowflakeConfig.closeLabel : snowflakeConfig.tooltip}
           placement="left"
           disableHoverListener={isMobile}
           disableFocusListener={isMobile}
         >
           <IconButton
-            aria-label={open ? 'Hide Snowflake widget' : 'Open Snowflake widget'}
+            aria-label={open ? snowflakeConfig.closeLabel : snowflakeConfig.openLabel}
             onClick={() =>
               setOpen((v) => {
                 const next = !v;
@@ -158,11 +177,11 @@ export default function SnowflakeEmbedToggle({ preload = true }) {
           </IconButton>
         </Tooltip>
 
-        {hasOpened && (
+        {shouldRenderPanel && (
           <Paper
             elevation={12}
             role="dialog"
-            aria-label="Snowflake widget"
+            aria-label={`${snowflakeConfig.title} widget`}
             aria-hidden={!open}
             sx={{
               position: 'fixed',
@@ -204,11 +223,11 @@ export default function SnowflakeEmbedToggle({ preload = true }) {
                     fontWeight: 600,
                   }}
                 >
-                  Snowflake
+                  {snowflakeConfig.title}
                 </Typography>
                 <IconButton
-                  aria-label="Open Snowflake website"
-                  href="https://snowflake.torproject.org/"
+                  aria-label={snowflakeConfig.websiteLabel}
+                  href={snowflakeConfig.siteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   size="small"
@@ -218,7 +237,7 @@ export default function SnowflakeEmbedToggle({ preload = true }) {
                 </IconButton>
               </Box>
 
-              <IconButton aria-label="Close Snowflake widget" onClick={() => setOpen(false)} size="small">
+              <IconButton aria-label={`Close ${snowflakeConfig.title} panel`} onClick={() => setOpen(false)} size="small">
                 <CloseIcon fontSize="small" />
               </IconButton>
             </Box>
@@ -230,10 +249,16 @@ export default function SnowflakeEmbedToggle({ preload = true }) {
                 variant="caption"
                 sx={{ color: 'text.secondary', display: 'block', mb: 0.75, lineHeight: 1.35 }}
               >
-                Keep this tab open to help others bypass censorship.
+                {snowflakeConfig.description}
               </Typography>
 
-              <SnowflakeScaledEmbed open={open} preload={preload} isMobile={isMobile} />
+              <SnowflakeScaledEmbed
+                open={open}
+                preload={shouldPreload}
+                isMobile={isMobile}
+                iframeTitle={snowflakeConfig.iframeTitle}
+                widgetUrl={snowflakeConfig.widgetUrl}
+              />
             </Box>
           </Paper>
         )}

@@ -1,9 +1,13 @@
+import { Fragment } from 'react';
 import { Box, Container, Typography, Link } from '@mui/material';
-import { portfolioData } from '../data/portfolioData';
+import { portfolioData as defaultPortfolioData } from '../data/portfolioData';
 import packageJson from '../../package.json';
 
-export default function Footer() {
+export default function Footer({ portfolioData = defaultPortfolioData }) {
   const currentYear = new Date().getFullYear();
+  const site = portfolioData.site || {};
+  const profile = portfolioData.profile || {};
+  const builtWith = site.builtWith || [];
 
   return (
     <Box
@@ -25,52 +29,37 @@ export default function Footer() {
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'center', sm: 'flex-start' }, gap: 1.5 }}>
             <Typography variant="body2" color="text.secondary">
-              © {currentYear} {portfolioData.name}. Engineered with curiosity & only god knows what i have do &nbsp;
-              <span style={{ fontSize: '0.85em', color: '#9db4cc', }}>Version&nbsp;{packageJson.version}</span>
+              &copy; {currentYear} {profile.name}. {site.footerNote}{' '}
+              {site.showVersion && (
+                <span style={{ fontSize: '0.85em', color: '#9db4cc' }}>
+                  Version&nbsp;{packageJson.version}
+                </span>
+              )}
             </Typography>
 
           </Box>
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'center', sm: 'right' } }}>
-            Built with{' '}
-            <Link
-              href="https://react.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                color: 'primary.main',
-                textDecoration: 'none',
-                '&:hover': { color: 'secondary.main' },
-              }}
-            >
-              React
-            </Link>
-            ,{' '}
-            <Link
-              href="https://vitejs.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                color: 'primary.main',
-                textDecoration: 'none',
-                '&:hover': { color: 'secondary.main' },
-              }}
-            >
-              Vite
-            </Link>
-            , and{' '}
-            <Link
-              href="https://mui.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                color: 'primary.main',
-                textDecoration: 'none',
-                '&:hover': { color: 'secondary.main' },
-              }}
-            >
-              Material Design 3
-            </Link>
-          </Typography>
+          {builtWith.length > 0 && (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: { xs: 'center', sm: 'right' } }}>
+              Built with{' '}
+              {builtWith.map((technology, index) => (
+                <Fragment key={technology.label}>
+                  {index > 0 && (index === builtWith.length - 1 ? ' and ' : ', ')}
+                  <Link
+                    href={technology.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      color: 'primary.main',
+                      textDecoration: 'none',
+                      '&:hover': { color: 'secondary.main' },
+                    }}
+                  >
+                    {technology.label}
+                  </Link>
+                </Fragment>
+              ))}
+            </Typography>
+          )}
         </Box>
       </Container>
     </Box>

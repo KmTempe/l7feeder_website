@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SidePanel from '../components/SidePanel';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { testPortfolioData } from './testPortfolioData';
 
 // Mock Framer Motion
 vi.mock('framer-motion', () => ({
@@ -44,14 +45,7 @@ describe('SidePanel Component', () => {
     });
 
     it('renders navigation items', () => {
-        const mockData = {
-            title: 'Test Title',
-            experience: [{}],
-            education: [{}],
-            skills: { test: 'test' },
-            projects: [{}]
-        };
-        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={() => { }} portfolioData={mockData} />);
+        renderWithTheme(<SidePanel mobileOpen={true} onClose={() => { }} portfolioData={testPortfolioData} />);
 
         expect(screen.getAllByText('Home')[0]).toBeInTheDocument();
         expect(screen.getAllByText('Experience')[0]).toBeInTheDocument();
@@ -61,8 +55,7 @@ describe('SidePanel Component', () => {
     });
 
     it('renders social links', () => {
-        const mockData = { title: 'Test Title' };
-        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={() => { }} portfolioData={mockData} />);
+        renderWithTheme(<SidePanel mobileOpen={true} onClose={() => { }} portfolioData={testPortfolioData} />);
 
         const githubLinks = screen.queryAllByRole('link', { name: /GitHub/i });
         expect(githubLinks.length).toBeGreaterThan(0);
@@ -75,14 +68,7 @@ describe('SidePanel Component', () => {
 
     it('navigates to section on click', () => {
         const onCloseMock = vi.fn();
-        const mockData = {
-            title: 'Test Title',
-            experience: [{}],
-            education: [{}],
-            skills: { test: 'test' },
-            projects: [{}]
-        };
-        renderWithTheme(<SidePanel name="Test Name" mobileOpen={true} onClose={onCloseMock} portfolioData={mockData} />);
+        renderWithTheme(<SidePanel mobileOpen={true} onClose={onCloseMock} portfolioData={testPortfolioData} />);
 
         // Mock document.querySelector to return an element
         const mockElement = document.createElement('div');

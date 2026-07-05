@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Contact from '../components/Contact';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { testPortfolioData, getTestSection } from './testPortfolioData';
 
 // Mock Framer Motion (including AnimatePresence used in the 2FA flow)
 vi.mock('framer-motion', () => ({
@@ -24,6 +25,10 @@ const renderWithTheme = (component) => {
     </ThemeProvider>
   );
 };
+
+const renderContact = () => renderWithTheme(
+  <Contact contact={testPortfolioData.contact} section={getTestSection('contact')} />
+);
 
 // Helper: fill and submit the contact form
 async function fillAndSubmitForm() {
@@ -48,7 +53,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
   // ── Form validation (client-side) ──────────────────────────────────────
   describe('Client-side form validation', () => {
     it('should show initial form with all fields empty', () => {
-      renderWithTheme(<Contact />);
+      renderContact();
 
       const nameInput = screen.getByPlaceholderText(/Your name/i);
       const emailInput = screen.getByPlaceholderText(/Your email/i);
@@ -60,7 +65,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should have Send Message button enabled initially', () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       const btn = screen.getByRole('button', { name: /Send Message/i });
       expect(btn).not.toBeDisabled();
     });
@@ -70,7 +75,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
   describe('OTP send failure', () => {
     it('should show error on network failure', async () => {
       window.fetch = vi.fn().mockRejectedValueOnce(new Error('Network error'));
-      renderWithTheme(<Contact />);
+      renderContact();
 
       // Fill form and submit inside act to handle all resulting state updates
       await act(async () => {
@@ -92,7 +97,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
         status: 500,
         json: async () => ({ error: 'Failed to generate verification code.' }),
       });
-      renderWithTheme(<Contact />);
+      renderContact();
 
       await fillAndSubmitForm();
 
@@ -107,7 +112,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
         status: 500,
         json: async () => ({ error: 'Server error' }),
       });
-      renderWithTheme(<Contact />);
+      renderContact();
 
       await fillAndSubmitForm();
 
@@ -123,7 +128,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
         status: 429,
         json: async () => ({ error: 'Please wait 20 seconds before requesting a new code.', retryAfter: 20 }),
       });
-      renderWithTheme(<Contact />);
+      renderContact();
 
       await fillAndSubmitForm();
 
@@ -143,7 +148,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should show Email Verification title on OTP step', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -152,7 +157,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should display the user email on OTP step', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -163,7 +168,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should show OTP input with placeholder 1234567', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -172,7 +177,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should show Verify & Send button', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -181,7 +186,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should show Edit form and Resend code buttons', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -192,7 +197,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should show countdown timer', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -214,7 +219,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should show error for invalid OTP code', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -237,7 +242,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should go back to form when OTP is expired', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -261,7 +266,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should show error on network failure during verification', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -287,7 +292,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
         ok: true,
         json: async () => ({ success: true }),
       });
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -306,7 +311,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
         ok: true,
         json: async () => ({ success: true }),
       });
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -339,7 +344,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
           json: async () => ({ success: true, queued: 'q-123' }),
         });
 
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -368,7 +373,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
           json: async () => ({ success: true, direct: true }),
         });
 
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -394,7 +399,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should have maxLength of 7 on OTP input', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -404,7 +409,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should have inputMode numeric on OTP input', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -414,7 +419,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
     });
 
     it('should have autocomplete one-time-code on OTP input', async () => {
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -432,7 +437,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
         json: async () => ({ success: true }),
       });
 
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {
@@ -462,7 +467,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component — Extended 2FA T
           json: async () => ({ success: true, queued: 'q-1' }),
         });
 
-      renderWithTheme(<Contact />);
+      renderContact();
       await fillAndSubmitForm();
 
       await waitFor(() => {

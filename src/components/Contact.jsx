@@ -34,6 +34,7 @@ export default function Contact({ contact, section = {} }) {
   const otpLength = formConfig.otpLength;
   const sendOtpUrl = formConfig.sendOtpUrl;
   const verifyOtpUrl = formConfig.verifyOtpUrl;
+  const otpPlaceholder = Array.from({ length: otpLength }, (_, index) => String((index + 1) % 10)).join('');
 
   // ── State ────────────────────────────────────────────────────────────────
   const [step, setStep] = useState('form');           // 'form' | 'otp' | 'done'
@@ -410,7 +411,7 @@ export default function Contact({ contact, section = {} }) {
                           {labels.emailVerification}
                         </Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                          A 7-digit code has been sent to{' '}
+                          A {otpLength}-digit code has been sent to{' '}
                           <Box component="span" sx={{ color: 'primary.main', fontWeight: 600 }}>
                             {formData.email}
                           </Box>
@@ -459,13 +460,13 @@ export default function Contact({ contact, section = {} }) {
                           name="otp"
                           value={otpCode}
                           onChange={(e) => {
-                            // Allow only digits, max 7 chars
+                            // Allow only digits and cap input to the configured OTP length.
                             const val = e.target.value.replace(/\D/g, '').slice(0, otpLength);
                             setOtpCode(val);
                           }}
                           required
                           maxLength={otpLength}
-                          placeholder="1234567"
+                          placeholder={otpPlaceholder}
                           inputMode="numeric"
                           autoComplete="one-time-code"
                           style={{
@@ -480,7 +481,7 @@ export default function Contact({ contact, section = {} }) {
 
                       <Button
                         type="submit"
-                        disabled={loading || otpCode.length !== otpCode || countdown <= 0}
+                        disabled={loading || otpCode.length !== otpLength || countdown <= 0}
                         variant="outlined"
                         sx={{
                           mt: 1,

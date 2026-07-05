@@ -6,7 +6,18 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 // Mock portfolio data and package.json
 vi.mock('../data/portfolioData', () => ({
     portfolioData: {
-        name: 'Test User'
+        site: {
+            footerNote: 'Built from test data.',
+            showVersion: true,
+            builtWith: [
+                { label: 'React', href: 'https://react.dev' },
+                { label: 'Vite', href: 'https://vitejs.dev' },
+                { label: 'Material Design 3', href: 'https://mui.com' },
+            ],
+        },
+        profile: {
+            name: 'Test User',
+        },
     }
 }));
 
@@ -30,7 +41,8 @@ describe('Footer Component', () => {
     it('renders copyright text with name and year', () => {
         renderWithTheme(<Footer />);
         const currentYear = new Date().getFullYear();
-        expect(screen.getByText(new RegExp(`© ${currentYear} Test User`))).toBeInTheDocument();
+        expect(screen.getByText(new RegExp(`${currentYear} Test User`))).toBeInTheDocument();
+        expect(screen.getByText(/Built from test data./)).toBeInTheDocument();
     });
 
     it('renders version number', () => {

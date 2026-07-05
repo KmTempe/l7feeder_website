@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Contact from '../components/Contact';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { testPortfolioData, getTestSection } from './testPortfolioData';
 
 // Mock Framer Motion (including AnimatePresence used in the 2FA flow)
 vi.mock('framer-motion', () => ({
@@ -25,6 +26,10 @@ const renderWithTheme = (component) => {
     );
 };
 
+const renderContact = () => renderWithTheme(
+    <Contact contact={testPortfolioData.contact} section={getTestSection('contact')} />
+);
+
 const isContactFormTestEnabled = true;
 
 describe.skipIf(!isContactFormTestEnabled)('Contact Component', () => {
@@ -33,7 +38,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component', () => {
     });
 
     it('renders contact form inputs', () => {
-        renderWithTheme(<Contact />);
+        renderContact();
 
         expect(screen.getByPlaceholderText(/Your name/i)).toBeInTheDocument();
         expect(screen.getByPlaceholderText(/Your email/i)).toBeInTheDocument();
@@ -48,7 +53,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component', () => {
             json: async () => ({ success: true, message: 'Verification code sent.' }),
         });
 
-        renderWithTheme(<Contact />);
+        renderContact();
 
         fireEvent.change(screen.getByPlaceholderText(/Your name/i), { target: { value: 'Test User' } });
         fireEvent.change(screen.getByPlaceholderText(/Your email/i), { target: { value: 'test@example.com' } });
@@ -94,7 +99,7 @@ describe.skipIf(!isContactFormTestEnabled)('Contact Component', () => {
                 json: async () => ({ success: true, queued: 'q-123' }),
             });
 
-        renderWithTheme(<Contact />);
+        renderContact();
 
         // Fill and submit form
         fireEvent.change(screen.getByPlaceholderText(/Your name/i), { target: { value: 'Test User' } });

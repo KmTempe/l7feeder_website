@@ -3,8 +3,249 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import ProjectsTiles from './ProjectsTiles';
 
-export default function Projects({ projects, section = {} }) {
+export default ProjectsTiles;
+
+const featuredTileSx = {
+    bgcolor: '#112240',
+    border: '1px solid rgba(100, 255, 218, 0.12)',
+    borderRadius: 1,
+    p: { xs: 2.25, md: 2.75 },
+    minHeight: 120,
+    boxShadow: '0 10px 30px -18px rgba(2, 12, 27, 0.75)',
+};
+
+function ProjectHeader({ project, dense = false }) {
+    return (
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 2, mb: dense ? 2 : 0 }}>
+            <Typography
+                variant="h6"
+                sx={{
+                    fontWeight: 600,
+                    color: 'text.primary',
+                    fontSize: dense ? '1.1rem' : { xs: '1.25rem', md: '1.45rem' },
+                    display: 'flex',
+                    alignItems: 'center',
+                    lineHeight: 1.25,
+                    '&::before': {
+                        content: '"▹"',
+                        color: 'primary.main',
+                        mr: 1,
+                        fontSize: dense ? '1.2rem' : '1.35rem',
+                    }
+                }}
+            >
+                {project.title}
+            </Typography>
+            {project.link && (
+                <Tooltip title="Visit Website" placement="top">
+                    <IconButton
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="small"
+                        sx={{
+                            color: 'text.secondary',
+                            mt: -0.5,
+                            mr: -1,
+                            '&:hover': { color: 'primary.main' }
+                        }}
+                    >
+                        <OpenInNewIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+            )}
+        </Box>
+    );
+}
+
+function FeaturedProject({ project }) {
+    const hasDiagram = Boolean(project.image?.src);
+
+    return (
+        <Box sx={{ gridColumn: { md: '1 / -1' } }}>
+            <ProjectHeader project={project} />
+
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: {
+                        xs: '1fr',
+                        sm: 'repeat(2, minmax(0, 1fr))',
+                        lg: 'repeat(4, minmax(0, 1fr))',
+                    },
+                    gap: 2,
+                    mt: 2.5,
+                    alignItems: 'stretch',
+                }}
+            >
+                {hasDiagram && (
+                    <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 2' }, gridRow: { lg: 'span 2' }, p: 1.5 }}>
+                        <Box
+                            component="a"
+                            href={project.image.src}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Open ${project.title} stack diagram`}
+                            sx={{
+                                display: 'block',
+                                height: '100%',
+                                minHeight: { xs: 240, md: 360 },
+                                border: '1px solid rgba(100, 255, 218, 0.18)',
+                                borderRadius: 1,
+                                bgcolor: '#0a192f',
+                                overflow: 'hidden',
+                                '&:focus-visible': {
+                                    outline: '2px solid',
+                                    outlineColor: 'primary.main',
+                                    outlineOffset: 3
+                                }
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src={project.image.src}
+                                alt={project.image.alt}
+                                loading="lazy"
+                                sx={{
+                                    display: 'block',
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'contain'
+                                }}
+                            />
+                        </Box>
+                        {project.image.caption && (
+                            <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'text.secondary' }}>
+                                {project.image.caption}
+                            </Typography>
+                        )}
+                        <Button
+                            href={project.image.src}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            startIcon={<AccountTreeIcon />}
+                            endIcon={<OpenInNewIcon />}
+                            size="small"
+                            sx={{ mt: 1.5, px: 0, color: 'primary.main', justifyContent: 'flex-start' }}
+                        >
+                            View stack diagram
+                        </Button>
+                    </Box>
+                )}
+
+                <Box sx={{ ...featuredTileSx, gridColumn: { sm: hasDiagram ? 'span 2' : 'span 2', lg: hasDiagram ? 'span 2' : 'span 4' } }}>
+                    <Typography variant="overline" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>
+                        Summary
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.95rem', lineHeight: 1.65 }}>
+                        {project.description}
+                    </Typography>
+                </Box>
+
+                {project.highlights?.length > 0 && (
+                    <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 2' } }}>
+                        <Typography variant="overline" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>
+                            Operations
+                        </Typography>
+                        <Box
+                            component="ul"
+                            sx={{
+                                mt: 1,
+                                mb: 0,
+                                pl: 2.5,
+                                color: 'text.secondary',
+                                '& li': {
+                                    pl: 0.5,
+                                    mb: 0.85,
+                                    fontSize: '0.88rem',
+                                    lineHeight: 1.5
+                                },
+                                '& li::marker': {
+                                    color: 'primary.main'
+                                }
+                            }}
+                        >
+                            {project.highlights.map((highlight) => (
+                                <li key={highlight}>{highlight}</li>
+                            ))}
+                        </Box>
+                    </Box>
+                )}
+
+                {project.technologies?.length > 0 && (
+                    <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 2' } }}>
+                        <Typography variant="overline" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>
+                            Stack
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                            {project.technologies.map((technology) => (
+                                <Chip
+                                    key={technology}
+                                    label={technology}
+                                    size="small"
+                                    sx={{
+                                        bgcolor: 'rgba(100, 255, 218, 0.08)',
+                                        border: '1px solid rgba(100, 255, 218, 0.16)',
+                                        color: 'primary.main',
+                                        fontFamily: '"Fira Code", monospace',
+                                        fontSize: '0.7rem'
+                                    }}
+                                />
+                            ))}
+                        </Box>
+                    </Box>
+                )}
+
+                {project.roadmap && (
+                    <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 2' } }}>
+                        <Typography variant="overline" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>
+                            Ongoing
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                            {project.roadmap}
+                        </Typography>
+                    </Box>
+                )}
+            </Box>
+        </Box>
+    );
+}
+
+function SimpleProjectCard({ project }) {
+    return (
+        <Box
+            sx={{
+                bgcolor: '#112240',
+                p: 4,
+                height: '100%',
+                borderRadius: 2,
+                transition: 'all 0.25s cubic-bezier(0.645,0.045,0.355,1)',
+                '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: '0 10px 30px -15px rgba(2, 12, 27, 0.7)',
+                },
+                display: 'flex',
+                flexDirection: 'column',
+            }}
+        >
+            <ProjectHeader project={project} dense />
+            <Typography
+                variant="body2"
+                sx={{
+                    color: 'text.secondary',
+                    fontSize: '0.9rem',
+                    lineHeight: 1.6
+                }}
+            >
+                {project.description}
+            </Typography>
+        </Box>
+    );
+}
+
+function ProjectsLegacy({ projects, section = {} }) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 

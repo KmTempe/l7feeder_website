@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Skills from '../components/Skills';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { testPortfolioData, getTestSection } from './testPortfolioData';
 
 // Mock Framer Motion
 vi.mock('framer-motion', () => ({
@@ -24,26 +25,22 @@ const renderWithTheme = (component) => {
 };
 
 describe('Skills Component', () => {
-    const mockSkills = {
-        'Languages': ['JavaScript', 'Python'],
-        'Frameworks': ['React', 'Next.js'],
-        'Tools & Platforms': ['Git', 'Docker']
-    };
+    const mockSkills = testPortfolioData.skills;
 
     it('renders section title', () => {
-        renderWithTheme(<Skills skills={mockSkills} />);
+        renderWithTheme(<Skills skills={mockSkills} section={getTestSection('skills')} />);
         expect(screen.getByText(/Expertise/i)).toBeInTheDocument();
     });
 
     it('renders all skill categories', () => {
-        renderWithTheme(<Skills skills={mockSkills} />);
+        renderWithTheme(<Skills skills={mockSkills} section={getTestSection('skills')} />);
         expect(screen.getByText('Languages')).toBeInTheDocument();
         expect(screen.getByText('Frameworks')).toBeInTheDocument();
         expect(screen.getByText('Tools & Platforms')).toBeInTheDocument();
     });
 
     it('renders all skill items', () => {
-        renderWithTheme(<Skills skills={mockSkills} />);
+        renderWithTheme(<Skills skills={mockSkills} section={getTestSection('skills')} />);
         expect(screen.getByText('JavaScript')).toBeInTheDocument();
         expect(screen.getByText('Python')).toBeInTheDocument();
         expect(screen.getByText('React')).toBeInTheDocument();
@@ -54,7 +51,7 @@ describe('Skills Component', () => {
 
     it('opens correct link when clicking Git skill', () => {
         const openSpy = vi.spyOn(window, 'open').mockImplementation(() => { });
-        renderWithTheme(<Skills skills={mockSkills} />);
+        renderWithTheme(<Skills skills={mockSkills} section={getTestSection('skills')} />);
 
         const gitChip = screen.getByText('Git');
         fireEvent.click(gitChip);
@@ -65,7 +62,7 @@ describe('Skills Component', () => {
 
     it('opens correct link when clicking Next.js skill', () => {
         const openSpy = vi.spyOn(window, 'open').mockImplementation(() => { });
-        renderWithTheme(<Skills skills={mockSkills} />);
+        renderWithTheme(<Skills skills={mockSkills} section={getTestSection('skills')} />);
 
         const nextJsChip = screen.getByText('Next.js');
         fireEvent.click(nextJsChip);

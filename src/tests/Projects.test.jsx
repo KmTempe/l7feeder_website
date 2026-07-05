@@ -69,7 +69,8 @@ describe('Projects Component', () => {
                 projects={[
                     {
                         title: 'Self-Hosted Media Platform & Homelab',
-                        description: 'Built and operate a self-hosted homelab centered on Jellyfin.',
+                        description: 'Built and operate a self-hosted homelab centered on Jellyfin with 3.6 TB of media on a 1 Gbps line, tested with 10-12 transcoding users or 20 non-transcoding users.',
+                        featured: true,
                         image: {
                             src: 'https://blob.example.com/docker-compose-diagram.svg',
                             alt: 'Homelab Docker Compose architecture diagram',
@@ -88,6 +89,8 @@ describe('Projects Component', () => {
             'https://blob.example.com/docker-compose-diagram.svg'
         );
         expect(screen.getByText('Operate Jellyfin with 3.6 TB of media.')).toBeInTheDocument();
+        expect(screen.getByText(/3.6 TB of media on a 1 Gbps line/)).toBeInTheDocument();
+        expect(screen.getByText(/10-12 transcoding users or 20 non-transcoding users/)).toBeInTheDocument();
         expect(screen.getByText('Jellyfin')).toBeInTheDocument();
         expect(screen.getByText(/Next steps include LDAP and SSO./i)).toBeInTheDocument();
         expect(screen.getByRole('link', { name: /open self-hosted media platform & homelab stack diagram/i })).toHaveAttribute(

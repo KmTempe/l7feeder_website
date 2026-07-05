@@ -1,9 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const { pathToFileURL } = require('url');
 
-const DOMAIN = 'https://l7feeders.dev';
-const CONTACT_EMAIL = 'support@l7feeders.dev';
-const siteName = 'Kosmas Temperekidis Portfolio';
 const lastmod = new Date().toISOString().split('T')[0];
 
 const publicDir = path.join(__dirname, '../public');
@@ -35,18 +33,21 @@ function generateFavicon() {
 }
 
 
-const pages = [
-  '/',
-  // Add more routes as needed
-];
+async function loadPortfolioData() {
+  const dataPath = pathToFileURL(path.join(__dirname, '../src/data/portfolioData.js')).href;
+  const module = await import(dataPath);
+  return module.portfolioData;
+}
 
-function generateSitemap() {
+function generateSitemap(site) {
+  const domain = site.domain;
+  const pages = site.seo?.pages || ['/'];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages
       .map(
         (page) => `  <url>
-    <loc>${DOMAIN}${page}</loc>
+    <loc>${domain}${page}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -61,11 +62,12 @@ ${pages
   console.log('✓ sitemap.xml generated at', outputPath);
 }
 
-function generateRobots() {
+function generateRobots(site) {
+  const domain = site.domain;
   const robots = `# Allow all search engines to crawl your site
 User-agent: *
 Allow: /
-Sitemap: ${DOMAIN}/sitemap.xml
+Sitemap: ${domain}/sitemap.xml
 
 # Google
 User-agent: Googlebot
@@ -86,7 +88,7 @@ User-agent: OpenAI-SearchBot
 Allow: /
 
 # Point to your sitemap
-Sitemap: ${DOMAIN}/sitemap.xml
+Sitemap: ${domain}/sitemap.xml
 `;
 
   const outputPath = path.join(__dirname, '../public/robots.txt');
@@ -94,37 +96,32 @@ Sitemap: ${DOMAIN}/sitemap.xml
   console.log('✓ robots.txt generated at', outputPath);
 }
 
-function generateLlmsTxt() {
+function generateLlmsTxt(site, contact) {
+  const domain = site.domain;
+  const seo = site.seo || {};
+  const topics = seo.topics || [];
+  const technologyStack = seo.technologyStack || [];
   const llms = `# LLMs.txt - Information for AI Language Models
 # LLMs.txt - Information for AI Language Models
 # Specification: https://llmstxt.org
 
-Site-Name: ${siteName}
-Site-URL: ${DOMAIN}
-Contact: ${CONTACT_EMAIL}
+Site-Name: ${site.name}
+Site-URL: ${domain}
+Contact: ${contact.email}
 
 Description:
-This is a website showcasing my experience. The site includes project demonstrations, 
-and contact information for collaboration inquiries.
+${seo.description}
 
 Topics:
-- DevOps
-- Backend Development
-- API Development
-- Cloud Infrastructure
-- Self-hosted Services
-- System Architecture
+${topics.map((topic) => `- ${topic}`).join('\n')}
 
 Technology Stack:
-- Frontend: React, Vite, Material Design
-- Backend: Node.js
-- Deployment: Vercel
-- Infrastructure: Docker, Nginx
+${technologyStack.map((technology) => `- ${technology}`).join('\n')}
 
 Allow-User-Agents: *
 Disallow-User-Agents: CCBot, anthropic-ai, OpenAI-SearchBot
 
-Sitemap: ${DOMAIN}/sitemap.xml
+Sitemap: ${domain}/sitemap.xml
 `;
 
   const outputPath = path.join(__dirname, '../public/llms.txt');
@@ -133,13 +130,14 @@ Sitemap: ${DOMAIN}/sitemap.xml
 }
 
 
-function main() {
+async function main() {
   console.log('🔧 Generating site files...\n');
 
   try {
-    generateSitemap();
-    generateRobots();
-    generateLlmsTxt();
+    const portfolioData = await loadPortfolioData();
+    generateSitemap(portfolioData.site);
+    generateRobots(portfolioData.site);
+    generateLlmsTxt(portfolioData.site, portfolioData.contact);
     generateFavicon();
     console.log('\n✅ All site files generated successfully!');
   } catch (error) {

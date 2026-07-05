@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { portfolioData } from '../data/portfolioData';
 
 // Font registration removed to use default fonts
@@ -93,16 +93,28 @@ const styles = StyleSheet.create({
     },
 });
 
+const profile = portfolioData.profile || {};
+const contact = portfolioData.contact || {};
+const resume = portfolioData.resume || {};
+const excludedSkillLabels = new Set(resume.excludedSkillLabels || []);
+const skillGroups = (portfolioData.skills || [])
+    .map((group) => ({
+        category: group.category,
+        items: (group.items || [])
+            .map((skill) => skill.label)
+            .filter((label) => label && !excludedSkillLabels.has(label)),
+    }))
+    .filter((group) => group.items.length > 0);
+
 const ResumeDocument = () => (
-    <Document title="Kosmas Temperekidis resume" author={portfolioData.name}>
+    <Document title={resume.documentTitle || `${profile.name} resume`} author={profile.name}>
         <Page size="A4" style={styles.page}>
             {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.name}>{portfolioData.name}</Text>
-                <Text style={styles.title}>{portfolioData.title}</Text>
+                <Text style={styles.name}>{profile.name}</Text>
+                <Text style={styles.title}>{profile.title}</Text>
                 <View style={styles.contactInfo}>
-                    <Text>{portfolioData.email}</Text>
-                    {/* Add phone or location if available in data, currently only email is there */}
+                    <Text>{contact.email}</Text>
                 </View>
             </View>
 
@@ -126,12 +138,13 @@ const ResumeDocument = () => (
                             <Text style={styles.date}>{job.period}</Text>
                         </View>
                         <Text style={[styles.company, { marginBottom: 4 }]}>{job.company}</Text>
-                        {job.responsibilities.map((resp, i) => (
+                        {job.responsibilities?.map((resp, i) => (
                             <View key={i} style={styles.bulletPoint}>
                                 <Text style={styles.bullet}>•</Text>
                                 <Text style={styles.bulletContent}>{resp}</Text>
                             </View>
                         ))}
+                        {job.description && <Text>{job.description}</Text>}
                     </View>
                 ))}
             </View>
@@ -155,18 +168,12 @@ const ResumeDocument = () => (
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Skills</Text>
                 <View style={styles.skillsContainer}>
-                    {Object.entries(portfolioData.skills).map(([category, skills]) => {
-                        const filtered = skills.filter(
-                            (s) => s !== 'Working in High Stress Environments'
-                        );
-                        if (filtered.length === 0) return null;
-                        return (
-                            <View key={category} style={{ width: '50%', marginBottom: 10 }}>
-                                <Text style={styles.skillCategory}>{category}</Text>
-                                <Text style={styles.skillList}>{filtered.join(', ')}</Text>
-                            </View>
-                        );
-                    })}
+                    {skillGroups.map((group) => (
+                        <View key={group.category} style={{ width: '50%', marginBottom: 10 }}>
+                            <Text style={styles.skillCategory}>{group.category}</Text>
+                            <Text style={styles.skillList}>{group.items.join(', ')}</Text>
+                        </View>
+                    ))}
                 </View>
             </View>
         </Page>

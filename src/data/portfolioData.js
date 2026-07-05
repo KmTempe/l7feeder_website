@@ -1,4 +1,4 @@
-import { siteConfig } from '../config/siteConfig';
+import { siteConfig } from '../config/siteConfig.js';
 
 export const portfolioData = {
   site: {
@@ -262,20 +262,21 @@ export const portfolioData = {
     },
     {
       title: 'Self-Hosted Media Platform & Homelab',
-      description: 'Built and operate a self-hosted homelab centered on Jellyfin, with separate service stacks for media streaming, support, private cloud, photo management, monitoring, search, and invite-based onboarding.',
+      description: 'Built and operate a self-hosted homelab centered on Jellyfin, with separate service stacks for media streaming, support, private cloud, photo management, monitoring, search, and invite-based onboarding. The Jellyfin instance currently manages 3.6 TB of media and has been tested on a 1 Gbps line with 10-12 transcoding users or 20 non-transcoding users.',
       link: 'https://ausrine.giize.com/',
       featured: true,
       image: {
         src: siteConfig.assets.homelabStackDiagramUrl,
         alt: 'Homelab Docker Compose architecture diagram',
-        caption: 'Stack diagram served from Vercel Blob storage'
+        caption: 'Stack diagram'
       },
       highlights: [
         'Operate Jellyfin with the official server and web UI components, currently managing 3.6 TB of media.',
-        'Tested real-world capacity for 15-18 simultaneous transcoding users and about 25 direct-play users on a 1 Gbps connection.',
+        'Tested real-world capacity for 10-12 simultaneous transcoding users and 20 non-transcoding users on a 1 Gbps connection.',
         'Use Nginx Proxy Manager as the public routing layer with SSL termination and protective rules for selected services.',
         'Automate invite onboarding with Wizarr and support mailbox workflows, leaving final approval under admin control.',
-        'Monitor service health with Uptime Kuma so users can check platform status live.'
+        'Monitor service health with Uptime Kuma so users can check platform status live.',
+        'Hardening Jellyfin known holes on authentication (added 2FA & passkey support, automated password recovery via email and account recovery)'
       ],
       technologies: [
         'Jellyfin',
@@ -289,7 +290,7 @@ export const portfolioData = {
         'Uptime Kuma',
         'Vercel Blob'
       ],
-      roadmap: 'Next steps include centralizing users with LDAP and adding SSO through Google or Authelia.'
+      roadmap: 'Next steps include centralizing user database with LDAP and adding SSO through Google or Authelia.'
     }
   ]
 };
