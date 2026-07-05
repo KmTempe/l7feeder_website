@@ -25,13 +25,15 @@ const inputStyle = {
 };
 
 // Steps: 'form' → 'otp' → 'done'
-const OTP_DURATION = 5 * 60; // 5 minutes in seconds
-
-export default function Contact() {
-  const isContactFormEnabled = true; // Toggle to hide contact form
-
-  const sendOtpUrl = '/api/send-otp';
-  const verifyOtpUrl = '/api/verify-otp';
+export default function Contact({ contact, section = {} }) {
+  const formConfig = contact.form;
+  const formFields = formConfig.fields;
+  const labels = formConfig.labels;
+  const isContactFormEnabled = formConfig.enabled;
+  const otpDuration = formConfig.otpDurationSeconds;
+  const otpLength = formConfig.otpLength;
+  const sendOtpUrl = formConfig.sendOtpUrl;
+  const verifyOtpUrl = formConfig.verifyOtpUrl;
 
   // ── State ────────────────────────────────────────────────────────────────
   const [step, setStep] = useState('form');           // 'form' | 'otp' | 'done'
@@ -109,15 +111,15 @@ export default function Contact() {
       if (res.ok) {
         setStep('otp');
         setOtpCode('');
-        setCountdown(OTP_DURATION);
-        setResendCooldown(30);
+        setCountdown(otpDuration);
+        setResendCooldown(formConfig.resendCooldownSeconds);
         setSnackbar({
           open: true,
           message: `Verification code sent to ${formData.email}. Check your inbox.`,
           severity: 'info',
         });
       } else if (res.status === 429) {
-        setResendCooldown(data.retryAfter || 30);
+        setResendCooldown(data.retryAfter || formConfig.resendCooldownSeconds);
         showError(data.error || 'Please wait before requesting a new code.');
       } else {
         showError(data.error || 'Failed to send verification code.');
@@ -135,8 +137,8 @@ export default function Contact() {
     if (!otpCode.trim()) {
       return showError('Please enter the verification code.');
     }
-    if (otpCode.trim().length !== 7) {
-      return showError('The verification code must be 7 digits.');
+    if (otpCode.trim().length !== otpLength) {
+      return showError(`The verification code must be ${otpLength} digits.`);
     }
 
     setLoading(true);
@@ -189,11 +191,11 @@ export default function Contact() {
 
       if (res.ok) {
         setOtpCode('');
-        setCountdown(OTP_DURATION);
-        setResendCooldown(30);
+        setCountdown(otpDuration);
+        setResendCooldown(formConfig.resendCooldownSeconds);
         setSnackbar({ open: true, message: 'New verification code sent!', severity: 'info' });
       } else if (res.status === 429) {
-        setResendCooldown(data.retryAfter || 30);
+        setResendCooldown(data.retryAfter || formConfig.resendCooldownSeconds);
         showError(data.error || 'Please wait before requesting a new code.');
       } else {
         showError(data.error || 'Failed to resend code.');
@@ -243,7 +245,7 @@ export default function Contact() {
                 display: 'block',
               }}
             >
-              05. What&apos;s Next?
+              {section.number} {section.kicker}
             </Typography>
           </motion.div>
 
@@ -256,7 +258,7 @@ export default function Contact() {
               variant="h2"
               sx={{ fontWeight: 700, color: 'text.primary', mb: 3, fontSize: { xs: '2.5rem', md: '3.5rem' } }}
             >
-              Get In Touch
+              {section.title}
             </Typography>
           </motion.div>
 
@@ -269,7 +271,7 @@ export default function Contact() {
               variant="body1"
               sx={{ color: 'text.secondary', maxWidth: '600px', mx: 'auto', mb: 4, fontSize: '1.1rem', lineHeight: 1.6 }}
             >
-              I&apos;m currently looking for new opportunities, and my inbox is always open. Whether you have a question or just want to say hi, I&apos;ll try my best to get back to you!
+              {contact.intro}
             </Typography>
           </motion.div>
 
@@ -300,21 +302,23 @@ export default function Contact() {
                   >
                     <Box sx={{ textAlign: 'center', py: 4 }}>
                       <Typography variant="body1" sx={{ color: 'text.secondary', fontFamily: '"Fira Code", monospace' }}>
-                        contact form is hidden due to technical reasons
+                        {formConfig.disabledMessage}
                       </Typography>
                       <Typography
                         component="a"
-                        href="mailto:support@l7feeders.dev"
+                        href={`mailto:${contact.email}`}
                         sx={{
                           color: 'text.secondary',
                           textDecoration: 'none',
                           fontFamily: '"Fira Code", monospace',
                           fontSize: '0.8rem',
                         }}
-                      >contact me directly at <Box component="span" sx={{
-                        transition: 'color 0.3s ease',
-                        '&:hover': { color: 'primary.main' }
-                      }}>👉support@l7feeders.dev</Box></Typography>
+                      >
+                        {contact.directLabel}{' '}
+                        <Box component="span" sx={{ transition: 'color 0.3s ease', '&:hover': { color: 'primary.main' } }}>
+                          {contact.email}
+                        </Box>
+                      </Typography>
                     </Box>
                   </motion.div>
                 )}
@@ -328,42 +332,42 @@ export default function Contact() {
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ duration: 0.3 }}
                     onSubmit={handleSendOtp}
-                  >
+                    >
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                       <Box>
-                        <Typography variant="body2" sx={{ mb: 1, color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>Name</Typography>
+                        <Typography variant="body2" sx={{ mb: 1, color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>{formFields.name.label}</Typography>
                         <input
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          maxLength={64}
-                          placeholder="Your name"
+                          maxLength={formFields.name.maxLength}
+                          placeholder={formFields.name.placeholder}
                           style={inputStyle}
                         />
                       </Box>
                       <Box>
-                        <Typography variant="body2" sx={{ mb: 1, color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>Email</Typography>
+                        <Typography variant="body2" sx={{ mb: 1, color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>{formFields.email.label}</Typography>
                         <input
                           name="email"
                           type="email"
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          maxLength={128}
-                          placeholder="Your email"
+                          maxLength={formFields.email.maxLength}
+                          placeholder={formFields.email.placeholder}
                           style={inputStyle}
                         />
                       </Box>
                       <Box>
-                        <Typography variant="body2" sx={{ mb: 1, color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>Message</Typography>
+                        <Typography variant="body2" sx={{ mb: 1, color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>{formFields.message.label}</Typography>
                         <textarea
                           name="message"
                           value={formData.message}
                           onChange={handleChange}
                           required
-                          maxLength={1000}
-                          placeholder="How can I help?"
+                          maxLength={formFields.message.maxLength}
+                          placeholder={formFields.message.placeholder}
                           rows={5}
                           style={{ ...inputStyle, resize: 'vertical' }}
                         />
@@ -381,7 +385,7 @@ export default function Contact() {
                           '&:hover': { backgroundColor: 'rgba(100, 255, 218, 0.1)', borderColor: 'primary.main' },
                         }}
                       >
-                        {loading ? 'Sending code...' : 'Send Message'}
+                        {loading ? labels.sending : labels.send}
                       </Button>
                     </Box>
                   </motion.form>
@@ -403,7 +407,7 @@ export default function Contact() {
                           variant="h6"
                           sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace', mb: 1 }}
                         >
-                          Email Verification
+                          {labels.emailVerification}
                         </Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                           A 7-digit code has been sent to{' '}
@@ -417,7 +421,7 @@ export default function Contact() {
                       <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                           <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: '"Fira Code", monospace' }}>
-                            Code expires in
+                            {labels.codeExpiresIn}
                           </Typography>
                           <Typography
                             variant="caption"
@@ -432,7 +436,7 @@ export default function Contact() {
                         </Box>
                         <LinearProgress
                           variant="determinate"
-                          value={(countdown / OTP_DURATION) * 100}
+                          value={(countdown / otpDuration) * 100}
                           sx={{
                             height: 4,
                             borderRadius: 2,
@@ -448,7 +452,7 @@ export default function Contact() {
                       {/* OTP input */}
                       <Box>
                         <Typography variant="body2" sx={{ mb: 1, color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>
-                          Verification Code
+                          {labels.verificationCode}
                         </Typography>
                         <input
                           ref={otpInputRef}
@@ -456,11 +460,11 @@ export default function Contact() {
                           value={otpCode}
                           onChange={(e) => {
                             // Allow only digits, max 7 chars
-                            const val = e.target.value.replace(/\D/g, '').slice(0, 7);
+                            const val = e.target.value.replace(/\D/g, '').slice(0, otpLength);
                             setOtpCode(val);
                           }}
                           required
-                          maxLength={7}
+                          maxLength={otpLength}
                           placeholder="1234567"
                           inputMode="numeric"
                           autoComplete="one-time-code"
@@ -476,7 +480,7 @@ export default function Contact() {
 
                       <Button
                         type="submit"
-                        disabled={loading || otpCode.length !== 7 || countdown <= 0}
+                        disabled={loading || otpCode.length !== otpCode || countdown <= 0}
                         variant="outlined"
                         sx={{
                           mt: 1,
@@ -487,7 +491,7 @@ export default function Contact() {
                           '&:hover': { backgroundColor: 'rgba(100, 255, 218, 0.1)', borderColor: 'primary.main' },
                         }}
                       >
-                        {loading ? 'Verifying...' : 'Verify & Send'}
+                        {loading ? labels.verifying : labels.verify}
                       </Button>
 
                       {/* Resend & Back buttons */}
@@ -498,7 +502,7 @@ export default function Contact() {
                           size="small"
                           sx={{ color: 'text.secondary', fontFamily: '"Fira Code", monospace', textTransform: 'none' }}
                         >
-                          ← Edit form
+                          {labels.edit}
                         </Button>
                         <Button
                           onClick={handleResendOtp}
@@ -506,7 +510,7 @@ export default function Contact() {
                           size="small"
                           sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace', textTransform: 'none' }}
                         >
-                          {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend code'}
+                          {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : labels.resend}
                         </Button>
                       </Box>
                     </Box>
@@ -526,10 +530,10 @@ export default function Contact() {
                         ✓
                       </Typography>
                       <Typography variant="h6" sx={{ color: 'text.primary', mb: 1 }}>
-                        Message Sent!
+                        {labels.successTitle}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Thank you for reaching out. I&apos;ll get back to you soon.
+                        {labels.successMessage}
                       </Typography>
                     </Box>
                   </motion.div>

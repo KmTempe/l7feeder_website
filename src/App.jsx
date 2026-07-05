@@ -12,6 +12,7 @@ import { Analytics } from '@vercel/analytics/react';
 import Snowfall from 'react-snowfall';
 
 import SidePanel from './components/SidePanel';
+import { getSection } from './data/portfolioHelpers';
 
 
 // Lazy load components that are below the fold
@@ -22,24 +23,26 @@ const Contact = lazy(() => import('./components/Contact'));
 const Footer = lazy(() => import('./components/Footer'));
 const Education = lazy(() => import('./components/Education'));
 
-const ENABLE_SNOWFALL = false; // Toggle snowfall effect on/off
-const LIBREDESK_BASE_URL = import.meta.env.VITE_LIBREDESK_BASE_URL || 'https://support.ausrine.giize.com';
-
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const profile = portfolioData.profile;
+  const snowfallConfig = portfolioData.features?.snowfall || {};
+  const snowflakeConfig = portfolioData.features?.snowflake || {};
+  const libredeskConfig = portfolioData.integrations?.libredesk || {};
 
   // Load LibreDesk live chat widget with inbox ID from env
   useEffect(() => {
-    const inboxId = import.meta.env.VITE_LIBREDESK_INBOX_ID;
+    const inboxId = libredeskConfig.inboxId;
+    const baseUrl = libredeskConfig.baseUrl;
     if (!inboxId) return;
 
     window.LibredeskSettings = {
-      baseURL: LIBREDESK_BASE_URL,
+      baseURL: baseUrl,
       inboxID: inboxId,
     };
 
     const script = document.createElement('script');
-    script.src = `${LIBREDESK_BASE_URL}/widget.js`;
+    script.src = `${baseUrl}/widget.js`;
     script.async = true;
     document.body.appendChild(script);
 
@@ -47,7 +50,7 @@ function App() {
       document.body.removeChild(script);
       delete window.LibredeskSettings;
     };
-  }, []);
+  }, [libredeskConfig.baseUrl, libredeskConfig.inboxId]);
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -60,7 +63,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {ENABLE_SNOWFALL && !prefersReducedMotion && (
+      {snowfallConfig.enabled && !prefersReducedMotion && (
         <Snowfall
           snowflakeCount={snowflakeCount}
           speed={isMobile ? [0.6, 1.4] : [0.8, 2.0]}
@@ -79,11 +82,11 @@ function App() {
       )}
       <CssBaseline />
       <ScrollProgress />
-      <SnowflakeEmbedToggle />
+      {snowflakeConfig.enabled && <SnowflakeEmbedToggle config={snowflakeConfig} />}
       {/* <AnimatedBlobs /> */}
       <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
-        <Header name={portfolioData.name} onDrawerToggle={handleDrawerToggle} />
-        <SidePanel name={portfolioData.name} portfolioData={portfolioData} mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
+        <Header name={profile.name} onDrawerToggle={handleDrawerToggle} />
+        <SidePanel portfolioData={portfolioData} mobileOpen={mobileOpen} onClose={handleDrawerToggle} />
         <Box
           component="main"
           sx={{
@@ -97,19 +100,20 @@ function App() {
           }}
         >
           <Home
-            name={portfolioData.name}
-            title={portfolioData.title}
+            profile={profile}
             about={portfolioData.about}
+            section={getSection(portfolioData, 'home')}
           />
           <Suspense fallback={<Box sx={{ minHeight: '50vh' }} />}>
-            {portfolioData.experience && <Experience experience={portfolioData.experience} />}
-            {portfolioData.projects && <Projects projects={portfolioData.projects} />}
-            {portfolioData.education && <Education education={portfolioData.education} />}
-            {portfolioData.skills && <Skills skills={portfolioData.skills} />}
+            {portfolioData.experience && <Experience experience={portfolioData.experience} section={getSection(portfolioData, 'experience')} />}
+            {portfolioData.projects && <Projects projects={portfolioData.projects} section={getSection(portfolioData, 'projects')} />}
+            {portfolioData.education && <Education education={portfolioData.education} section={getSection(portfolioData, 'education')} />}
+            {portfolioData.skills && <Skills skills={portfolioData.skills} section={getSection(portfolioData, 'skills')} />}
             <Contact
-              email={portfolioData.email}
+              contact={portfolioData.contact}
+              section={getSection(portfolioData, 'contact')}
             />
-            <Footer />
+            <Footer portfolioData={portfolioData} />
           </Suspense>
           <SpeedInsights />
           <Analytics />

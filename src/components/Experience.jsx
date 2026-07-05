@@ -2,7 +2,7 @@ import { Box, Container, Typography } from '@mui/material';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export default function Experience({ experience }) {
+export default function Experience({ experience, section = {} }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -51,7 +51,7 @@ export default function Experience({ experience }) {
                   display: 'flex',
                   alignItems: 'center',
                   '&::before': {
-                    content: '"02."',
+                    content: `"${section.number || '02.'}"`,
                     color: 'primary.main',
                     fontFamily: '"Fira Code", monospace',
                     fontSize: '1.5rem',
@@ -68,7 +68,7 @@ export default function Experience({ experience }) {
                   },
                 }}
               >
-                Where I&apos;ve Worked
+                {section.title || "Where I've Worked"}
               </Typography>
             </Box >
           </motion.div >

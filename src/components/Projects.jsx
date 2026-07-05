@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 
-export default function Projects({ projects }) {
+export default function Projects({ projects, section = {} }) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -53,7 +53,7 @@ export default function Projects({ projects }) {
                                     display: 'flex',
                                     alignItems: 'center',
                                     '&::before': {
-                                        content: '"03."',
+                                        content: `"${section.number || '03.'}"`,
                                         color: 'primary.main',
                                         fontFamily: '"Fira Code", monospace',
                                         fontSize: '1.5rem',
@@ -70,7 +70,7 @@ export default function Projects({ projects }) {
                                     },
                                 }}
                             >
-                                Some Things I&apos;ve Built
+                                {section.title || "Some Things I've Built"}
                             </Typography>
                         </Box>
                     </motion.div>

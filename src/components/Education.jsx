@@ -2,7 +2,7 @@ import { Box, Container, Typography } from '@mui/material';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export default function Education({ education }) {
+export default function Education({ education, section = {} }) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -51,7 +51,7 @@ export default function Education({ education }) {
                                     display: 'flex',
                                     alignItems: 'center',
                                     '&::before': {
-                                        content: '"04."',
+                                        content: `"${section.number || '04.'}"`,
                                         color: 'primary.main',
                                         fontFamily: '"Fira Code", monospace',
                                         fontSize: '1.5rem',
@@ -68,7 +68,7 @@ export default function Education({ education }) {
                                     },
                                 }}
                             >
-                                Education
+                                {section.title || 'Education'}
                             </Typography>
                         </Box >
                     </motion.div >

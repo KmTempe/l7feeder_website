@@ -1,11 +1,132 @@
-const homelabStackDiagramUrl = import.meta.env.VITE_HOMELAB_STACK_DIAGRAM_URL
-  || 'https://78dcc92loiyfdt17.public.blob.vercel-storage.com/docker-compose-diagram-as1AHJu3AIgz0HLWQIRQ1MQqgMDz58.svg';
+import { siteConfig } from '../config/siteConfig';
 
 export const portfolioData = {
-  name: 'Kosmas Temperekidis',
-  title: 'IT Applications & Technical Support',
-  tagline: 'Passionate about service and technical support, with a decisive and effective approach to achieving goals. A collaborative team player with high productivity.',
-  email: 'support@l7feeders.dev',
+  site: {
+    name: 'Kosmas Temperekidis Portfolio',
+    domain: 'https://l7feeders.dev',
+    repository: 'https://github.com/KmTempe/portfolio-react',
+    footerNote: 'Engineered with curiosity, practical support experience, and a DevOps mindset.',
+    showVersion: true,
+    builtWith: [
+      { label: 'React', href: 'https://react.dev' },
+      { label: 'Vite', href: 'https://vitejs.dev' },
+      { label: 'Material Design 3', href: 'https://mui.com' }
+    ],
+    seo: {
+      description: 'Portfolio for Kosmas Temperekidis, focused on IT support, DevOps, self-hosted services, and practical web tooling.',
+      topics: [
+        'DevOps',
+        'Backend Development',
+        'API Development',
+        'Cloud Infrastructure',
+        'Self-hosted Services',
+        'System Architecture'
+      ],
+      technologyStack: [
+        'Frontend: React, Vite, Material Design',
+        'Backend: Node.js, Express',
+        'Deployment: Vercel',
+        'Infrastructure: Docker, Nginx'
+      ],
+      pages: ['/']
+    }
+  },
+
+  profile: {
+    name: 'Kosmas Temperekidis',
+    title: 'IT Applications & Technical Support',
+    tagline: 'Passionate about service and technical support, with a decisive and effective approach to achieving goals. A collaborative team player with high productivity.',
+    image: {
+      src: 'https://github.com/KmTempe.png',
+      alt: 'Kosmas Temperekidis'
+    },
+    hero: {
+      eyebrow: 'Hi, my name is',
+      subtitle: 'I build things.',
+      cta: {
+        label: 'Check out my work!',
+        href: '#experience'
+      }
+    }
+  },
+
+  sections: [
+    { id: 'home', navLabel: 'Home' },
+    { id: 'experience', number: '02.', title: "Where I've Worked", navLabel: 'Experience' },
+    { id: 'projects', number: '03.', title: "Some Things I've Built", navLabel: 'Projects' },
+    { id: 'education', number: '04.', title: 'Education', navLabel: 'Education' },
+    { id: 'skills', number: '05.', title: 'Expertise', navLabel: 'Skills' },
+    { id: 'contact', number: '06.', kicker: "What's Next?", title: 'Get In Touch', navLabel: 'Contact' }
+  ],
+
+  contact: {
+    email: 'support@l7feeders.dev',
+    intro: "I'm currently looking for new opportunities, and my inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!",
+    directLabel: 'contact me directly at',
+    form: {
+      enabled: true,
+      sendOtpUrl: '/api/send-otp',
+      verifyOtpUrl: '/api/verify-otp',
+      otpLength: 7,
+      otpDurationSeconds: 5 * 60,
+      resendCooldownSeconds: 30,
+      disabledMessage: 'Contact form is hidden due to technical reasons.',
+      fields: {
+        name: { label: 'Name', placeholder: 'Your name', maxLength: 64 },
+        email: { label: 'Email', placeholder: 'Your email', maxLength: 128 },
+        message: { label: 'Message', placeholder: 'How can I help?', maxLength: 1000 }
+      },
+      labels: {
+        send: 'Send Message',
+        sending: 'Sending code...',
+        verify: 'Verify & Send',
+        verifying: 'Verifying...',
+        edit: 'Edit form',
+        resend: 'Resend code',
+        emailVerification: 'Email Verification',
+        verificationCode: 'Verification Code',
+        codeExpiresIn: 'Code expires in',
+        successTitle: 'Message Sent!',
+        successMessage: "Thank you for reaching out. I'll get back to you soon."
+      }
+    }
+  },
+
+  socials: [
+    { type: 'github', label: 'GitHub', href: 'https://github.com/KmTempe' },
+    { type: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/rememberthe5thofnovember1605/' },
+    { type: 'discord', label: 'Discord', handle: 'vannesss' }
+  ],
+
+  resume: {
+    buttonLabel: 'Resume',
+    loadingLabel: 'Loading...',
+    documentTitle: 'Kosmas Temperekidis resume',
+    excludedSkillLabels: ['Working in High Stress Environments']
+  },
+
+  features: {
+    snowfall: {
+      enabled: false
+    },
+    snowflake: {
+      enabled: true,
+      preload: true,
+      title: 'Snowflake',
+      iframeTitle: 'Snowflake (Tor Project)',
+      widgetUrl: 'https://snowflake.torproject.org/embed.html',
+      siteUrl: 'https://snowflake.torproject.org/',
+      openLabel: 'Open Snowflake widget',
+      closeLabel: 'Hide Snowflake widget',
+      tooltip: 'Anti-censorship: open Snowflake widget',
+      websiteLabel: 'Open Snowflake website',
+      description: 'Keep this tab open to help others bypass censorship.'
+    }
+  },
+
+  integrations: {
+    libredesk: siteConfig.integrations.libredesk
+  },
 
   about: {
     description: [
@@ -15,16 +136,6 @@ export const portfolioData = {
   },
 
   experience: [
-    // {
-    //   title: 'Dummy Job Title',
-    //   company: 'Test Company Inc.',
-    //   period: 'Future – Forever',
-    //   responsibilities: [
-    //     'Testing dynamic rendering of the experience section',
-    //     'Ensuring the UI scales correctly with new data',
-    //     'Verifying component reusability'
-    //   ]
-    // },
     {
       title: 'Customer and Technical Support Specialist',
       company: 'CQS S.A',
@@ -72,12 +183,61 @@ export const portfolioData = {
     }
   ],
 
-  skills: {
-    'Frameworks': ['PHP', 'JavaScript', 'Python', 'Next.js', 'Vite', 'React', 'Flask'],
-    'Tools & Platforms': ['Git', 'Docker', 'Docker Compose', 'MongoDB', 'PostgreSQL', 'Redis', 'Nginx Proxy Manager', 'Uptime Kuma', 'Vercel Blob'],
-    'Creative & Productivity': ['Adobe Photoshop', 'Adobe Lightroom', 'DaVinci Resolve'],
-    'Professional': ['Technical Support', 'Customer Service', 'E-commerce Management', 'Problem Solving', 'Team Collaboration', 'Working in High Stress Environments']
-  },
+  skills: [
+    {
+      category: 'Frameworks',
+      items: [
+        { label: 'PHP' },
+        { label: 'JavaScript' },
+        { label: 'Python' },
+        { label: 'Next.js', action: { type: 'link', href: 'https://binlookup.l7feeders.dev/' } },
+        { label: 'Vite' },
+        { label: 'React' },
+        { label: 'Flask' }
+      ]
+    },
+    {
+      category: 'Tools & Platforms',
+      items: [
+        { label: 'Git', action: { type: 'link', href: 'https://github.com/KmTempe/portfolio-react' } },
+        { label: 'Docker' },
+        { label: 'Docker Compose' },
+        { label: 'MongoDB' },
+        { label: 'PostgreSQL' },
+        { label: 'Redis' },
+        { label: 'Nginx Proxy Manager' },
+        { label: 'Uptime Kuma' },
+        { label: 'Vercel Blob' }
+      ]
+    },
+    {
+      category: 'Creative & Productivity',
+      items: [
+        { label: 'Adobe Photoshop' },
+        { label: 'Adobe Lightroom' },
+        { label: 'DaVinci Resolve' }
+      ]
+    },
+    {
+      category: 'Professional',
+      items: [
+        { label: 'Technical Support' },
+        { label: 'Customer Service' },
+        { label: 'E-commerce Management' },
+        { label: 'Problem Solving' },
+        { label: 'Team Collaboration' },
+        {
+          label: 'Working in High Stress Environments',
+          featured: true,
+          action: {
+            type: 'video',
+            title: 'Working in High Stress Environments',
+            src: siteConfig.assets.stressVideoUrl
+          }
+        }
+      ]
+    }
+  ],
 
   projects: [
     {
@@ -103,17 +263,16 @@ export const portfolioData = {
     {
       title: 'Self-Hosted Media Platform & Homelab',
       description: 'Built and operate a self-hosted homelab centered on Jellyfin, with separate service stacks for media streaming, support, private cloud, photo management, monitoring, search, and invite-based onboarding.',
-      link: 'https://github.com/jellyfin/jellyfin',
+      link: 'https://ausrine.giize.com/',
       featured: true,
       image: {
-        src: homelabStackDiagramUrl,
+        src: siteConfig.assets.homelabStackDiagramUrl,
         alt: 'Homelab Docker Compose architecture diagram',
         caption: 'Stack diagram served from Vercel Blob storage'
       },
       highlights: [
         'Operate Jellyfin with the official server and web UI components, currently managing 3.6 TB of media.',
-        'Tested real-world capacity for 10-12 simultaneous transcoding users and about 20 direct-play users on a 1 Gbps connection.',
-        'Run database and cache-backed apps including LibreDesk, Nextcloud, Immich, and Meilisearch-backed search.',
+        'Tested real-world capacity for 15-18 simultaneous transcoding users and about 25 direct-play users on a 1 Gbps connection.',
         'Use Nginx Proxy Manager as the public routing layer with SSL termination and protective rules for selected services.',
         'Automate invite onboarding with Wizarr and support mailbox workflows, leaving final approval under admin control.',
         'Monitor service health with Uptime Kuma so users can check platform status live.'

@@ -3,10 +3,6 @@ import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import VideoModal from './VideoModal';
 
-const STRESS_VIDEO_URL = import.meta.env.VITE_STRESS_VIDEO_URL || '';
-
-const SPECIAL_SKILL = 'Working in High Stress Environments';
-
 /** Keyframe animation for the pulse-glow effect */
 const pulseGlowKeyframes = {
   '@keyframes pulseGlow': {
@@ -23,23 +19,22 @@ const pulseGlowKeyframes = {
 };
 
 /** Returns onClick handler for interactive skill chips */
-function getSkillClickHandler(category, skill, openVideoModal) {
-  if (skill === SPECIAL_SKILL) return openVideoModal;
-  if (category === 'Tools & Platforms' && skill === 'Git') {
-    return () => window.open('https://github.com/KmTempe/portfolio-react', '_blank');
+function getSkillClickHandler(skill, openVideoModal) {
+  if (skill.action?.type === 'video') {
+    return () => openVideoModal(skill.action);
   }
-  if (category === 'Frameworks' && skill === 'Next.js') {
-    return () => window.open('https://binlookup.l7feeders.dev/', '_blank');
+  if (skill.action?.type === 'link' && skill.action.href) {
+    return () => window.open(skill.action.href, '_blank');
   }
   return undefined;
 }
 
-export default function Skills({ skills }) {
+export default function Skills({ skills, section = {} }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [videoAction, setVideoAction] = useState(null);
 
-  if (!skills || Object.keys(skills).length === 0) return null;
+  if (!skills || skills.length === 0) return null;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -85,7 +80,7 @@ export default function Skills({ skills }) {
                   display: 'flex',
                   alignItems: 'center',
                   '&::before': {
-                    content: '"05."',
+                    content: `"${section.number || '05.'}"`,
                     color: 'primary.main',
                     fontFamily: '"Fira Code", monospace',
                     fontSize: '1.5rem',
@@ -102,7 +97,7 @@ export default function Skills({ skills }) {
                   },
                 }}
               >
-                Expertise
+                {section.title || 'Expertise'}
               </Typography>
             </Box >
           </motion.div >
@@ -114,8 +109,8 @@ export default function Skills({ skills }) {
           animate={isInView ? "visible" : "hidden"}
         >
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
-            {Object.entries(skills).map(([category, items]) => (
-              <motion.div key={category} variants={itemVariants}>
+            {skills.map((group) => (
+              <motion.div key={group.category} variants={itemVariants}>
                 <Box
                   sx={{
                     bgcolor: '#112240',
@@ -146,7 +141,7 @@ export default function Skills({ skills }) {
                       }
                     }}
                   >
-                    {category}
+                    {group.category}
                   </Typography>
                   <Box
                     component={motion.div}
@@ -158,11 +153,12 @@ export default function Skills({ skills }) {
                     }}
                     sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}
                   >
-                    {items.map((skill, idx) => {
-                      const isSpecial = skill === SPECIAL_SKILL;
+                    {group.items.map((skill, idx) => {
+                      const isSpecial = Boolean(skill.featured);
+                      const isInteractive = Boolean(skill.action);
                       return (
                         <motion.div
-                          key={idx}
+                          key={skill.label || idx}
                           variants={{
                             hidden: { opacity: 0, scale: 0.8 },
                             visible: { opacity: 1, scale: 1 }
@@ -171,11 +167,10 @@ export default function Skills({ skills }) {
                           whileTap={{ scale: 0.95 }}
                         >
                           <Chip
-                            label={skill}
+                            label={skill.label}
                             onClick={getSkillClickHandler(
-                              category,
                               skill,
-                              () => setIsVideoOpen(true),
+                              setVideoAction,
                             )}
                             sx={{
                               bgcolor: isSpecial
@@ -186,7 +181,7 @@ export default function Skills({ skills }) {
                               fontSize: '0.8rem',
                               borderRadius: 1,
                               height: '28px',
-                              cursor: isSpecial ? 'pointer' : 'default',
+                              cursor: isInteractive ? 'pointer' : 'default',
                               border: isSpecial
                                 ? '1px solid rgba(100, 255, 218, 0.4)'
                                 : 'none',
@@ -212,10 +207,10 @@ export default function Skills({ skills }) {
 
         {/* Video modal for the stress skill */}
         <VideoModal
-          open={isVideoOpen}
-          onClose={() => setIsVideoOpen(false)}
-          videoUrl={STRESS_VIDEO_URL}
-          title="Working in High Stress Environments"
+          open={Boolean(videoAction)}
+          onClose={() => setVideoAction(null)}
+          videoUrl={videoAction?.src}
+          title={videoAction?.title}
         />
       </Container >
     </Box >

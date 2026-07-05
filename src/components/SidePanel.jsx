@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { BlobProvider } from '@react-pdf/renderer';
 import ResumeDocument from './ResumeDocument';
-import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Button, Avatar, Paper } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemButton, ListItemIcon, ListItemText, IconButton, Button, Paper } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
 import SchoolIcon from '@mui/icons-material/School';
@@ -13,44 +13,39 @@ import CodeIcon from '@mui/icons-material/Code';
 import DownloadIcon from '@mui/icons-material/Download';
 import DiscordIcon from './icons/DiscordIcon';
 import { motion } from 'framer-motion';
-
-
-
-
-const socialLinks = [
-    { icon: <GitHubIcon />, href: 'https://github.com/KmTempe', label: 'GitHub' },
-    { icon: <InstagramIcon />, href: 'https://www.instagram.com/rememberthe5thofnovember1605/', label: 'Instagram' },
-];
+import { hasContentForSection } from '../data/portfolioHelpers';
 
 import { Drawer } from '@mui/material';
 
-export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) {
+const navIcons = {
+    home: <HomeIcon />,
+    experience: <WorkIcon />,
+    projects: <CodeIcon />,
+    education: <SchoolIcon />,
+    skills: <ConstructionIcon />,
+    contact: <EmailIcon />,
+};
+
+const socialIcons = {
+    github: <GitHubIcon />,
+    instagram: <InstagramIcon />,
+    discord: <DiscordIcon />,
+};
+
+export default function SidePanel({ mobileOpen, onClose, portfolioData }) {
     const [discordPopupOpen, setDiscordPopupOpen] = useState(false);
+    const profile = portfolioData.profile;
+    const contact = portfolioData.contact;
+    const resume = portfolioData.resume || {};
 
     const navItems = useMemo(() => {
-        const items = [
-            { text: 'Home', icon: <HomeIcon />, href: '#home' }
-        ];
-
-        if (portfolioData?.experience?.length > 0) {
-            items.push({ text: 'Experience', icon: <WorkIcon />, href: '#experience' });
-        }
-
-        if (portfolioData?.projects?.length > 0) {
-            items.push({ text: 'Projects', icon: <CodeIcon />, href: '#projects' });
-        }
-
-        if (portfolioData?.education?.length > 0) {
-            items.push({ text: 'Education', icon: <SchoolIcon />, href: '#education' });
-        }
-
-        if (portfolioData?.skills && Object.keys(portfolioData?.skills).length > 0) {
-            items.push({ text: 'Skills', icon: <ConstructionIcon />, href: '#skills' });
-        }
-
-        items.push({ text: 'Contact', icon: <EmailIcon />, href: '#contact' });
-
-        return items;
+        return (portfolioData?.sections || [])
+            .filter((section) => hasContentForSection(portfolioData, section.id))
+            .map((section) => ({
+                text: section.navLabel || section.title,
+                icon: navIcons[section.id],
+                href: `#${section.id}`,
+            }));
     }, [portfolioData]);
     const handleNavClick = (href) => {
         const element = document.querySelector(href);
@@ -82,10 +77,10 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                             letterSpacing: '-0.02em',
                         }}
                     >
-                        {name}
+                        {profile.name}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace', mb: 2 }}>
-                        {portfolioData.title}
+                        {profile.title}
                     </Typography>
 
                     {/* Mobile/Tablet Profile Image */}
@@ -100,8 +95,8 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                     >
                         <Box
                             component="img"
-                            src="https://github.com/KmTempe.png"
-                            alt="Profile"
+                            src={profile.image?.src}
+                            alt={profile.image?.alt}
                             sx={{
                                 width: '100%',
                                 height: 'auto',
@@ -165,7 +160,7 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                         <EmailIcon sx={{ color: 'primary.main', fontSize: 20 }} />
                         <Typography
                             component="a"
-                            href="mailto:support@l7feeders.dev"
+                            href={`mailto:${contact.email}`}
                             sx={{
                                 color: 'text.secondary',
                                 textDecoration: 'none',
@@ -175,7 +170,7 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                                 '&:hover': { color: 'primary.main' },
                             }}
                         >
-                            support@l7feeders.dev
+                            {contact.email}
                         </Typography>
                     </Box>
 
@@ -184,104 +179,108 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                     </Typography>
 
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                        {socialLinks.map((link) => (
-                            <IconButton
-                                key={link.label}
-                                href={link.href}
-                                aria-label={link.label}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                sx={{
-                                    color: 'text.secondary',
-                                    border: '1px solid rgba(100, 255, 218, 0.1)',
-                                    '&:hover': {
-                                        color: 'primary.main',
-                                        borderColor: 'primary.main',
-                                        bgcolor: 'rgba(100, 255, 218, 0.1)',
-                                        transform: 'translateY(-2px)',
-                                    },
-                                    transition: 'all 0.3s ease'
-                                }}
-                            >
-                                {link.icon}
-                            </IconButton>
-                        ))}
-                        <Box sx={{ position: 'relative' }}>
-                            <IconButton
-                                onClick={() => setDiscordPopupOpen(!discordPopupOpen)}
-                                sx={{
-                                    color: 'text.secondary',
-                                    border: '1px solid rgba(100, 255, 218, 0.1)',
-                                    cursor: 'pointer',
-                                    '&:hover': {
-                                        color: 'primary.main',
-                                        borderColor: 'primary.main',
-                                        bgcolor: 'rgba(100, 255, 218, 0.1)',
-                                        transform: 'translateY(-2px)',
-                                    },
-                                    transition: 'all 0.3s ease'
-                                }}
-                            >
-                                <DiscordIcon />
-                            </IconButton>
-                            {discordPopupOpen && (
-                                <Paper
-                                    elevation={8}
+                        {portfolioData.socials.map((link) => (
+                            link.href ? (
+                                <IconButton
+                                    key={link.label}
+                                    href={link.href}
+                                    aria-label={link.label}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     sx={{
-                                        position: 'absolute',
-                                        bottom: '100%',
-                                        left: '50%',
-                                        transform: 'translateX(-50%)',
-                                        mb: 1,
-                                        px: 2,
-                                        py: 1.5,
-                                        bgcolor: '#112240',
-                                        border: '1px solid rgba(100, 255, 218, 0.3)',
-                                        borderRadius: 1,
-                                        whiteSpace: 'nowrap',
-                                        animation: 'popupSlide 0.3s ease-out',
-                                        '@keyframes popupSlide': {
-                                            '0%': {
-                                                opacity: 0,
-                                                transform: 'translateX(-50%) translateY(10px)',
-                                            },
-                                            '100%': {
-                                                opacity: 1,
-                                                transform: 'translateX(-50%) translateY(0)',
-                                            },
+                                        color: 'text.secondary',
+                                        border: '1px solid rgba(100, 255, 218, 0.1)',
+                                        '&:hover': {
+                                            color: 'primary.main',
+                                            borderColor: 'primary.main',
+                                            bgcolor: 'rgba(100, 255, 218, 0.1)',
+                                            transform: 'translateY(-2px)',
                                         },
-                                        '&::before': {
-                                            content: '""',
-                                            position: 'absolute',
-                                            bottom: -6,
-                                            left: '50%',
-                                            transform: 'translateX(-50%)',
-                                            width: 0,
-                                            height: 0,
-                                            borderLeft: '6px solid transparent',
-                                            borderRight: '6px solid transparent',
-                                            borderTop: '6px solid rgba(100, 255, 218, 0.3)',
-                                        },
+                                        transition: 'all 0.3s ease'
                                     }}
                                 >
-                                    <Typography
-                                        variant="body2"
+                                    {socialIcons[link.type]}
+                                </IconButton>
+                            ) : (
+                                <Box key={link.label} sx={{ position: 'relative' }}>
+                                    <IconButton
+                                        aria-label={link.label}
+                                        onClick={() => setDiscordPopupOpen(!discordPopupOpen)}
                                         sx={{
-                                            fontWeight: 500,
-                                            color: 'primary.main',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
-                                            fontFamily: '"Fira Code", monospace',
-                                            fontSize: '0.8rem',
+                                            color: 'text.secondary',
+                                            border: '1px solid rgba(100, 255, 218, 0.1)',
+                                            cursor: 'pointer',
+                                            '&:hover': {
+                                                color: 'primary.main',
+                                                borderColor: 'primary.main',
+                                                bgcolor: 'rgba(100, 255, 218, 0.1)',
+                                                transform: 'translateY(-2px)',
+                                            },
+                                            transition: 'all 0.3s ease'
                                         }}
                                     >
-                                        <DiscordIcon sx={{ fontSize: 16 }} />
-                                        vannesss
-                                    </Typography>
-                                </Paper>
-                            )}
-                        </Box>
+                                        {socialIcons[link.type]}
+                                    </IconButton>
+                                    {discordPopupOpen && (
+                                        <Paper
+                                            elevation={8}
+                                            sx={{
+                                                position: 'absolute',
+                                                bottom: '100%',
+                                                left: '50%',
+                                                transform: 'translateX(-50%)',
+                                                mb: 1,
+                                                px: 2,
+                                                py: 1.5,
+                                                bgcolor: '#112240',
+                                                border: '1px solid rgba(100, 255, 218, 0.3)',
+                                                borderRadius: 1,
+                                                whiteSpace: 'nowrap',
+                                                animation: 'popupSlide 0.3s ease-out',
+                                                '@keyframes popupSlide': {
+                                                    '0%': {
+                                                        opacity: 0,
+                                                        transform: 'translateX(-50%) translateY(10px)',
+                                                    },
+                                                    '100%': {
+                                                        opacity: 1,
+                                                        transform: 'translateX(-50%) translateY(0)',
+                                                    },
+                                                },
+                                                '&::before': {
+                                                    content: '""',
+                                                    position: 'absolute',
+                                                    bottom: -6,
+                                                    left: '50%',
+                                                    transform: 'translateX(-50%)',
+                                                    width: 0,
+                                                    height: 0,
+                                                    borderLeft: '6px solid transparent',
+                                                    borderRight: '6px solid transparent',
+                                                    borderTop: '6px solid rgba(100, 255, 218, 0.3)',
+                                                },
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    fontWeight: 500,
+                                                    color: 'primary.main',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 1,
+                                                    fontFamily: '"Fira Code", monospace',
+                                                    fontSize: '0.8rem',
+                                                }}
+                                            >
+                                                {socialIcons[link.type]}
+                                                {link.handle}
+                                            </Typography>
+                                        </Paper>
+                                    )}
+                                </Box>
+                            )
+                        ))}
                     </Box>
                 </Box>
 
@@ -301,7 +300,7 @@ export default function SidePanel({ name, mobileOpen, onClose, portfolioData }) 
                                 fontFamily: '"Fira Code", monospace',
                             }}
                         >
-                            {loading ? 'Loading...' : 'Résumé'}
+                            {loading ? resume.loadingLabel : resume.buttonLabel}
                         </Button>
                     )}
                 </BlobProvider>

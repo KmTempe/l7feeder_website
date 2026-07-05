@@ -2,8 +2,9 @@ import { Box, Container, Typography, Button } from '@mui/material';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
-export default function Home({ name, about }) {
+export default function Home({ profile, about }) {
   const ref = useRef(null);
+  const hero = profile.hero || {};
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"]
@@ -53,7 +54,7 @@ export default function Home({ name, about }) {
                     fontWeight: 500,
                   }}
                 >
-                  Hi, my name is
+                  {hero.eyebrow}
                 </Typography>
               </ motion.div>
 
@@ -69,7 +70,7 @@ export default function Home({ name, about }) {
                     mb: 1,
                   }}
                 >
-                  {name}.
+                  {profile.name}.
                 </Typography>
               </motion.div>
 
@@ -85,7 +86,7 @@ export default function Home({ name, about }) {
                     mb: 4,
                   }}
                 >
-                  I build things. Only God knows if they work.
+                  {hero.subtitle}
                 </Typography>
               </motion.div>
 
@@ -120,7 +121,7 @@ export default function Home({ name, about }) {
                   <Button
                     variant="outlined"
                     size="large"
-                    onClick={() => handleScroll('#experience')}
+                    onClick={() => handleScroll(hero.cta?.href || '#experience')}
                     sx={{
                       color: 'primary.main',
                       borderColor: 'primary.main',
@@ -133,7 +134,7 @@ export default function Home({ name, about }) {
                       },
                     }}
                   >
-                    Check out my work!
+                    {hero.cta?.label}
                   </Button>
                 </motion.div>
               </motion.div>
@@ -184,8 +185,8 @@ export default function Home({ name, about }) {
                     >
                       <Box
                         component="img"
-                        src="https://github.com/KmTempe.png"
-                        alt="Profile"
+                        src={profile.image?.src}
+                        alt={profile.image?.alt}
                         sx={{
                           width: '100%',
                           height: 'auto',
