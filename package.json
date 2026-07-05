@@ -17,7 +17,7 @@
     "queue:process": "node scripts/process-queue.js"
   },
   "engines": {
-    "node": "26.x"
+    "node": "24.x"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
