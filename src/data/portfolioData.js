@@ -288,7 +288,6 @@ export const portfolioData = {
         'Meilisearch',
         'Wizarr',
         'Uptime Kuma',
-        'Vercel Blob'
       ],
       roadmap: 'Next steps include centralizing user database with LDAP and adding SSO through Google or Authelia.'
     }

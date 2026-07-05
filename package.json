@@ -16,6 +16,9 @@
     "version:patch": "npm version patch --no-git-tag-version",
     "queue:process": "node scripts/process-queue.js"
   },
+  "engines": {
+    "node": "26.x"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
