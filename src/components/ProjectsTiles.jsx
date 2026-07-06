@@ -86,6 +86,47 @@ function FeaturedProject({ project, onOpenDiagram }) {
                     <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.95rem', lineHeight: 1.65 }}>
                         {project.description}
                     </Typography>
+                    {project.disclaimer?.text && (
+                        <Box
+                            component="details"
+                            sx={{
+                                mt: 1.25,
+                                color: 'text.secondary',
+                                fontSize: '0.78rem',
+                                lineHeight: 1.5,
+                                '& summary': {
+                                    cursor: 'pointer',
+                                    color: 'primary.main',
+                                    fontFamily: '"Fira Code", monospace',
+                                    fontSize: '0.7rem',
+                                    textTransform: 'uppercase',
+                                    outline: 'none',
+                                    '&:focus-visible': {
+                                        outline: '2px solid',
+                                        outlineColor: 'primary.main',
+                                        outlineOffset: 3,
+                                    },
+                                },
+                            }}
+                        >
+                            <Box component="summary">
+                                {project.disclaimer.label || 'Project disclaimer'}
+                            </Box>
+                            <Typography
+                                variant="caption"
+                                component="p"
+                                sx={{
+                                    mt: 0.75,
+                                    mb: 0,
+                                    color: 'text.secondary',
+                                    fontSize: '0.78rem',
+                                    lineHeight: 1.55,
+                                }}
+                            >
+                                {project.disclaimer.text}
+                            </Typography>
+                        </Box>
+                    )}
                     {hasDiagram && (
                         <Button
                             type="button"

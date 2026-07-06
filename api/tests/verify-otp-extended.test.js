@@ -87,6 +87,51 @@ describe('Verify OTP API Handler — Extended', () => {
       expect(res.statusCode).toBe(400);
     });
 
+    it('should reject non-string email and otp before verification', async () => {
+      const invalidBodies = [
+        { email: { value: 'test@test.com' }, otp: '1234567' },
+        { email: 'test@test.com', otp: ['1234567'] },
+      ];
+
+      for (const body of invalidBodies) {
+        vi.clearAllMocks();
+        const req = createMockReq('POST', body);
+        const res = createMockRes();
+
+        await handler(req, res);
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toBe('Invalid field types.');
+        expect(verifyOtp).not.toHaveBeenCalled();
+        expect(getFormData).not.toHaveBeenCalled();
+        expect(enqueue).not.toHaveBeenCalled();
+        expect(sendToLibreDesk).not.toHaveBeenCalled();
+      }
+    });
+
+    it('should reject malformed otp and email before verification', async () => {
+      const invalidBodies = [
+        { email: 'test@test.com', otp: '123456' },
+        { email: 'test@test.com', otp: '12345678' },
+        { email: 'test@test.com', otp: 'abcdefg' },
+        { email: 'not-an-email', otp: '1234567' },
+      ];
+
+      for (const body of invalidBodies) {
+        vi.clearAllMocks();
+        const req = createMockReq('POST', body);
+        const res = createMockRes();
+
+        await handler(req, res);
+
+        expect(res.statusCode).toBe(400);
+        expect(verifyOtp).not.toHaveBeenCalled();
+        expect(getFormData).not.toHaveBeenCalled();
+        expect(enqueue).not.toHaveBeenCalled();
+        expect(sendToLibreDesk).not.toHaveBeenCalled();
+      }
+    });
+
     it('should reject PUT method', async () => {
       const req = createMockReq('PUT', { email: 'a@b.com', otp: '1234567' });
       const res = createMockRes();
@@ -169,6 +214,18 @@ describe('Verify OTP API Handler — Extended', () => {
       expect(enqueue).not.toHaveBeenCalled();
       expect(sendToLibreDesk).not.toHaveBeenCalled();
       expect(res.statusCode).toBe(410);
+    });
+
+    it('should reject malformed stored form data before delivery', async () => {
+      getFormData.mockResolvedValue({ name: 'John', email: 'john@test.com', message: ['bad'] });
+      const req = createMockReq('POST', { email: 'john@test.com', otp: '1234567' });
+      const res = createMockRes();
+      await handler(req, res);
+
+      expect(res.statusCode).toBe(410);
+      expect(res.body.expired).toBe(true);
+      expect(enqueue).not.toHaveBeenCalled();
+      expect(sendToLibreDesk).not.toHaveBeenCalled();
     });
   });
 

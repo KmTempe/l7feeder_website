@@ -3,6 +3,7 @@
 
 import { getPendingItems, markProcessing, markFailed, dequeue, getQueue } from '../lib/kv-queue.js';
 import { escapeHtml } from '../lib/sanitize.js';
+import { validateQueueItem } from '../lib/validation.js';
 
 function getConfig() {
   return {
@@ -85,18 +86,29 @@ async function createConversation(name, email, message, config) {
 }
 
 async function processItem(item, config) {
-  console.log(`Processing: ${item.id} (attempt ${item.attempts + 1})`);
-  await markProcessing(item.id);
+  const validation = validateQueueItem(item);
+  if (!validation.valid) {
+    console.error(`Invalid queue item: ${validation.error}`);
+    if (validation.id) {
+      await markFailed(validation.id, validation.error);
+    }
+    return { id: validation.id || 'invalid', success: false, error: validation.error };
+  }
+
+  const queueItem = validation.value;
+
+  console.log(`Processing: ${queueItem.id} (attempt ${queueItem.attempts + 1})`);
+  await markProcessing(queueItem.id);
 
   try {
-    await createConversation(item.name, item.email, item.message, config);
-    await dequeue(item.id);
-    console.log(`✓ Success: ${item.id}`);
-    return { id: item.id, success: true };
+    await createConversation(queueItem.name, queueItem.email, queueItem.message, config);
+    await dequeue(queueItem.id);
+    console.log(`✓ Success: ${queueItem.id}`);
+    return { id: queueItem.id, success: true };
   } catch (err) {
-    console.error(`✗ Failed: ${item.id} - ${err.message}`);
-    await markFailed(item.id, err.message);
-    return { id: item.id, success: false, error: err.message };
+    console.error(`✗ Failed: ${queueItem.id} - ${err.message}`);
+    await markFailed(queueItem.id, err.message);
+    return { id: queueItem.id, success: false, error: err.message };
   }
 }
 

@@ -41,7 +41,7 @@
       "destination": "/api/:path*"
     },
     {
-      "source": "/:path((?!@|.*\\.).*)",
+      "source": "/:path((?!api(?:/|$)|@|.*\\.).*)",
       "destination": "/index.html"
     }
   ]

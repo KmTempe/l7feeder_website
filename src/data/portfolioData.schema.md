@@ -165,6 +165,10 @@ projects: [
       alt: 'Diagram description',
       caption: 'Stack diagram served from Vercel Blob storage',
     },
+    disclaimer: {
+      label: 'Project scope disclaimer',
+      text: 'Short legal or scope note shown as compact expandable text under the summary.',
+    },
     highlights: ['Outcome or responsibility'],
     technologies: ['Docker'],
     roadmap: 'Next steps...',

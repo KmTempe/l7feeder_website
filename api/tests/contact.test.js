@@ -151,6 +151,27 @@ describe('Contact API Handler', () => {
       expect(res.statusCode).toBe(400);
       expect(res.body.error).toBe('Invalid email address.');
     });
+
+    it('should reject non-string fields before queueing or sending', async () => {
+      const invalidBodies = [
+        { name: { value: 'Test' }, email: 'test@test.com', message: 'Hi' },
+        { name: 'Test', email: ['test@test.com'], message: 'Hi' },
+        { name: 'Test', email: 'test@test.com', message: { text: 'Hi' } },
+      ];
+
+      for (const body of invalidBodies) {
+        vi.clearAllMocks();
+        const req = createMockReq('POST', body);
+        const res = createMockRes();
+
+        await handler(req, res);
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toBe('Invalid field types.');
+        expect(enqueue).not.toHaveBeenCalled();
+        expect(sendToLibreDesk).not.toHaveBeenCalled();
+      }
+    });
   });
 
   describe('Queue integration', () => {

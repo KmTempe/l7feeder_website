@@ -1,5 +1,6 @@
 import { enqueue, isKVConfigured } from './lib/kv-queue.js';
 import { sendToLibreDesk } from './lib/libredesk.js';
+import { validateContactPayload } from './lib/validation.js';
 
 export default async function handler(req, res) {
   // CORS support — restrict to production domain or local dev
@@ -17,17 +18,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message } = req.body;
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'All fields are required.' });
+  const validation = validateContactPayload(req.body);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
   }
-  if (name.length > 100 || email.length > 254 || message.length > 5000) {
-    return res.status(400).json({ error: 'Field exceeds maximum length.' });
-  }
-  const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-  if (!emailPattern.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address.' });
-  }
+
+  const { name, email, message } = validation.value;
 
   // Check if KV is configured
   const kvAvailable = await isKVConfigured();

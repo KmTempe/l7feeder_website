@@ -270,11 +270,14 @@ export const portfolioData = {
         alt: 'Homelab Docker Compose architecture diagram',
         caption: 'Stack diagram'
       },
+      disclaimer: {
+        label: 'Project scope disclaimer',
+        text: 'This Jellyfin setup is a private homelab demonstration. It is not a public media service, does not distribute copyrighted content, and is not operated for profit.'
+      },
       highlights: [
         'Operate Jellyfin with the official server and web UI components, currently managing 3.6 TB of media.',
-        'Tested real-world capacity for 10-12 simultaneous transcoding users and 20 non-transcoding users on a 1 Gbps connection.',
-        'Use Nginx Proxy Manager as the public routing layer with SSL termination and protective rules for selected services.',
-        'Automate invite onboarding with Wizarr and support mailbox workflows, leaving final approval under admin control.',
+        'Use Nginx Proxy as the public routing layer with SSL termination and protective rules for selected services.',
+        'Automate invite onboarding with Wizarr and support mailbox workflows.',
         'Monitor service health with Uptime Kuma so users can check platform status live.',
         'Hardening Jellyfin known holes on authentication (added 2FA & passkey support, automated password recovery via email and account recovery)'
       ],

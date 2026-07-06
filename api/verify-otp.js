@@ -6,6 +6,7 @@
 import { verifyOtp, getFormData } from './lib/otp.js';
 import { enqueue, isKVConfigured } from './lib/kv-queue.js';
 import { sendToLibreDesk } from './lib/libredesk.js';
+import { validateOtpPayload, validateStoredContactData } from './lib/validation.js';
 
 export default async function handler(req, res) {
   // CORS — restrict to production domain or local dev
@@ -18,11 +19,12 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { email, otp } = req.body;
-
-  if (!email || !otp) {
-    return res.status(400).json({ error: 'Email and verification code are required.' });
+  const validation = validateOtpPayload(req.body);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
   }
+
+  const { email, otp } = validation.value;
 
   // ── Verify OTP ─────────────────────────────────────────────────────────
   let result;
@@ -60,7 +62,15 @@ export default async function handler(req, res) {
     });
   }
 
-  const { name, message } = formData;
+  const storedValidation = validateStoredContactData(formData, email);
+  if (!storedValidation.valid) {
+    return res.status(410).json({
+      error: 'Form data has expired. Please fill out the form again.',
+      expired: true,
+    });
+  }
+
+  const { name, message } = storedValidation.value;
 
   // ── Send to LibreDesk (same logic as old contact.js) ───────────────────
   const kvAvailable = await isKVConfigured();

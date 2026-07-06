@@ -1,5 +1,6 @@
 import { getPendingItems, markProcessing, markFailed, dequeue } from './lib/queue.js';
 import { escapeHtml } from './lib/sanitize.js';
+import { validateQueueItem } from './lib/validation.js';
 
 const LIBREDESK_API_URL = process.env.LIBREDESK_API_URL; // e.g., https://your-libredesk.com/api/v1
 const LIBREDESK_API_KEY = process.env.LIBREDESK_API_KEY;
@@ -78,27 +79,38 @@ async function createConversation(subject, message, email, name) {
 
 // Process a single queue item
 async function processQueueItem(item) {
-  console.log(`Processing queue item: ${item.id}`);
-  markProcessing(item.id);
+  const validation = validateQueueItem(item);
+  if (!validation.valid) {
+    console.error(`Invalid queue item: ${validation.error}`);
+    if (validation.id) {
+      markFailed(validation.id, validation.error);
+    }
+    return { success: false, id: validation.id || 'invalid', error: validation.error };
+  }
+
+  const queueItem = validation.value;
+
+  console.log(`Processing queue item: ${queueItem.id}`);
+  markProcessing(queueItem.id);
 
   try {
     // Create conversation (LibreDesk auto-creates contact from contact_email)
     await createConversation(
-      `[Contact Form] ${item.name} - New collaboration request`,
-      item.message,
-      item.email,
-      item.name
+      `[Contact Form] ${queueItem.name} - New collaboration request`,
+      queueItem.message,
+      queueItem.email,
+      queueItem.name
     );
 
     // Success! Remove from queue
-    dequeue(item.id);
-    console.log(`Successfully processed and removed: ${item.id}`);
-    return { success: true, id: item.id };
+    dequeue(queueItem.id);
+    console.log(`Successfully processed and removed: ${queueItem.id}`);
+    return { success: true, id: queueItem.id };
 
   } catch (err) {
-    console.error(`Failed to process ${item.id}:`, err.message);
-    markFailed(item.id, err.message);
-    return { success: false, id: item.id, error: err.message };
+    console.error(`Failed to process ${queueItem.id}:`, err.message);
+    markFailed(queueItem.id, err.message);
+    return { success: false, id: queueItem.id, error: err.message };
   }
 }
 

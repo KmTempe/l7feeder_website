@@ -64,30 +64,34 @@ ${pages
 
 function generateRobots(site) {
   const domain = site.domain;
-  const robots = `# Allow all search engines to crawl your site
+  const robots = `# Public portfolio pages are open to normal search indexing.
 User-agent: *
 Allow: /
-Sitemap: ${domain}/sitemap.xml
 
-# Google
+# Major search crawlers
 User-agent: Googlebot
 Allow: /
 
-# Bing
 User-agent: Bingbot
 Allow: /
 
-# Block AI crawlers
-User-agent: CCBot
+# User-requested AI search is allowed for public pages.
+User-agent: OpenAI-SearchBot
 Allow: /
+
+# AI training crawlers are not allowed.
+User-agent: CCBot
+Disallow: /
 
 User-agent: anthropic-ai
 Disallow: /
 
-User-agent: OpenAI-SearchBot
-Allow: /
+User-agent: GPTBot
+Disallow: /
 
-# Point to your sitemap
+User-agent: Google-Extended
+Disallow: /
+
 Sitemap: ${domain}/sitemap.xml
 `;
 
@@ -96,32 +100,44 @@ Sitemap: ${domain}/sitemap.xml
   console.log('✓ robots.txt generated at', outputPath);
 }
 
-function generateLlmsTxt(site, contact) {
+function generateLlmsTxt(portfolioData) {
+  const { site, contact, projects = [] } = portfolioData;
   const domain = site.domain;
   const seo = site.seo || {};
   const topics = seo.topics || [];
   const technologyStack = seo.technologyStack || [];
-  const llms = `# LLMs.txt - Information for AI Language Models
-# LLMs.txt - Information for AI Language Models
-# Specification: https://llmstxt.org
+  const projectLinks = projects
+    .filter((project) => project.link)
+    .map((project) => `- [${project.title}](${project.link}): ${project.description}`)
+    .join('\n');
 
-Site-Name: ${site.name}
-Site-URL: ${domain}
+  const llms = `# ${site.name}
+
+> ${seo.description}
+
+This file follows the /llms.txt proposal at https://llmstxt.org. It gives AI assistants a concise, curated overview of the public portfolio content.
+
+Site: ${domain}
 Contact: ${contact.email}
+Crawler policy: public search and user-requested retrieval are allowed; AI training crawlers listed in robots.txt are disallowed.
 
-Description:
-${seo.description}
-
-Topics:
+## Topics
 ${topics.map((topic) => `- ${topic}`).join('\n')}
 
-Technology Stack:
+## Technology Stack
 ${technologyStack.map((technology) => `- ${technology}`).join('\n')}
 
-Allow-User-Agents: *
-Disallow-User-Agents: CCBot, anthropic-ai, OpenAI-SearchBot
+## Primary Pages
+- [Portfolio home](${domain}/): Main portfolio page with experience, skills, projects, and contact information.
+- [Projects section](${domain}/#projects): Public project overview and links.
+- [Contact section](${domain}/#contact): Public contact options.
+- [Sitemap](${domain}/sitemap.xml): XML sitemap for indexable public pages.
 
-Sitemap: ${domain}/sitemap.xml
+## Source
+- [Portfolio source](${site.repository}): Public repository for the React, Vite, Express, and Vercel implementation.
+
+## Featured Projects
+${projectLinks}
 `;
 
   const outputPath = path.join(__dirname, '../public/llms.txt');
@@ -137,7 +153,7 @@ async function main() {
     const portfolioData = await loadPortfolioData();
     generateSitemap(portfolioData.site);
     generateRobots(portfolioData.site);
-    generateLlmsTxt(portfolioData.site, portfolioData.contact);
+    generateLlmsTxt(portfolioData);
     generateFavicon();
     console.log('\n✅ All site files generated successfully!');
   } catch (error) {

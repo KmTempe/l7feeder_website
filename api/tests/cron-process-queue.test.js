@@ -182,6 +182,56 @@ describe('Cron Process Queue Handler', () => {
       expect(dequeue).not.toHaveBeenCalled();
     });
 
+    it('should reject malformed queue items before calling LibreDesk', async () => {
+      const mockItem = {
+        id: 'test-invalid',
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        message: ['not a string'],
+        attempts: 0,
+      };
+
+      getQueue.mockResolvedValue([mockItem]);
+      getPendingItems.mockResolvedValue([mockItem]);
+
+      const req = createMockReq(`Bearer ${CRON_SECRET}`);
+      const res = createMockRes();
+
+      await handler(req, res);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.successful).toBe(0);
+      expect(res.body.failed).toBe(1);
+      expect(markFailed).toHaveBeenCalledWith('test-invalid', 'Invalid field types.');
+      expect(global.fetch).not.toHaveBeenCalled();
+      expect(dequeue).not.toHaveBeenCalled();
+    });
+
+    it('should reject queue items with invalid email before calling LibreDesk', async () => {
+      const mockItem = {
+        id: 'test-invalid-email',
+        name: 'Jane Doe',
+        email: 'not-an-email',
+        message: 'Hi',
+        attempts: 0,
+      };
+
+      getQueue.mockResolvedValue([mockItem]);
+      getPendingItems.mockResolvedValue([mockItem]);
+
+      const req = createMockReq(`Bearer ${CRON_SECRET}`);
+      const res = createMockRes();
+
+      await handler(req, res);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.successful).toBe(0);
+      expect(res.body.failed).toBe(1);
+      expect(markFailed).toHaveBeenCalledWith('test-invalid-email', 'Invalid email address.');
+      expect(global.fetch).not.toHaveBeenCalled();
+      expect(dequeue).not.toHaveBeenCalled();
+    });
+
     it('should process multiple items', async () => {
       const mockItems = [
         { id: '1', name: 'User 1', email: 'u1@test.com', message: 'Msg 1', attempts: 0 },

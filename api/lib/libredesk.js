@@ -1,6 +1,7 @@
 // LibreDesk API helper for direct message sending
 
 import { escapeHtml } from './sanitize.js';
+import { validateContactPayload } from './validation.js';
 
 function getConfig() {
   return {
@@ -22,14 +23,20 @@ function getAuthHeader(config) {
 }
 
 export async function sendToLibreDesk(name, email, message) {
+  const validation = validateContactPayload({ name, email, message });
+  if (!validation.valid) {
+    throw new Error('Invalid contact payload');
+  }
+
+  const contact = validation.value;
   const config = getConfig();
 
   if (!config.LIBREDESK_API_URL || !config.LIBREDESK_API_KEY || !config.LIBREDESK_API_SECRET) {
     throw new Error('LibreDesk not configured');
   }
 
-  const nameParts = name.trim().split(' ');
-  const firstName = nameParts[0] || name;
+  const nameParts = contact.name.split(' ');
+  const firstName = nameParts[0] || contact.name;
   const lastName = nameParts.slice(1).join(' ') || '';
 
   // Step 1: Create conversation
@@ -41,9 +48,9 @@ export async function sendToLibreDesk(name, email, message) {
     },
     body: JSON.stringify({
       inbox_id: parseInt(config.LIBREDESK_INBOX_ID, 10),
-      subject: `[Contact Form] New message from ${name}`,
-      content: `<p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><hr/><p>${escapeHtml(message).replace(/\n/g, '<br/>')}</p>`,
-      contact_email: email,
+      subject: `[Contact Form] New message from ${contact.name}`,
+      content: `<p><strong>Name:</strong> ${escapeHtml(contact.name)}</p><p><strong>Email:</strong> ${escapeHtml(contact.email)}</p><hr/><p>${escapeHtml(contact.message).replace(/\n/g, '<br/>')}</p>`,
+      contact_email: contact.email,
       first_name: firstName,
       last_name: lastName,
       initiator: 'contact',

@@ -3,6 +3,7 @@
 // Does NOT create a LibreDesk ticket — that only happens after OTP verification.
 
 import { generateOtp, storeOtp, storeFormData, checkResendCooldown, sendOtpEmail } from './lib/otp.js';
+import { validateContactPayload } from './lib/validation.js';
 
 export default async function handler(req, res) {
   // CORS — restrict to production domain or local dev
@@ -15,27 +16,14 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { name, email, message } = req.body;
+  const validation = validateContactPayload(req.body);
+  if (!validation.valid) {
+    return res.status(400).json({ error: validation.error });
+  }
+
+  const { name, email, message } = validation.value;
 
   // ── Validate required fields ────────────────────────────────────────────
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'All fields are required.' });
-  }
-  if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
-    return res.status(400).json({ error: 'Invalid field types.' });
-  }
-  if (!name.trim() || !email.trim() || !message.trim()) {
-    return res.status(400).json({ error: 'All fields are required.' });
-  }
-  if (name.length > 100 || email.length > 254 || message.length > 5000) {
-    return res.status(400).json({ error: 'Field exceeds maximum length.' });
-  }
-
-  const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-  if (!emailPattern.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address.' });
-  }
-
   // ── Check resend cooldown (prevent spamming) ────────────────────────────
   try {
     const cooldown = await checkResendCooldown(email);
@@ -56,7 +44,7 @@ export default async function handler(req, res) {
 
   try {
     await storeOtp(email, otp);
-    await storeFormData(email, { name: name.trim(), email: email.trim(), message: message.trim() });
+    await storeFormData(email, { name, email, message });
   } catch (err) {
     console.error('OTP storage error:', err);
     return res.status(500).json({ error: 'Failed to generate verification code. Please try again.' });

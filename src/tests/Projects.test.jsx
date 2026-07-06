@@ -77,6 +77,10 @@ describe('Projects Component', () => {
                             alt: 'Homelab Docker Compose architecture diagram',
                             caption: 'Stack diagram served from Vercel Blob storage'
                         },
+                        disclaimer: {
+                            label: 'Project scope disclaimer',
+                            text: 'This Jellyfin setup is a private homelab demonstration. It is not a public media service, does not distribute copyrighted content, and is not operated for profit.'
+                        },
                         highlights: ['Operate Jellyfin with 3.6 TB of media.'],
                         technologies: ['Jellyfin', 'Docker Compose'],
                         roadmap: 'Next steps include LDAP and SSO.'
@@ -89,6 +93,9 @@ describe('Projects Component', () => {
         expect(screen.getByText('Operate Jellyfin with 3.6 TB of media.')).toBeInTheDocument();
         expect(screen.getByText(/3.6 TB of media on a 1 Gbps line/)).toBeInTheDocument();
         expect(screen.getByText(/10-12 transcoding users or 20 non-transcoding users/)).toBeInTheDocument();
+        expect(screen.getByText('Project scope disclaimer')).toBeInTheDocument();
+        expect(screen.getByText(/private homelab demonstration/i)).toBeInTheDocument();
+        expect(screen.getByText(/not operated for profit/i)).toBeInTheDocument();
         expect(screen.getByText('Jellyfin')).toBeInTheDocument();
         expect(screen.getByText(/Next steps include LDAP and SSO./i)).toBeInTheDocument();
 
