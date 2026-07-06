@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Projects from '../components/Projects';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -9,6 +9,7 @@ vi.mock('framer-motion', () => ({
         // eslint-disable-next-line no-unused-vars
         div: ({ children, whileHover, whileTap, whileInView, initial, animate, exit, transition, variants, viewport, ...props }) => <div {...props}>{children}</div>,
     },
+    AnimatePresence: ({ children }) => <>{children}</>,
     useInView: () => true,
 }));
 
@@ -63,7 +64,7 @@ describe('Projects Component', () => {
         expect(screen.getAllByText(/Project \d/)).toHaveLength(2);
     });
 
-    it('renders featured project details and diagram link', () => {
+    it('renders featured project details and opens the diagram overlay', () => {
         renderWithTheme(
             <Projects
                 projects={[
@@ -84,16 +85,27 @@ describe('Projects Component', () => {
             />
         );
 
-        expect(screen.getByAltText('Homelab Docker Compose architecture diagram')).toHaveAttribute(
-            'src',
-            'https://blob.example.com/docker-compose-diagram.svg'
-        );
+        expect(screen.queryByAltText('Homelab Docker Compose architecture diagram')).not.toBeInTheDocument();
         expect(screen.getByText('Operate Jellyfin with 3.6 TB of media.')).toBeInTheDocument();
         expect(screen.getByText(/3.6 TB of media on a 1 Gbps line/)).toBeInTheDocument();
         expect(screen.getByText(/10-12 transcoding users or 20 non-transcoding users/)).toBeInTheDocument();
         expect(screen.getByText('Jellyfin')).toBeInTheDocument();
         expect(screen.getByText(/Next steps include LDAP and SSO./i)).toBeInTheDocument();
-        expect(screen.getByRole('link', { name: /open self-hosted media platform & homelab stack diagram/i })).toHaveAttribute(
+
+        fireEvent.click(screen.getByRole('button', { name: /view self-hosted media platform & homelab stack diagram/i }));
+
+        expect(screen.getByRole('dialog', { name: /self-hosted media platform & homelab stack diagram/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /zoom in diagram/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /zoom out diagram/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /move diagram left/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /move diagram right/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /move diagram up/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /move diagram down/i })).toBeInTheDocument();
+        expect(screen.getByAltText('Homelab Docker Compose architecture diagram')).toHaveAttribute(
+            'src',
+            'https://blob.example.com/docker-compose-diagram.svg'
+        );
+        expect(screen.getByRole('link', { name: /open full size/i })).toHaveAttribute(
             'href',
             'https://blob.example.com/docker-compose-diagram.svg'
         );

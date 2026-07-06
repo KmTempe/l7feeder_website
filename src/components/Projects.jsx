@@ -1,9 +1,10 @@
 import { Box, Button, Chip, Container, Typography, IconButton, Tooltip } from '@mui/material';
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ProjectsTiles from './ProjectsTiles';
+import StackDiagramDialog from './StackDiagramDialog';
 
 export default ProjectsTiles;
 
@@ -60,7 +61,7 @@ function ProjectHeader({ project, dense = false }) {
     );
 }
 
-function FeaturedProject({ project }) {
+function FeaturedProject({ project, onOpenDiagram }) {
     const hasDiagram = Boolean(project.image?.src);
 
     return (
@@ -80,72 +81,29 @@ function FeaturedProject({ project }) {
                     alignItems: 'stretch',
                 }}
             >
-                {hasDiagram && (
-                    <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 2' }, gridRow: { lg: 'span 2' }, p: 1.5 }}>
-                        <Box
-                            component="a"
-                            href={project.image.src}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`Open ${project.title} stack diagram`}
-                            sx={{
-                                display: 'block',
-                                height: '100%',
-                                minHeight: { xs: 240, md: 360 },
-                                border: '1px solid rgba(100, 255, 218, 0.18)',
-                                borderRadius: 1,
-                                bgcolor: '#0a192f',
-                                overflow: 'hidden',
-                                '&:focus-visible': {
-                                    outline: '2px solid',
-                                    outlineColor: 'primary.main',
-                                    outlineOffset: 3
-                                }
-                            }}
-                        >
-                            <Box
-                                component="img"
-                                src={project.image.src}
-                                alt={project.image.alt}
-                                loading="lazy"
-                                sx={{
-                                    display: 'block',
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'contain'
-                                }}
-                            />
-                        </Box>
-                        {project.image.caption && (
-                            <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'text.secondary' }}>
-                                {project.image.caption}
-                            </Typography>
-                        )}
-                        <Button
-                            href={project.image.src}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            startIcon={<AccountTreeIcon />}
-                            endIcon={<OpenInNewIcon />}
-                            size="small"
-                            sx={{ mt: 1.5, px: 0, color: 'primary.main', justifyContent: 'flex-start' }}
-                        >
-                            View stack diagram
-                        </Button>
-                    </Box>
-                )}
-
-                <Box sx={{ ...featuredTileSx, gridColumn: { sm: hasDiagram ? 'span 2' : 'span 2', lg: hasDiagram ? 'span 2' : 'span 4' } }}>
+                <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 4' } }}>
                     <Typography variant="overline" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>
                         Summary
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.95rem', lineHeight: 1.65 }}>
                         {project.description}
                     </Typography>
+                    {hasDiagram && (
+                        <Button
+                            type="button"
+                            onClick={() => onOpenDiagram(project)}
+                            aria-label={`View ${project.title} stack diagram`}
+                            startIcon={<AccountTreeIcon />}
+                            size="small"
+                            sx={{ mt: 1.5, px: 0, color: 'primary.main', justifyContent: 'flex-start' }}
+                        >
+                            View stack diagram
+                        </Button>
+                    )}
                 </Box>
 
                 {project.highlights?.length > 0 && (
-                    <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 2' } }}>
+                    <Box sx={{ ...featuredTileSx, gridColumn: { sm: 'span 2', lg: 'span 2' }, gridRow: { lg: project.roadmap ? 'span 2' : 'auto' } }}>
                         <Typography variant="overline" sx={{ color: 'primary.main', fontFamily: '"Fira Code", monospace' }}>
                             Operations
                         </Typography>
@@ -248,6 +206,7 @@ function SimpleProjectCard({ project }) {
 function ProjectsLegacy({ projects, section = {} }) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
+    const [selectedDiagramProject, setSelectedDiagramProject] = useState(null);
 
     if (!projects || projects.length === 0) return null;
 
@@ -387,77 +346,11 @@ function ProjectsLegacy({ projects, section = {} }) {
                                     <Box
                                         sx={{
                                             display: 'grid',
-                                            gridTemplateColumns: hasDiagram ? { xs: '1fr', md: 'minmax(0, 0.95fr) minmax(0, 1.05fr)' } : '1fr',
+                                            gridTemplateColumns: '1fr',
                                             gap: hasDetails ? 3 : 0,
                                             alignItems: 'start'
                                         }}
                                     >
-                                        {hasDiagram && (
-                                            <Box>
-                                                <Box
-                                                    component="a"
-                                                    href={project.image.src}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    aria-label={`Open ${project.title} stack diagram`}
-                                                    sx={{
-                                                        display: 'block',
-                                                        border: '1px solid rgba(100, 255, 218, 0.18)',
-                                                        borderRadius: 1,
-                                                        bgcolor: '#0a192f',
-                                                        overflow: 'hidden',
-                                                        maxHeight: { xs: 280, md: 420 },
-                                                        '&:focus-visible': {
-                                                            outline: '2px solid',
-                                                            outlineColor: 'primary.main',
-                                                            outlineOffset: 3
-                                                        }
-                                                    }}
-                                                >
-                                                    <Box
-                                                        component="img"
-                                                        src={project.image.src}
-                                                        alt={project.image.alt}
-                                                        loading="lazy"
-                                                        sx={{
-                                                            display: 'block',
-                                                            width: '100%',
-                                                            maxHeight: { xs: 280, md: 420 },
-                                                            objectFit: 'contain'
-                                                        }}
-                                                    />
-                                                </Box>
-                                                {project.image.caption && (
-                                                    <Typography
-                                                        variant="caption"
-                                                        sx={{
-                                                            display: 'block',
-                                                            mt: 1,
-                                                            color: 'text.secondary'
-                                                        }}
-                                                    >
-                                                        {project.image.caption}
-                                                    </Typography>
-                                                )}
-                                                <Button
-                                                    href={project.image.src}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    startIcon={<AccountTreeIcon />}
-                                                    endIcon={<OpenInNewIcon />}
-                                                    size="small"
-                                                    sx={{
-                                                        mt: 1.5,
-                                                        px: 0,
-                                                        color: 'primary.main',
-                                                        justifyContent: 'flex-start'
-                                                    }}
-                                                >
-                                                    View stack diagram
-                                                </Button>
-                                            </Box>
-                                        )}
-
                                         <Box>
                                             <Typography
                                                 variant="body2"
@@ -469,6 +362,23 @@ function ProjectsLegacy({ projects, section = {} }) {
                                             >
                                                 {project.description}
                                             </Typography>
+
+                                            {hasDiagram && (
+                                                <Button
+                                                    type="button"
+                                                    onClick={() => setSelectedDiagramProject(project)}
+                                                    aria-label={`View ${project.title} stack diagram`}
+                                                    startIcon={<AccountTreeIcon />}
+                                                    sx={{
+                                                        mt: 1.5,
+                                                        px: 0,
+                                                        color: 'primary.main',
+                                                        justifyContent: 'flex-start'
+                                                    }}
+                                                >
+                                                    View stack diagram
+                                                </Button>
+                                            )}
 
                                             {project.highlights?.length > 0 && (
                                                 <Box
@@ -546,6 +456,12 @@ function ProjectsLegacy({ projects, section = {} }) {
                     </Box>
                 </motion.div>
             </Container>
+            <StackDiagramDialog
+                open={Boolean(selectedDiagramProject)}
+                onClose={() => setSelectedDiagramProject(null)}
+                image={selectedDiagramProject?.image}
+                title={selectedDiagramProject?.title}
+            />
         </Box>
     );
 }

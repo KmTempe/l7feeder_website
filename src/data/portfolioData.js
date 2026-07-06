@@ -262,7 +262,7 @@ export const portfolioData = {
     },
     {
       title: 'Self-Hosted Media Platform & Homelab',
-      description: 'Built and operate a self-hosted homelab centered on Jellyfin, with separate service stacks for media streaming, support, private cloud, photo management, monitoring, search, and invite-based onboarding. The Jellyfin instance currently manages 3.6 TB of media and has been tested on a 1 Gbps line with 10-12 transcoding users or 20 non-transcoding users.',
+      description: 'Built and operate a self-hosted homelab centered on Jellyfin, with separate service stacks for media streaming, support, private cloud, photo management, monitoring, search, and invite-based onboarding. The Jellyfin instance currently manages 3.7 TB',
       link: 'https://ausrine.giize.com/',
       featured: true,
       image: {
@@ -279,15 +279,11 @@ export const portfolioData = {
         'Hardening Jellyfin known holes on authentication (added 2FA & passkey support, automated password recovery via email and account recovery)'
       ],
       technologies: [
-        'Jellyfin',
         'Docker Compose',
         'Nginx Proxy Manager',
         'PostgreSQL',
         'Redis',
         'Valkey',
-        'Meilisearch',
-        'Wizarr',
-        'Uptime Kuma',
       ],
       roadmap: 'Next steps include centralizing user database with LDAP and adding SSO through Google or Authelia.'
     }
