@@ -50,11 +50,11 @@ Production uses `REDIS_URL`. Local development prefers `DEV_REDIS_URL` and falls
 LIBREDESK_API_URL=https://support.example.com/api/v1
 LIBREDESK_API_KEY=your_api_key
 LIBREDESK_API_SECRET=your_api_secret
-LIBREDESK_INBOX_ID=1
-LIBREDESK_AGENT_ID=40
-LIBREDESK_TEAM_ID=1
-LIBREDESK_PRIORITY=Low
-LIBREDESK_TAGS=l7f
+LIBREDESK_INBOX_ID={id}
+LIBREDESK_AGENT_ID={id}
+LIBREDESK_TEAM_ID={id}
+LIBREDESK_PRIORITY={id (text)}
+LIBREDESK_TAGS={tag (alfanumeric)}
 ```
 
 `LIBREDESK_AGENT_ID`, `LIBREDESK_TEAM_ID`, `LIBREDESK_PRIORITY`, and `LIBREDESK_TAGS` are optional, but the API URL, key, secret, and inbox ID are needed for message delivery.
